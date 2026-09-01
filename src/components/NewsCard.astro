@@ -1,0 +1,52 @@
+---
+import CategoryBadge from './CategoryBadge.astro';
+
+interface Props {
+  category: string;
+  title: string;
+  summary?: string;
+  date?: string;
+  href?: string;
+  image?: string;
+  imageAlt?: string;
+  demo?: boolean;
+}
+
+const {
+  category,
+  title,
+  summary,
+  date = '01 Sep 2026',
+  href = '#',
+  image,
+  imageAlt = '',
+  demo = false,
+} = Astro.props;
+---
+
+<article class="group border-b border-line pb-6">
+  <a href={href} class="focus-ring block">
+    <div class="mb-4 aspect-[16/9] overflow-hidden bg-surface">
+      {image ? (
+        <img
+          src={image}
+          alt={imageAlt}
+          width="640"
+          height="360"
+          loading="lazy"
+          decoding="async"
+          class="h-full w-full object-cover transition duration-300 group-hover:scale-[1.025]"
+        />
+      ) : (
+        <div class="flex h-full items-end p-4"><CategoryBadge category={category} /></div>
+      )}
+    </div>
+    <div class="flex flex-wrap items-center gap-2">
+      <CategoryBadge category={category} />
+      <time class="text-[10px] font-bold uppercase tracking-[0.08em] text-muted">{date}</time>
+      {demo && <span class="border border-line bg-surface px-1.5 py-0.5 text-[8px] font-black tracking-[0.12em] text-muted">DEMO</span>}
+    </div>
+    <h3 class="mt-2.5 text-lg font-black leading-[1.12] tracking-[-0.028em] text-ink transition group-hover:text-brand-700">{title}</h3>
+    {summary && <p class="mt-2 text-sm leading-6 text-muted">{summary}</p>}
+  </a>
+</article>

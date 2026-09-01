@@ -1,0 +1,3 @@
+# Canonical hostname redirect can be enabled after the custom domain is connected.
+# Example:
+# https://deafjobsindia.com/* https://www.deafjobsindia.com/:splat 301

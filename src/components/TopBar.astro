@@ -1,0 +1,45 @@
+---
+import { siteConfig } from '../data/site';
+
+const links = [
+  { label: 'About', href: '/about/' },
+  { label: 'Contact', href: '/contact/' },
+  { label: 'Advertise', href: '/advertise/' },
+  { label: 'Privacy', href: '/privacy/' },
+  { label: 'Disclaimer', href: '/disclaimer/' },
+];
+
+const socialLinks = Object.entries(siteConfig.social)
+  .filter(([, href]) => Boolean(href))
+  .map(([label, href]) => ({ label, href }));
+
+const today = new Intl.DateTimeFormat('en-IN', {
+  weekday: 'short',
+  day: '2-digit',
+  month: 'short',
+  year: 'numeric',
+  timeZone: 'Asia/Kolkata',
+}).format(new Date());
+---
+
+<div class="border-b border-line bg-surface text-muted">
+  <div class="container-site flex min-h-10 items-center justify-between gap-4">
+    <nav aria-label="Utility navigation" class="hidden items-center gap-5 md:flex">
+      {links.map((link) => (
+        <a class="focus-ring text-[11px] font-bold transition hover:text-ink" href={link.href}>{link.label}</a>
+      ))}
+    </nav>
+
+    <p class="flex min-w-0 items-center gap-2 py-2 text-[10px] font-black uppercase tracking-[0.11em] sm:text-[11px]">
+      <span class="inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-brand-600"></span>
+      <span class="truncate">Independent newsroom for Deaf India</span>
+    </p>
+
+    <div class="hidden items-center gap-4 md:flex">
+      <time class="text-[10px] font-bold uppercase tracking-[0.08em]">{today}</time>
+      {socialLinks.map((link) => (
+        <a class="focus-ring text-[10px] font-black uppercase tracking-[0.08em] hover:text-ink" href={link.href}>{link.label}</a>
+      ))}
+    </div>
+  </div>
+</div>

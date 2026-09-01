@@ -1,0 +1,44 @@
+---
+import { getCollection } from 'astro:content';
+import type { GetStaticPaths } from 'astro';
+import SectionLayout from '../../layouts/SectionLayout.astro';
+import NewsArchive from '../../components/NewsArchive.astro';
+import { getAllTags, slugify, sortPosts, type NewsPost , getPublicPosts} from '../../utils/news';
+
+interface Props {
+  tagName: string;
+  posts: NewsPost[];
+}
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const posts = getPublicPosts(await getCollection('news'));
+  const tags = getAllTags(posts);
+
+  return tags.map(({ slug, name }) => ({
+    params: { tag: slug },
+    props: {
+      tagName: name,
+      posts: posts.filter((post) => post.data.tags.some((tag) => slugify(tag) === slug)),
+    },
+  }));
+};
+
+const { tagName, posts } = Astro.props;
+---
+
+<SectionLayout
+  title={`#${tagName}`}
+  description={`All DeafJobsIndia stories tagged with ${tagName}.`}
+  eyebrow="Topic"
+  breadcrumbs={[
+    { label: 'Home', href: '/' },
+    { label: 'Topics', href: '/topics/' },
+    { label: `#${tagName}` },
+  ]}
+>
+  <div class="mb-7 flex items-center justify-between gap-3">
+    <p class="text-sm font-semibold text-muted">{posts.length} {posts.length === 1 ? 'story' : 'stories'}</p>
+    <a href="/topics/" class="focus-ring text-sm font-extrabold text-brand-700 hover:text-brand-600">All topics →</a>
+  </div>
+  <NewsArchive posts={posts} />
+</SectionLayout>

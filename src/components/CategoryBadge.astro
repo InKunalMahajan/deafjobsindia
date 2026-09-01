@@ -1,0 +1,21 @@
+---
+interface Props {
+  category: string;
+  href?: string;
+  inverse?: boolean;
+}
+
+const { category, href, inverse = false } = Astro.props;
+const Tag = href ? 'a' : 'span';
+---
+
+<Tag
+  href={href}
+  data-category={category}
+  class:list={[
+    'category-badge focus-ring inline-flex min-h-6 items-center px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.12em]',
+    inverse && 'category-badge--inverse',
+  ]}
+>
+  {category}
+</Tag>

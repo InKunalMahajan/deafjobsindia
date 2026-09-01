@@ -1,0 +1,59 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import ArticleLayout from '../../layouts/ArticleLayout.astro';
+import NewsCard from '../../components/NewsCard.astro';
+import SectionHeader from '../../components/SectionHeader.astro';
+import {
+  formatNewsDate,
+  getCategoryUrl,
+  getPostUrl,
+  getRelatedPosts,
+  getPublicPosts,
+} from '../../utils/news';
+
+export async function getStaticPaths() {
+  const posts = getPublicPosts(await getCollection('news'));
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+interface Props {
+  post: CollectionEntry<'news'>;
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const allPosts = getPublicPosts(await getCollection('news'));
+const currentIndex = allPosts.findIndex((item) => item.id === post.id);
+
+// Sorted newest first: index - 1 is newer, index + 1 is older.
+const newer = currentIndex > 0 ? allPosts[currentIndex - 1] : undefined;
+const older = currentIndex >= 0 && currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1] : undefined;
+const relatedPosts = getRelatedPosts(post, allPosts, 3);
+---
+
+<ArticleLayout post={post} newer={newer} older={older}>
+  <Content />
+
+  {relatedPosts.length > 0 && (
+    <section slot="related" class="border-t border-line pt-10">
+      <SectionHeader title="Related News" href={getCategoryUrl(post.data.category)} />
+      <div class="grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
+        {relatedPosts.map((item) => (
+          <NewsCard
+            category={item.data.category}
+            title={item.data.title}
+            summary={item.data.description}
+            date={formatNewsDate(item.data.publishedAt)}
+            href={getPostUrl(item)}
+            image={item.data.image}
+            imageAlt={item.data.imageAlt}
+            demo={item.data.demo}
+          />
+        ))}
+      </div>
+    </section>
+  )}
+</ArticleLayout>

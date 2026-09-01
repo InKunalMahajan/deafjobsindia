@@ -1,0 +1,19 @@
+---
+import { getCollection } from 'astro:content';
+import SectionLayout from '../layouts/SectionLayout.astro';
+import NewsArchive from '../components/NewsArchive.astro';
+import Pagination from '../components/Pagination.astro';
+import { paginatePosts, sortPosts , getPublicPosts} from '../utils/news';
+
+const posts = getPublicPosts(await getCollection('news'));
+const page = paginatePosts(posts, 1);
+---
+
+<SectionLayout title="Latest News" description="The newest DeafJobsIndia stories and important updates in one chronological feed." eyebrow="Latest">
+  <div class="mb-7 flex flex-wrap items-center justify-between gap-3">
+    <p class="text-sm font-semibold text-muted">{posts.length} published stories</p>
+    <span class="text-xs font-black uppercase tracking-[0.12em] text-brand-700">Newest first</span>
+  </div>
+  <NewsArchive posts={page.items} />
+  <Pagination currentPage={1} totalPages={page.totalPages} basePath="/latest/" />
+</SectionLayout>

@@ -1,0 +1,36 @@
+---
+import type { NewsPost } from '../utils/news';
+import { getPostUrl } from '../utils/news';
+
+interface Props {
+  newer?: NewsPost;
+  older?: NewsPost;
+}
+
+const { newer, older } = Astro.props;
+---
+
+{(newer || older) && (
+  <nav class="mt-12 grid gap-4 border-y border-line py-6 sm:grid-cols-2" aria-label="Previous and next articles">
+    <div>
+      {newer && (
+        <a href={getPostUrl(newer)} rel="prev" class="focus-ring group block">
+          <span class="text-[10px] font-black uppercase tracking-[0.16em] text-muted">Newer story</span>
+          <span class="mt-2 block text-base font-black leading-snug text-ink transition group-hover:text-brand-700">
+            ← {newer.data.title}
+          </span>
+        </a>
+      )}
+    </div>
+    <div class="sm:text-right">
+      {older && (
+        <a href={getPostUrl(older)} rel="next" class="focus-ring group block">
+          <span class="text-[10px] font-black uppercase tracking-[0.16em] text-muted">Older story</span>
+          <span class="mt-2 block text-base font-black leading-snug text-ink transition group-hover:text-brand-700">
+            {older.data.title} →
+          </span>
+        </a>
+      )}
+    </div>
+  </nav>
+)}

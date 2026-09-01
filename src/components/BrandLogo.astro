@@ -1,0 +1,50 @@
+---
+interface Props {
+  compact?: boolean;
+  inverse?: boolean;
+}
+
+const { compact = false, inverse = false } = Astro.props;
+---
+
+<a href="/" class="focus-ring group inline-flex min-w-0 items-center gap-3.5" aria-label="DeafJobsIndia home">
+  <span
+    class:list={[
+      'relative grid shrink-0 place-items-center overflow-hidden rounded-xl border font-black tracking-[-0.08em] shadow-sm',
+      compact ? 'h-10 w-10 text-[11px]' : 'h-12 w-12 text-[12px] sm:h-14 sm:w-14 sm:text-[13px]',
+      inverse
+        ? 'border-white/30 bg-white text-brand-700'
+        : 'border-brand-600 bg-brand-600 text-white',
+    ]}
+    aria-hidden="true"
+  >
+    DJI
+    <span class:list={[
+      'absolute inset-x-[18%] bottom-[12%] h-[3px] rounded-full',
+      inverse ? 'bg-brand-600' : 'bg-white',
+    ]}></span>
+  </span>
+
+  <span class="min-w-0">
+    <span
+      class:list={[
+        'block whitespace-nowrap font-black leading-none tracking-[-0.055em]',
+        compact ? 'text-xl' : 'text-2xl sm:text-[1.8rem] lg:text-[2rem]',
+        inverse ? 'text-white' : 'text-ink',
+      ]}
+    >
+      DeafJobs<span class={inverse ? 'text-purple-200' : 'text-brand-600'}>India</span>
+    </span>
+
+    {!compact && (
+      <span
+        class:list={[
+          'mt-1.5 block max-w-[310px] truncate text-[9px] font-bold uppercase tracking-[0.13em] sm:text-[10px]',
+          inverse ? 'text-white/55' : 'text-muted',
+        ]}
+      >
+        Connecting Deaf Talent with Opportunities
+      </span>
+    )}
+  </span>
+</a>

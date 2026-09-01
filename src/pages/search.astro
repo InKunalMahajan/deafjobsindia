@@ -1,0 +1,107 @@
+---
+import { getCollection } from 'astro:content';
+import SectionLayout from '../layouts/SectionLayout.astro';
+import { formatNewsDate, getPostUrl, sortPosts , getPublicPosts} from '../utils/news';
+
+const posts = getPublicPosts(await getCollection('news'));
+---
+
+<SectionLayout title="Search" description="Search DeafJobsIndia news and information." eyebrow="Search" noindex>
+  <div class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_260px]">
+    <div>
+      <form id="search-form" class="border border-line bg-surface p-5" action="/search/" method="get">
+        <label for="search-page-input" class="text-sm font-black text-ink">Search DeafJobsIndia</label>
+        <div class="mt-3 flex flex-col gap-2 sm:flex-row">
+          <input id="search-page-input" name="q" type="search" placeholder="Jobs, education, training, community..." class="min-w-0 flex-1 border border-line bg-white px-4 py-3 text-sm outline-none focus:border-brand-500" autocomplete="off" />
+          <button class="focus-ring bg-ink px-5 py-3 text-sm font-black uppercase tracking-wide text-white hover:bg-brand-700" type="submit">Search</button>
+        </div>
+      </form>
+
+      <div class="mt-7 flex items-end justify-between gap-4 border-b border-line pb-3">
+        <div>
+          <p class="text-[10px] font-black uppercase tracking-[0.16em] text-brand-700">Results</p>
+          <h2 id="search-heading" class="mt-1 text-2xl font-black tracking-[-0.03em] text-ink">Enter a search term</h2>
+        </div>
+        <span id="result-count" class="text-xs font-bold text-muted"></span>
+      </div>
+
+      <div id="search-results" class="divide-y divide-line">
+        {posts.map((post) => {
+          const haystack = [post.data.title, post.data.description, post.data.category, ...post.data.tags].join(' ').toLowerCase();
+          return (
+            <article class="search-result hidden py-6" data-search={haystack}>
+              <a href={getPostUrl(post)} class="focus-ring group block">
+                <div class="flex flex-wrap items-center gap-2 text-[10px] font-black uppercase tracking-[0.14em] text-brand-700">
+                  <span>{post.data.category}</span>
+                  <span class="text-muted">•</span>
+                  <time class="text-muted" datetime={post.data.publishedAt.toISOString()}>{formatNewsDate(post.data.publishedAt)}</time>
+                </div>
+                <h3 class="mt-2 text-xl font-black leading-tight tracking-[-0.025em] text-ink transition group-hover:text-brand-700 sm:text-2xl">{post.data.title}</h3>
+                <p class="mt-2 text-sm leading-6 text-muted">{post.data.description}</p>
+              </a>
+            </article>
+          );
+        })}
+      </div>
+
+      <div id="empty-results" class="hidden border border-line bg-surface p-6 text-sm leading-6 text-muted">
+        No matching articles were found. Try a shorter or different keyword.
+      </div>
+    </div>
+
+    <aside class="border border-line bg-surface p-5 lg:self-start">
+      <p class="text-[10px] font-black uppercase tracking-[0.16em] text-brand-700">Search tips</p>
+      <ul class="mt-3 space-y-2 text-sm leading-6 text-muted">
+        <li>Try a job title or company topic.</li>
+        <li>Search by category such as Education or Training.</li>
+        <li>Use a city, scheme name or community keyword when included in a story.</li>
+      </ul>
+    </aside>
+  </div>
+</SectionLayout>
+
+<script>
+  const input = document.querySelector('#search-page-input');
+  const form = document.querySelector('#search-form');
+  const results = [...document.querySelectorAll('.search-result')];
+  const count = document.querySelector('#result-count');
+  const heading = document.querySelector('#search-heading');
+  const empty = document.querySelector('#empty-results');
+
+  const runSearch = (rawQuery) => {
+    const query = rawQuery.trim().toLowerCase();
+    if (input) input.value = rawQuery;
+
+    if (!query) {
+      results.forEach((item) => item.classList.add('hidden'));
+      if (count) count.textContent = '';
+      if (heading) heading.textContent = 'Enter a search term';
+      empty?.classList.add('hidden');
+      return;
+    }
+
+    let matches = 0;
+    results.forEach((item) => {
+      const isMatch = item.dataset.search?.includes(query) ?? false;
+      item.classList.toggle('hidden', !isMatch);
+      if (isMatch) matches += 1;
+    });
+
+    if (heading) heading.textContent = `Search: “${rawQuery}”`;
+    if (count) count.textContent = `${matches} result${matches === 1 ? '' : 's'}`;
+    empty?.classList.toggle('hidden', matches !== 0);
+  };
+
+  const params = new URLSearchParams(window.location.search);
+  runSearch(params.get('q') ?? '');
+
+  form?.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const query = input?.value ?? '';
+    const next = new URL(window.location.href);
+    if (query.trim()) next.searchParams.set('q', query.trim());
+    else next.searchParams.delete('q');
+    window.history.replaceState({}, '', next);
+    runSearch(query);
+  });
+</script>

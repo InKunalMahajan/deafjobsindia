@@ -1,0 +1,33 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import TopBar from '../components/TopBar.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import Navbar from '../components/Navbar.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+---
+
+<BaseLayout
+  title="Page Not Found — DeafJobsIndia"
+  description="The page you requested could not be found."
+  noindex
+>
+  <TopBar />
+  <SiteHeader />
+  <Navbar />
+
+  <main id="main-content" tabindex="-1" class="container-site py-20 sm:py-28">
+    <div class="mx-auto max-w-2xl text-center">
+      <p class="text-xs font-black uppercase tracking-[0.18em] text-brand-700">Error 404</p>
+      <h1 class="mt-3 text-5xl font-black tracking-[-0.05em] text-ink sm:text-6xl">Page not found</h1>
+      <p class="mx-auto mt-5 max-w-xl text-base leading-7 text-muted">
+        This page may have moved, the link may be incorrect, or the story may no longer be available.
+      </p>
+      <div class="mt-8 flex flex-wrap justify-center gap-3">
+        <a href="/" class="focus-ring bg-ink px-5 py-3 text-sm font-black text-white hover:bg-brand-700">Go to homepage</a>
+        <a href="/latest/" class="focus-ring border border-line px-5 py-3 text-sm font-black text-ink hover:border-brand-500 hover:text-brand-700">Latest News</a>
+      </div>
+    </div>
+  </main>
+
+  <SiteFooter />
+</BaseLayout>

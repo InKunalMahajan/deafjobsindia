@@ -1,0 +1,54 @@
+---
+interface Props {
+  actionLabel?: string;
+  actionUrl?: string;
+  deadline?: Date;
+  location?: string;
+}
+
+const { actionLabel, actionUrl, deadline, location } = Astro.props;
+
+const deadlineText = deadline
+  ? new Intl.DateTimeFormat('en-IN', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+      timeZone: 'Asia/Kolkata',
+    }).format(deadline)
+  : '';
+---
+
+{(actionUrl || deadline || location) && (
+  <aside class="my-8 overflow-hidden rounded-2xl border border-line bg-white shadow-[0_10px_28px_rgba(17,17,17,.05)]" aria-label="Important details">
+    <div class="border-l-4 border-brand-600 p-5 sm:p-6">
+      <p class="text-[9px] font-black uppercase tracking-[0.18em] text-brand-700">Important details</p>
+
+      <div class="mt-3 grid gap-4 sm:grid-cols-2">
+        {location && (
+          <div>
+            <p class="text-[9px] font-black uppercase tracking-[0.13em] text-muted">Location</p>
+            <p class="mt-1 font-bold text-ink">{location}</p>
+          </div>
+        )}
+
+        {deadline && (
+          <div>
+            <p class="text-[9px] font-black uppercase tracking-[0.13em] text-muted">Deadline / date</p>
+            <p class="mt-1 font-bold text-ink">{deadlineText}</p>
+          </div>
+        )}
+      </div>
+
+      {actionUrl && (
+        <a
+          href={actionUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="focus-ring mt-5 inline-flex rounded-lg bg-brand-700 px-5 py-3 text-xs font-black uppercase tracking-[0.08em] text-white transition hover:bg-brand-600"
+        >
+          {actionLabel || 'Open official link'} ↗
+        </a>
+      )}
+    </div>
+  </aside>
+)}

@@ -1,0 +1,33 @@
+---
+import type { NewsPost } from '../utils/news';
+import NewsCard from './NewsCard.astro';
+import { formatNewsDate, getPostUrl } from '../utils/news';
+
+interface Props {
+  posts: NewsPost[];
+  emptyMessage?: string;
+}
+
+const { posts, emptyMessage = 'No stories are published in this section yet.' } = Astro.props;
+---
+
+{posts.length > 0 ? (
+  <div class="grid gap-x-7 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+    {posts.map((post) => (
+      <NewsCard
+        category={post.data.category}
+        title={post.data.title}
+        summary={post.data.description}
+        date={formatNewsDate(post.data.publishedAt)}
+        href={getPostUrl(post)}
+        image={post.data.image}
+        imageAlt={post.data.imageAlt}
+        demo={post.data.demo}
+      />
+    ))}
+  </div>
+) : (
+  <div class="border border-dashed border-line bg-surface p-8 text-center text-sm font-semibold text-muted">
+    {emptyMessage}
+  </div>
+)}

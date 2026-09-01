@@ -1,0 +1,196 @@
+name: Deploy DeafJobsIndia to Hostinger
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+  schedule:
+    # GitHub cron uses UTC. 23 minutes past every hour avoids the busiest minute.
+    - cron: "23 * * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: deafjobsindia-hostinger-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Build and deploy to Hostinger
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    env:
+      SITE_URL: ${{ vars.SITE_URL || 'https://www.deafjobsindia.com' }}
+      HOSTINGER_HOST: ${{ secrets.HOSTINGER_HOST }}
+      HOSTINGER_USERNAME: ${{ secrets.HOSTINGER_USERNAME }}
+      HOSTINGER_SSH_PRIVATE_KEY: ${{ secrets.HOSTINGER_SSH_PRIVATE_KEY }}
+      HOSTINGER_KNOWN_HOSTS: ${{ secrets.HOSTINGER_KNOWN_HOSTS }}
+      HOSTINGER_REMOTE_PATH: ${{ secrets.HOSTINGER_REMOTE_PATH }}
+      HOSTINGER_PORT: ${{ vars.HOSTINGER_PORT || '65002' }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22.12.0"
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Release due scheduled stories
+        id: release
+        if: github.event_name == 'schedule'
+        shell: bash
+        run: |
+          npm run release:scheduled
+
+          if git diff --quiet -- src/content/news; then
+            echo "released=false" >> "$GITHUB_OUTPUT"
+            echo "No scheduled stories are due."
+          else
+            echo "released=true" >> "$GITHUB_OUTPUT"
+            echo "One or more scheduled stories are due."
+          fi
+
+      - name: Stop empty scheduled run
+        if: github.event_name == 'schedule' && steps.release.outputs.released != 'true'
+        run: echo "Nothing to deploy on this scheduled check."
+
+      - name: Audit newsroom content
+        if: github.event_name != 'schedule' || steps.release.outputs.released == 'true'
+        run: npm run content:audit
+
+      - name: Build Astro site
+        if: github.event_name != 'schedule' || steps.release.outputs.released == 'true'
+        run: npm run build
+
+      - name: Verify production output
+        if: github.event_name != 'schedule' || steps.release.outputs.released == 'true'
+        run: npm run verify:dist
+
+      - name: Validate Hostinger secrets
+        if: github.event_name != 'schedule' || steps.release.outputs.released == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required=(
+            HOSTINGER_HOST
+            HOSTINGER_USERNAME
+            HOSTINGER_SSH_PRIVATE_KEY
+            HOSTINGER_REMOTE_PATH
+          )
+
+          for name in "${required[@]}"; do
+            if [ -z "${!name:-}" ]; then
+              echo "::error::$name is not configured in GitHub Actions secrets."
+              exit 1
+            fi
+          done
+
+          case "$HOSTINGER_REMOTE_PATH" in
+            */public_html)
+              echo "Remote path safety check passed."
+              ;;
+            *)
+              echo "::error::HOSTINGER_REMOTE_PATH must end with /public_html because rsync uses --delete."
+              exit 1
+              ;;
+          esac
+
+      - name: Configure secure SSH
+        if: github.event_name != 'schedule' || steps.release.outputs.released == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+
+          printf '%s\n' "$HOSTINGER_SSH_PRIVATE_KEY" > ~/.ssh/deafjobsindia_hostinger
+          chmod 600 ~/.ssh/deafjobsindia_hostinger
+
+          if [ -n "${HOSTINGER_KNOWN_HOSTS:-}" ]; then
+            printf '%s\n' "$HOSTINGER_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          else
+            echo "::warning::HOSTINGER_KNOWN_HOSTS is not configured. Fetching the host key during this run."
+            ssh-keyscan -p "$HOSTINGER_PORT" -H "$HOSTINGER_HOST" > ~/.ssh/known_hosts
+          fi
+
+          chmod 600 ~/.ssh/known_hosts
+
+      - name: Check Hostinger destination
+        if: github.event_name != 'schedule' || steps.release.outputs.released == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          ssh \
+            -i ~/.ssh/deafjobsindia_hostinger \
+            -p "$HOSTINGER_PORT" \
+            "$HOSTINGER_USERNAME@$HOSTINGER_HOST" \
+            "test -d '$HOSTINGER_REMOTE_PATH' && echo 'Hostinger destination is ready.'"
+
+      - name: Deploy dist to Hostinger
+        if: github.event_name != 'schedule' || steps.release.outputs.released == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          rsync \
+            -az \
+            --delete \
+            --exclude='.well-known/' \
+            --human-readable \
+            --stats \
+            -e "ssh -i ~/.ssh/deafjobsindia_hostinger -p $HOSTINGER_PORT" \
+            dist/ \
+            "$HOSTINGER_USERNAME@$HOSTINGER_HOST:$HOSTINGER_REMOTE_PATH/"
+
+      - name: Verify deployed homepage
+        if: github.event_name != 'schedule' || steps.release.outputs.released == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          for attempt in 1 2 3 4 5; do
+            code="$(curl \
+              --silent \
+              --show-error \
+              --location \
+              --output /tmp/deafjobsindia-home.html \
+              --write-out '%{http_code}' \
+              --max-time 20 \
+              "$SITE_URL/")"
+
+            if [ "$code" = "200" ] && grep -q "DeafJobsIndia" /tmp/deafjobsindia-home.html; then
+              echo "Live website verification passed."
+              exit 0
+            fi
+
+            echo "Attempt $attempt: HTTP $code. Waiting before retry..."
+            sleep 10
+          done
+
+          echo "::error::The deployment uploaded, but the public homepage could not be verified."
+          exit 1
+
+      - name: Save released scheduled stories
+        if: github.event_name == 'schedule' && steps.release.outputs.released == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          git config user.name "deafjobsindia-publisher"
+          git config user.email "actions@users.noreply.github.com"
+          git add src/content/news
+          git commit -m "Publish scheduled stories"
+          git push

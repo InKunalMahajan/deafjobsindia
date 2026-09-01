@@ -1,0 +1,29 @@
+---
+title: "Your News Headline"
+description: "One clear sentence explaining the story."
+category: "Community"
+publishedAt: 2026-09-01T09:00:00+05:30
+updatedAt: 2026-09-01T09:00:00+05:30
+image: "/images/featured.svg"
+imageAlt: "Describe the image for readers."
+author: "DeafJobsIndia Desk"
+authorId: desk
+status: draft
+tags:
+  - Community
+featured: false
+trending: false
+breaking: false
+draft: false
+demo: false
+---
+
+Write the verified story here.
+
+## Key details
+
+Add the most important facts first.
+
+## What readers should know
+
+Add useful context and official-source information where appropriate.

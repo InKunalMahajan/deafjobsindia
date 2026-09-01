@@ -1,0 +1,31 @@
+---
+import { getAuthorUrl } from '../utils/news';
+import { getAuthorProfile } from '../data/authors';
+
+interface Props {
+  author: string;
+  authorId?: string;
+}
+
+const { author, authorId } = Astro.props;
+const profile = getAuthorProfile(authorId, author);
+---
+
+<aside class="mt-10 border border-line bg-surface p-5 sm:p-6" aria-label="Article author">
+  <div class="flex items-start gap-4">
+    <img
+      src={profile.avatar}
+      alt=""
+      width="48"
+      height="48"
+      loading="lazy"
+      decoding="async"
+      class="h-12 w-12 shrink-0 rounded-full object-cover"
+    />
+    <div>
+      <p class="text-[10px] font-black uppercase tracking-[0.16em] text-muted">{profile.role}</p>
+      <a href={getAuthorUrl(profile.name)} class="focus-ring mt-1 inline-block text-lg font-black text-ink hover:text-brand-700">{profile.name}</a>
+      <p class="mt-2 text-sm leading-6 text-muted">{profile.bio}</p>
+    </div>
+  </div>
+</aside>

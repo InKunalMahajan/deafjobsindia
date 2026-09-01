@@ -1,0 +1,28 @@
+---
+import { getCollection } from 'astro:content';
+import SectionLayout from '../layouts/SectionLayout.astro';
+import NewsArchive from './NewsArchive.astro';
+import Pagination from './Pagination.astro';
+import { getCategoryMeta, paginatePosts, sortPosts , getPublicPosts} from '../utils/news';
+
+interface Props {
+  category: 'Jobs' | 'Education' | 'Government Schemes' | 'Training' | 'Job Fairs' | 'Community' | 'Technology' | 'Career';
+  title: string;
+  description: string;
+}
+
+const { category, title, description } = Astro.props;
+const posts = getPublicPosts(await getCollection('news')).filter((post) => post.data.category === category);
+const page = paginatePosts(posts, 1);
+const meta = getCategoryMeta(category);
+const basePath = meta ? `/${meta.slug}/` : '/latest/';
+---
+
+<SectionLayout title={title} description={description} eyebrow={category}>
+  <div class="mb-7 flex flex-wrap items-center justify-between gap-3">
+    <p class="text-sm font-semibold text-muted">{posts.length} {posts.length === 1 ? 'story' : 'stories'}</p>
+    <a href="/latest/" class="focus-ring text-sm font-extrabold text-brand-700 hover:text-brand-600">Browse all news →</a>
+  </div>
+  <NewsArchive posts={page.items} />
+  <Pagination currentPage={1} totalPages={page.totalPages} basePath={basePath} />
+</SectionLayout>

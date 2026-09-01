@@ -1,0 +1,31 @@
+---
+import { getCollection } from 'astro:content';
+import { homepageEditorial } from '../data/editorial';
+import { getPostUrl, getPublicPosts } from '../utils/news';
+
+const allPosts = getPublicPosts(await getCollection('news'));
+const breakingPost =
+  allPosts.find((post) => post.id === homepageEditorial.breakingStoryId) ??
+  allPosts.find((post) => post.data.breaking) ??
+  allPosts[0];
+---
+
+<section class="border-b border-line bg-white" aria-label="Breaking news">
+  <div class="container-site flex min-h-12 items-stretch overflow-hidden">
+    <div class="flex shrink-0 items-center bg-brand-700 px-4 text-[10px] font-black uppercase tracking-[0.15em] text-white sm:px-5 sm:text-xs">
+      Breaking
+    </div>
+    <div class="flex min-w-0 flex-1 items-center px-4">
+      {breakingPost ? (
+        <a href={getPostUrl(breakingPost)} class="focus-ring truncate text-sm font-bold text-ink hover:text-brand-700">
+          {breakingPost.data.title}
+        </a>
+      ) : (
+        <p class="truncate text-sm font-bold text-ink">DeafJobsIndia newsroom updates.</p>
+      )}
+    </div>
+    <a href="/latest/" class="focus-ring hidden shrink-0 items-center border-l border-line px-4 text-xs font-black uppercase tracking-wide text-brand-700 sm:flex">
+      Latest →
+    </a>
+  </div>
+</section>

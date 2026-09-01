@@ -1,0 +1,78 @@
+---
+import type { NewsPost } from '../utils/news';
+import { formatNewsDate, getCategoryUrl, getPostUrl } from '../utils/news';
+import CategoryBadge from './CategoryBadge.astro';
+
+interface Props {
+  category: string;
+  posts: NewsPost[];
+}
+
+const { category, posts } = Astro.props;
+const [lead, ...rest] = posts.slice(0, 4);
+---
+
+{lead && (
+  <section class="h-full rounded-2xl border border-line bg-white p-5 sm:p-6">
+    <div class="mb-5 flex items-end justify-between gap-3 border-b border-line pb-4">
+      <div>
+        <CategoryBadge category={category} href={getCategoryUrl(category)} />
+        <h2 class="mt-2 text-xl font-black tracking-[-0.035em] text-ink">{category}</h2>
+      </div>
+      <a href={getCategoryUrl(category)} class="focus-ring shrink-0 text-[10px] font-black uppercase tracking-[0.09em] text-brand-700 hover:text-brand-500">
+        View all →
+      </a>
+    </div>
+
+    <article class="group">
+      <a href={getPostUrl(lead)} class="focus-ring block">
+        <div class="aspect-[16/9] overflow-hidden rounded-xl bg-surface">
+          <img
+            src={lead.data.image}
+            alt={lead.data.imageAlt}
+            width="900"
+            height="506"
+            loading="lazy"
+            decoding="async"
+            class="h-full w-full object-cover transition duration-300 group-hover:scale-[1.025]"
+          />
+        </div>
+        <time class="mt-3.5 block text-[9px] font-bold uppercase tracking-[0.1em] text-muted">
+          {formatNewsDate(lead.data.publishedAt)}
+        </time>
+        <h3 class="mt-1.5 text-lg font-black leading-[1.12] tracking-[-0.03em] text-ink transition group-hover:text-brand-700 sm:text-xl">
+          {lead.data.title}
+        </h3>
+        <p class="mt-2 line-clamp-2 text-sm leading-6 text-muted">{lead.data.description}</p>
+      </a>
+    </article>
+
+    {rest.length > 0 && (
+      <div class="mt-5 divide-y divide-line border-t border-line">
+        {rest.map((post) => (
+          <article class="py-4 last:pb-0">
+            <a href={getPostUrl(post)} class="focus-ring group grid grid-cols-[76px_1fr] gap-3">
+              <img
+                src={post.data.image}
+                alt=""
+                width="152"
+                height="114"
+                loading="lazy"
+                decoding="async"
+                class="aspect-[4/3] h-full w-full rounded-lg object-cover"
+              />
+              <div>
+                <time class="text-[9px] font-bold uppercase tracking-[0.08em] text-muted">
+                  {formatNewsDate(post.data.publishedAt)}
+                </time>
+                <h3 class="mt-1 text-sm font-black leading-[1.35] text-ink transition group-hover:text-brand-700">
+                  {post.data.title}
+                </h3>
+              </div>
+            </a>
+          </article>
+        ))}
+      </div>
+    )}
+  </section>
+)}

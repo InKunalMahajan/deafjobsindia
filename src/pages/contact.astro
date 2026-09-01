@@ -1,0 +1,15 @@
+---
+import SectionLayout from '../layouts/SectionLayout.astro';
+---
+
+<SectionLayout title="Contact" description="Contact DeafJobsIndia for news tips, corrections, partnerships and general enquiries." eyebrow="Contact">
+  <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+    {[1, 2, 3].map((item) => (
+      <article class="border border-line bg-white p-5">
+        <span class="text-[10px] font-black uppercase tracking-[0.15em] text-brand-700">Contact</span>
+        <h2 class="mt-3 text-xl font-black tracking-[-0.025em]">Sample story {item}</h2>
+        <p class="mt-2 text-sm leading-6 text-muted">This section is ready to connect to Astro content collections or your future CMS.</p>
+      </article>
+    ))}
+  </div>
+</SectionLayout>

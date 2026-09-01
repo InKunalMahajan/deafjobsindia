@@ -1,0 +1,29 @@
+---
+import { getCollection } from 'astro:content';
+import SectionLayout from '../layouts/SectionLayout.astro';
+import { getAllTags, getTagUrl, sortPosts, slugify , getPublicPosts} from '../utils/news';
+
+const posts = getPublicPosts(await getCollection('news'));
+const tags = getAllTags(posts).map((tag) => ({
+  ...tag,
+  count: posts.filter((post) => post.data.tags.some((item) => slugify(item) === tag.slug)).length,
+})).sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
+---
+
+<SectionLayout
+  title="Topics"
+  description="Browse DeafJobsIndia news by subject and topic."
+  eyebrow="Explore"
+>
+  <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+    {tags.map((tag) => (
+      <a
+        href={getTagUrl(tag.name)}
+        class="focus-ring group flex items-center justify-between gap-4 border border-line bg-white p-4 transition hover:border-brand-500"
+      >
+        <span class="font-black text-ink group-hover:text-brand-700">#{tag.name}</span>
+        <span class="rounded-full bg-surface px-2.5 py-1 text-xs font-black text-muted">{tag.count}</span>
+      </a>
+    ))}
+  </div>
+</SectionLayout>

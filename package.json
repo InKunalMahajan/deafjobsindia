@@ -1,0 +1,29 @@
+{
+  "name": "deafjobsindia",
+  "version": "1.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "new:post": "node scripts/new-post.mjs",
+    "content:audit": "node scripts/content-audit.mjs",
+    "release:scheduled": "node scripts/release-scheduled.mjs",
+    "verify:dist": "node scripts/verify-dist.mjs",
+    "post:publish": "node scripts/publish-post.mjs",
+    "post:schedule": "node scripts/schedule-post.mjs",
+    "newsroom:status": "node scripts/newsroom-status.mjs"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "4.3.3",
+    "astro": "7.2.9",
+    "tailwindcss": "4.3.3",
+    "@astrojs/rss": "4.0.19",
+    "@astrojs/sitemap": "3.7.4"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  }
+}

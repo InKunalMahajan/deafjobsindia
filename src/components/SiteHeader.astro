@@ -1,0 +1,21 @@
+---
+import BrandLogo from './BrandLogo.astro';
+import AdSlot from './AdSlot.astro';
+---
+
+<header class="border-b border-line bg-white">
+  <div class="container-site grid min-h-24 items-center gap-5 py-5 lg:min-h-28 lg:grid-cols-[minmax(330px,1fr)_minmax(420px,620px)]">
+    <div class="flex min-w-0 items-center justify-between gap-5">
+      <BrandLogo />
+
+      <a
+        href="/latest/"
+        class="focus-ring hidden shrink-0 rounded-full border border-brand-100 bg-brand-50 px-4 py-2 text-[10px] font-black uppercase tracking-[0.11em] text-brand-700 transition hover:border-brand-500 hover:bg-white sm:inline-flex lg:hidden"
+      >
+        Latest News →
+      </a>
+    </div>
+
+    <AdSlot slot="header-leaderboard" format="leaderboard" class="hidden lg:flex" />
+  </div>
+</header>

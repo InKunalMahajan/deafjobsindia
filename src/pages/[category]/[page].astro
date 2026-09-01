@@ -1,0 +1,83 @@
+---
+import { getCollection } from 'astro:content';
+import type { GetStaticPaths } from 'astro';
+import SectionLayout from '../../layouts/SectionLayout.astro';
+import NewsArchive from '../../components/NewsArchive.astro';
+import Pagination from '../../components/Pagination.astro';
+import {
+  POSTS_PER_PAGE,
+  categoryMeta,
+  paginatePosts,
+  sortPosts,
+  type NewsPost, getPublicPosts} from '../../utils/news';
+
+interface Props {
+  posts: NewsPost[];
+  currentPage: number;
+  totalPages: number;
+  totalItems: number;
+  categoryName: string;
+  categoryTitle: string;
+  description: string;
+  categorySlug: string;
+}
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const allPosts = getPublicPosts(await getCollection('news'));
+  const paths = [];
+
+  for (const meta of categoryMeta) {
+    const posts = allPosts.filter((post) => post.data.category === meta.category);
+    const totalPages = Math.max(1, Math.ceil(posts.length / POSTS_PER_PAGE));
+
+    for (let currentPage = 2; currentPage <= totalPages; currentPage++) {
+      const page = paginatePosts(posts, currentPage);
+      paths.push({
+        params: { category: meta.slug, page: String(currentPage) },
+        props: {
+          posts: page.items,
+          currentPage,
+          totalPages,
+          totalItems: posts.length,
+          categoryName: meta.category,
+          categoryTitle: meta.title,
+          description: meta.description,
+          categorySlug: meta.slug,
+        },
+      });
+    }
+  }
+
+  return paths;
+};
+
+const {
+  posts,
+  currentPage,
+  totalPages,
+  totalItems,
+  categoryName,
+  categoryTitle,
+  description,
+  categorySlug,
+} = Astro.props;
+const basePath = `/${categorySlug}/`;
+---
+
+<SectionLayout
+  title={`${categoryTitle} — Page ${currentPage}`}
+  description={description}
+  eyebrow={categoryName}
+  breadcrumbs={[
+    { label: 'Home', href: '/' },
+    { label: categoryTitle, href: basePath },
+    { label: `Page ${currentPage}` },
+  ]}
+>
+  <div class="mb-7 flex flex-wrap items-center justify-between gap-3">
+    <p class="text-sm font-semibold text-muted">{totalItems} {totalItems === 1 ? 'story' : 'stories'}</p>
+    <span class="text-xs font-black uppercase tracking-[0.12em] text-brand-700">Page {currentPage} of {totalPages}</span>
+  </div>
+  <NewsArchive posts={posts} />
+  <Pagination currentPage={currentPage} totalPages={totalPages} basePath={basePath} />
+</SectionLayout>

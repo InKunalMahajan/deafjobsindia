@@ -1,0 +1,83 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  canonical?: string;
+  image?: string;
+  imageAlt?: string;
+  type?: 'website' | 'article';
+  noindex?: boolean;
+}
+
+const {
+  title = 'DeafJobsIndia',
+  description = 'News, jobs, education, schemes, training and community updates for Deaf India.',
+  canonical,
+  image = '/images/deafjobsindia-social.svg',
+  imageAlt = 'DeafJobsIndia',
+  type = 'website',
+  noindex = false,
+} = Astro.props;
+
+const site = Astro.site ?? new URL(Astro.url.origin);
+const canonicalUrl = canonical ? new URL(canonical, site) : new URL(Astro.url.pathname, site);
+const imageUrl = new URL(image, site);
+const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'DeafJobsIndia',
+  url: site.href,
+  description: 'News, jobs, education, schemes, training and community updates for Deaf India.',
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: `${new URL('/search/', site).href}?q={search_term_string}`,
+    'query-input': 'required name=search_term_string',
+  },
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#5B21B6" />
+    <meta name="color-scheme" content="light" />
+    <meta name="description" content={description} />
+    <meta name="generator" content={Astro.generator} />
+    {noindex && <meta name="robots" content="noindex,follow" />}
+
+    <link rel="canonical" href={canonicalUrl.href} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate" type="application/rss+xml" title="DeafJobsIndia RSS" href="/rss.xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <meta property="og:site_name" content="DeafJobsIndia" />
+    <meta property="og:type" content={type} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl.href} />
+    <meta property="og:image" content={imageUrl.href} />
+    <meta property="og:image:alt" content={imageAlt} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={imageUrl.href} />
+
+    <script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
+    <slot name="head" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <a
+      href="#main-content"
+      class="focus-ring fixed left-3 top-3 z-[100] -translate-y-24 bg-white px-4 py-3 text-sm font-black text-brand-700 shadow-lg transition focus:translate-y-0"
+    >
+      Skip to main content
+    </a>
+    <slot />
+  </body>
+</html>

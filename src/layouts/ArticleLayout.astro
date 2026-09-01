@@ -1,0 +1,242 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import TopBar from '../components/TopBar.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import Navbar from '../components/Navbar.astro';
+import BreakingNews from '../components/BreakingNews.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import ShareButtons from '../components/ShareButtons.astro';
+import AuthorBox from '../components/AuthorBox.astro';
+import PreviousNextStories from '../components/PreviousNextStories.astro';
+import CategoryBadge from '../components/CategoryBadge.astro';
+import AdSlot from '../components/AdSlot.astro';
+import ArticleSourceBox from '../components/ArticleSourceBox.astro';
+import ArticleActionCard from '../components/ArticleActionCard.astro';
+import type { NewsPost } from '../utils/news';
+import { getAuthorProfile } from '../data/authors';
+import {
+  formatNewsDate,
+  getAuthorUrl,
+  getCategoryUrl,
+  getPostUrl,
+  getReadingTime,
+  getTagUrl,
+} from '../utils/news';
+
+interface Props {
+  post: NewsPost;
+  newer?: NewsPost;
+  older?: NewsPost;
+}
+
+const { post, newer, older } = Astro.props;
+const {
+  title,
+  description,
+  category,
+  publishedAt,
+  updatedAt,
+  image,
+  imageAlt,
+  author,
+  authorId,
+  tags,
+  demo,
+  verificationStatus,
+  verifiedAt,
+  sourceName,
+  sourceUrl,
+  sourceType,
+  sourceNote,
+  actionLabel,
+  actionUrl,
+  deadline,
+  location,
+} = post.data;
+const authorProfile = getAuthorProfile(authorId, author);
+const site = Astro.site ?? new URL(Astro.url.origin);
+const articleUrl = new URL(getPostUrl(post), site);
+const imageUrl = new URL(image, site);
+const readingTime = getReadingTime(post);
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    {
+      '@type': 'ListItem',
+      position: 1,
+      name: 'Home',
+      item: new URL('/', site).href,
+    },
+    {
+      '@type': 'ListItem',
+      position: 2,
+      name: category,
+      item: new URL(getCategoryUrl(category), site).href,
+    },
+    {
+      '@type': 'ListItem',
+      position: 3,
+      name: title,
+      item: articleUrl.href,
+    },
+  ],
+};
+
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'NewsArticle',
+  headline: title,
+  description,
+  image: [imageUrl.href],
+  datePublished: publishedAt.toISOString(),
+  dateModified: (updatedAt ?? publishedAt).toISOString(),
+  mainEntityOfPage: articleUrl.href,
+  author: {
+    '@type': 'Organization',
+    name: authorProfile.name,
+    url: new URL(getAuthorUrl(authorProfile.name), site).href,
+  },
+  publisher: {
+    '@type': 'Organization',
+    name: 'DeafJobsIndia',
+    url: site.href,
+    logo: {
+      '@type': 'ImageObject',
+      url: new URL('/images/deafjobsindia-logo.svg', site).href,
+    },
+  },
+  articleSection: category,
+  keywords: tags.join(', '),
+  ...(sourceUrl ? { isBasedOn: sourceUrl } : {}),
+};
+---
+
+<BaseLayout
+  title={`${title} — DeafJobsIndia`}
+  description={description}
+  image={image}
+  imageAlt={imageAlt}
+  type="article"
+>
+  <Fragment slot="head">
+    <meta property="article:published_time" content={publishedAt.toISOString()} />
+    {updatedAt && <meta property="article:modified_time" content={updatedAt.toISOString()} />}
+    <meta property="article:section" content={category} />
+    {tags.map((tag) => <meta property="article:tag" content={tag} />)}
+    <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+  </Fragment>
+
+  <TopBar />
+  <SiteHeader />
+  <Navbar />
+  <BreakingNews />
+
+  <main id="main-content" tabindex="-1">
+    <article class="container-site py-7 sm:py-11 lg:py-14">
+      <div class="mx-auto max-w-4xl">
+        <Breadcrumbs
+          items={[
+            { label: 'Home', href: '/' },
+            { label: category, href: getCategoryUrl(category) },
+            { label: title },
+          ]}
+        />
+
+        <div class="mt-6 flex flex-wrap items-center gap-2">
+          <CategoryBadge category={category} href={getCategoryUrl(category)} />
+          {demo && <span class="border border-line bg-surface px-2 py-1 text-[9px] font-black uppercase tracking-[0.12em] text-muted">Demo content</span>}
+        </div>
+
+        <h1 class="mt-4 text-[2rem] font-black leading-[1.04] tracking-[-0.045em] text-ink sm:text-4xl lg:text-5xl">{title}</h1>
+        <p class="mt-5 max-w-3xl text-base leading-7 text-muted sm:text-base">{description}</p>
+
+        <div class="mt-6 flex flex-wrap items-center gap-x-3 gap-y-2 border-y border-line py-4 text-xs text-muted sm:text-sm">
+          <span>By <a href={getAuthorUrl(authorProfile.name)} class="focus-ring font-extrabold text-ink hover:text-brand-700">{authorProfile.name}</a></span>
+          <span aria-hidden="true">•</span>
+          <time datetime={publishedAt.toISOString()}>Published {formatNewsDate(publishedAt)}</time>
+          {updatedAt && (
+            <>
+              <span aria-hidden="true">•</span>
+              <time datetime={updatedAt.toISOString()}>Updated {formatNewsDate(updatedAt)}</time>
+            </>
+          )}
+          <span aria-hidden="true">•</span>
+          <span>{readingTime} min read</span>
+        </div>
+      </div>
+
+      <figure class="mx-auto mt-7 max-w-5xl overflow-hidden bg-surface sm:mt-8">
+        <img
+          src={image}
+          alt={imageAlt}
+          width="1280"
+          height="720"
+          loading="eager"
+          decoding="async"
+          fetchpriority="high"
+          class="aspect-[16/9] w-full object-cover"
+        />
+        {imageAlt && <figcaption class="border-x border-b border-line px-4 py-2.5 text-xs leading-5 text-muted">{imageAlt}</figcaption>}
+      </figure>
+
+      <div class="mx-auto mt-8 max-w-3xl sm:mt-10">
+        <AdSlot slot="article-top" format="in-article" class="mb-8" />
+
+        <ArticleActionCard
+          actionLabel={actionLabel}
+          actionUrl={actionUrl}
+          deadline={deadline}
+          location={location}
+        />
+
+        <ShareButtons title={title} url={articleUrl.href} />
+
+        <div class="article-content mt-8 sm:mt-10">
+          <slot />
+        </div>
+
+        <ArticleSourceBox
+          sourceName={sourceName}
+          sourceUrl={sourceUrl}
+          sourceType={sourceType}
+          sourceNote={sourceNote}
+          verificationStatus={verificationStatus}
+          verifiedAt={verifiedAt}
+        />
+
+        {tags.length > 0 && (
+          <div class="mt-10 border-t border-line pt-6">
+            <p class="text-[10px] font-black uppercase tracking-[0.16em] text-muted">Topics</p>
+            <div class="mt-3 flex flex-wrap gap-2">
+              {tags.map((tag) => (
+                <a
+                  href={getTagUrl(tag)}
+                  class="focus-ring border border-line bg-surface px-3 py-1.5 text-xs font-bold text-ink transition hover:border-brand-500 hover:text-brand-700"
+                >
+                  #{tag}
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <AuthorBox author={authorProfile.name} authorId={authorId} />
+        <PreviousNextStories newer={newer} older={older} />
+
+        <div class="mt-8">
+          <ShareButtons title={title} url={articleUrl.href} />
+        </div>
+      </div>
+
+      <div class="mx-auto mt-14 max-w-5xl">
+        <slot name="related" />
+      </div>
+    </article>
+  </main>
+
+  <SiteFooter />
+</BaseLayout>

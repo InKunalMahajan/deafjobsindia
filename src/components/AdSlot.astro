@@ -1,0 +1,47 @@
+---
+import { adConfig } from '../data/site';
+
+interface Props {
+  slot: string;
+  label?: string;
+  format?: 'leaderboard' | 'rectangle' | 'in-article';
+  class?: string;
+}
+
+const {
+  slot,
+  label = 'Advertisement',
+  format = 'leaderboard',
+  class: className = '',
+} = Astro.props;
+
+const sizeClass = {
+  leaderboard: 'min-h-24 sm:min-h-[112px]',
+  rectangle: 'min-h-[250px]',
+  'in-article': 'min-h-[160px]',
+}[format];
+---
+
+{(adConfig.enabled || adConfig.showPlaceholders) && (
+  <aside
+    class:list={[
+      'ad-slot flex items-center justify-center border border-dashed border-line bg-surface px-4 text-center',
+      sizeClass,
+      className,
+    ]}
+    aria-label={label}
+    data-ad-slot={slot}
+    data-ad-format={format}
+  >
+    {adConfig.enabled ? (
+      <div class="w-full" data-ad-provider="pending">
+        <!-- Insert approved advertising network markup here when adConfig.enabled is true. -->
+      </div>
+    ) : (
+      <div>
+        <span class="block text-[9px] font-black uppercase tracking-[0.2em] text-muted/65">{label}</span>
+        <span class="mt-1 block text-[11px] font-semibold text-muted">Ad-ready placement • {slot}</span>
+      </div>
+    )}
+  </aside>
+)}

@@ -1,0 +1,211 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import TopBar from '../components/TopBar.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import Navbar from '../components/Navbar.astro';
+import BreakingNews from '../components/BreakingNews.astro';
+import FeaturedNews from '../components/FeaturedNews.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+import LatestNewsItem from '../components/LatestNewsItem.astro';
+import TrendingSidebar from '../components/TrendingSidebar.astro';
+import HomeCategorySection from '../components/HomeCategorySection.astro';
+import CategoryBadge from '../components/CategoryBadge.astro';
+import AdSlot from '../components/AdSlot.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import { homepageEditorial } from '../data/editorial';
+import {
+  formatNewsDate,
+  getPostUrl,
+  getPublicPosts,
+  pickEditorialPosts,
+} from '../utils/news';
+
+const posts = getPublicPosts(await getCollection('news'));
+
+const editorialLead = posts.find((post) => post.id === homepageEditorial.leadStoryId);
+const featuredPosts = posts.filter((post) => post.data.featured);
+const leadPost = editorialLead ?? featuredPosts[0] ?? posts[0];
+
+const editorialSide = pickEditorialPosts(
+  posts.filter((post) => post.id !== leadPost?.id),
+  homepageEditorial.sideStoryIds,
+  2,
+);
+const sideFallback = featuredPosts
+  .filter((post) => post.id !== leadPost?.id && !editorialSide.some((item) => item.id === post.id))
+  .slice(0, Math.max(0, 2 - editorialSide.length));
+const sidePosts = [...editorialSide, ...sideFallback].slice(0, 2);
+
+const latestPosts = posts.slice(0, homepageEditorial.latestCount);
+
+const pinnedTrending = pickEditorialPosts(posts, homepageEditorial.pinnedTrendingIds);
+const trendingFallback = posts
+  .filter((post) => post.data.trending && !pinnedTrending.some((item) => item.id === post.id))
+  .slice(0, Math.max(0, homepageEditorial.trendingCount - pinnedTrending.length));
+const trendingPosts = [...pinnedTrending, ...trendingFallback].slice(0, homepageEditorial.trendingCount);
+
+const featuredLead = leadPost ? {
+  category: leadPost.data.category,
+  title: leadPost.data.title,
+  excerpt: leadPost.data.description,
+  href: getPostUrl(leadPost),
+  image: leadPost.data.image,
+  imageAlt: leadPost.data.imageAlt,
+  date: formatNewsDate(leadPost.data.publishedAt),
+} : null;
+
+const featuredSide = sidePosts.map((post) => ({
+  category: post.data.category,
+  title: post.data.title,
+  href: getPostUrl(post),
+  image: post.data.image,
+  imageAlt: post.data.imageAlt,
+  date: formatNewsDate(post.data.publishedAt),
+}));
+
+const quickCategories = [
+  ['Jobs', '/jobs/'],
+  ['Education', '/education/'],
+  ['Government Schemes', '/schemes/'],
+  ['Training', '/training/'],
+  ['Job Fairs', '/job-fairs/'],
+  ['Community', '/community/'],
+  ['Technology', '/technology/'],
+  ['Career', '/career/'],
+];
+
+const editorialSections = ['Jobs', 'Education', 'Community'];
+const sectionPosts = editorialSections.map((category) => ({
+  category,
+  posts: posts.filter((post) => post.data.category === category).slice(0, 4),
+}));
+
+const coverage = [
+  ['Government Schemes', 'Important schemes, notifications and public information.', '/schemes/'],
+  ['Training', 'Skill development, workshops and training opportunities.', '/training/'],
+  ['Job Fairs', 'Hiring events, career fairs and upcoming opportunities.', '/job-fairs/'],
+  ['Technology', 'Digital news, useful tools and technology updates.', '/technology/'],
+];
+---
+
+<BaseLayout
+  title="DeafJobsIndia — News, Education, Jobs & Community"
+  description="Independent news, jobs, education, government schemes, training and community updates focused on Deaf India."
+>
+  <TopBar />
+  <SiteHeader />
+  <Navbar />
+  <BreakingNews />
+
+  <main id="main-content" tabindex="-1">
+    {featuredLead && <FeaturedNews lead={featuredLead} side={featuredSide} />}
+
+    <section class="border-y border-line bg-surface" aria-label="Browse categories">
+      <div class="container-site flex items-center gap-2 overflow-x-auto py-3.5 [scrollbar-width:none]">
+        <a
+          href="/latest/"
+          class="focus-ring shrink-0 rounded-full bg-brand-700 px-4 py-2 text-[10px] font-black uppercase tracking-[0.1em] text-white transition hover:bg-brand-600"
+        >
+          Latest News
+        </a>
+        {quickCategories.map(([category, href]) => (
+          <CategoryBadge category={category} href={href} />
+        ))}
+      </div>
+    </section>
+
+    <section class="container-site py-10 sm:py-14 lg:py-16">
+      <div class="grid gap-10 lg:grid-cols-[minmax(0,1fr)_330px] xl:grid-cols-[minmax(0,1fr)_360px]">
+        <div>
+          <SectionHeader eyebrow="Newsroom" title="Latest News" href="/latest/" />
+          <div class="rounded-2xl border border-line bg-white px-5 sm:px-6">
+            {latestPosts.map((post) => (
+              <LatestNewsItem
+                category={post.data.category}
+                title={post.data.title}
+                summary={post.data.description}
+                date={formatNewsDate(post.data.publishedAt)}
+                href={getPostUrl(post)}
+                image={post.data.image}
+                imageAlt={post.data.imageAlt}
+              />
+            ))}
+          </div>
+          <div class="mt-6">
+            <a
+              href="/latest/"
+              class="focus-ring inline-flex rounded-lg bg-brand-700 px-5 py-3 text-xs font-black uppercase tracking-[0.08em] text-white transition hover:bg-brand-600"
+            >
+              More Latest News →
+            </a>
+          </div>
+        </div>
+
+        <TrendingSidebar stories={trendingPosts.map((post) => ({
+          category: post.data.category,
+          title: post.data.title,
+          href: getPostUrl(post),
+        }))} />
+      </div>
+    </section>
+
+    <div class="container-site">
+      <AdSlot slot="homepage-infeed" format="leaderboard" />
+    </div>
+
+    <section class="bg-surface py-10 sm:py-14 lg:py-16">
+      <div class="container-site">
+        <SectionHeader eyebrow="Sections" title="News by Category" />
+        <div class="grid gap-6 xl:grid-cols-3">
+          {sectionPosts.map((section) => (
+            <HomeCategorySection category={section.category} posts={section.posts} />
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="container-site py-10 sm:py-14 lg:py-16">
+      <SectionHeader eyebrow="Useful Updates" title="More Coverage" />
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {coverage.map(([category, description, href]) => (
+          <a
+            href={href}
+            class="focus-ring group rounded-2xl border border-line bg-white p-5 transition hover:-translate-y-0.5 hover:border-brand-100 hover:shadow-[0_12px_32px_rgba(91,33,182,.08)]"
+          >
+            <CategoryBadge category={category} />
+            <h2 class="mt-4 text-xl font-black tracking-[-0.03em] text-ink transition group-hover:text-brand-700">
+              {category}
+            </h2>
+            <p class="mt-2 text-sm leading-6 text-muted">{description}</p>
+            <span class="mt-5 inline-flex text-[11px] font-black uppercase tracking-[0.08em] text-brand-700">
+              Explore →
+            </span>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <section class="border-y border-brand-100 bg-brand-50 py-9 sm:py-11">
+      <div class="container-site grid gap-5 md:grid-cols-[1fr_auto] md:items-center">
+        <div>
+          <p class="text-[10px] font-black uppercase tracking-[0.18em] text-brand-700">DeafJobsIndia</p>
+          <h2 class="mt-1 text-2xl font-black tracking-[-0.035em] text-ink">
+            Connecting Deaf Talent with Opportunities
+          </h2>
+          <p class="mt-2 max-w-2xl text-sm leading-6 text-muted">
+            Follow reliable updates on jobs, education, training, schemes, technology and the Deaf community in India.
+          </p>
+        </div>
+        <a
+          href="/about/"
+          class="focus-ring inline-flex w-fit rounded-lg border border-brand-600 bg-white px-5 py-3 text-xs font-black uppercase tracking-[0.08em] text-brand-700 transition hover:bg-brand-700 hover:text-white"
+        >
+          About DeafJobsIndia →
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter />
+</BaseLayout>

@@ -1,0 +1,75 @@
+---
+interface Props {
+  title: string;
+  url: string;
+}
+
+const { title, url } = Astro.props;
+const encodedUrl = encodeURIComponent(url);
+const encodedTitle = encodeURIComponent(title);
+---
+
+<div class="article-share border-y border-line py-5">
+  <div class="flex flex-wrap items-center gap-3">
+    <span class="mr-1 text-[10px] font-black uppercase tracking-[0.16em] text-muted">Share</span>
+
+    <a
+      class="focus-ring inline-flex min-h-10 items-center border border-line px-3 text-xs font-extrabold transition hover:border-brand-500 hover:text-brand-700"
+      href={`https://wa.me/?text=${encodedTitle}%20${encodedUrl}`}
+      target="_blank"
+      rel="noopener noreferrer"
+    >WhatsApp</a>
+
+    <a
+      class="focus-ring inline-flex min-h-10 items-center border border-line px-3 text-xs font-extrabold transition hover:border-brand-500 hover:text-brand-700"
+      href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`}
+      target="_blank"
+      rel="noopener noreferrer"
+    >LinkedIn</a>
+
+    <a
+      class="focus-ring inline-flex min-h-10 items-center border border-line px-3 text-xs font-extrabold transition hover:border-brand-500 hover:text-brand-700"
+      href={`https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`}
+      target="_blank"
+      rel="noopener noreferrer"
+    >X</a>
+
+    <button
+      type="button"
+      class="focus-ring js-share inline-flex min-h-10 items-center border border-line bg-white px-3 text-xs font-extrabold transition hover:border-brand-500 hover:text-brand-700"
+      data-title={title}
+      data-url={url}
+    >
+      Share / Copy
+    </button>
+
+    <span class="js-share-status text-xs font-bold text-muted" aria-live="polite"></span>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('.js-share').forEach((button) => {
+    button.addEventListener('click', async () => {
+      const title = button.dataset.title ?? document.title;
+      const url = button.dataset.url ?? window.location.href;
+      const status = button.parentElement?.querySelector<HTMLElement>('.js-share-status');
+
+      try {
+        if (navigator.share) {
+          await navigator.share({ title, url });
+          if (status) status.textContent = 'Shared';
+        } else {
+          await navigator.clipboard.writeText(url);
+          if (status) status.textContent = 'Link copied';
+        }
+      } catch (error) {
+        if (error instanceof DOMException && error.name === 'AbortError') return;
+        if (status) status.textContent = 'Copy the page URL to share';
+      }
+
+      window.setTimeout(() => {
+        if (status) status.textContent = '';
+      }, 2500);
+    });
+  });
+</script>

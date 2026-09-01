@@ -1,0 +1,72 @@
+---
+import AdSlot from './AdSlot.astro';
+import CategoryBadge from './CategoryBadge.astro';
+
+interface Story {
+  category: string;
+  title: string;
+  href: string;
+}
+
+interface Props {
+  stories: Story[];
+}
+
+const { stories } = Astro.props;
+---
+
+<aside class="lg:sticky lg:top-20 lg:self-start" aria-label="Trending and useful links">
+  <section class="overflow-hidden rounded-2xl border border-line bg-surface">
+    <div class="border-t-4 border-brand-600 p-5 sm:p-6">
+      <div class="flex items-center justify-between border-b border-line pb-3">
+        <div>
+          <p class="text-[9px] font-black uppercase tracking-[0.18em] text-brand-700">Most Read</p>
+          <h2 class="mt-0.5 text-xl font-black tracking-[-0.035em]">Trending</h2>
+        </div>
+        <span class="flex items-center gap-1.5 text-[9px] font-black uppercase tracking-[0.15em] text-brand-700">
+          <span class="h-1.5 w-1.5 rounded-full bg-brand-600"></span> Now
+        </span>
+      </div>
+
+      <ol class="divide-y divide-line">
+        {stories.map((story, index) => (
+          <li class="py-4">
+            <a href={story.href} class="focus-ring group grid grid-cols-[38px_1fr] gap-3">
+              <span class="text-3xl font-black leading-none text-brand-100 transition group-hover:text-brand-500">
+                {String(index + 1).padStart(2, '0')}
+              </span>
+              <span>
+                <CategoryBadge category={story.category} />
+                <span class="mt-2 block text-sm font-black leading-5 text-ink transition group-hover:text-brand-700">
+                  {story.title}
+                </span>
+              </span>
+            </a>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <AdSlot slot="sidebar-rectangle" format="rectangle" class="mt-5" />
+
+  <section class="mt-5 rounded-2xl border border-line bg-white p-5 sm:p-6">
+    <p class="text-[9px] font-black uppercase tracking-[0.18em] text-brand-700">Explore</p>
+    <h2 class="mt-1 text-xl font-black tracking-[-0.03em] text-ink">More from DeafJobsIndia</h2>
+    <div class="mt-4 grid grid-cols-2 gap-2">
+      {[
+        ['Topics', '/topics/'],
+        ['Career', '/career/'],
+        ['Training', '/training/'],
+        ['Job Fairs', '/job-fairs/'],
+      ].map(([label, href]) => (
+        <a
+          href={href}
+          class="focus-ring rounded-lg border border-line bg-surface px-3 py-3 text-center text-[11px] font-black uppercase tracking-[0.06em] text-ink transition hover:border-brand-500 hover:bg-brand-50 hover:text-brand-700"
+        >
+          {label}
+        </a>
+      ))}
+    </div>
+  </section>
+</aside>

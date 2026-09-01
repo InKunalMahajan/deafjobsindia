@@ -1,0 +1,82 @@
+---
+import BrandLogo from './BrandLogo.astro';
+import { siteConfig } from '../data/site';
+
+const columns = [
+  {
+    title: 'News',
+    links: [
+      ['Latest News', '/latest/'],
+      ['Jobs', '/jobs/'],
+      ['Education', '/education/'],
+      ['Government Schemes', '/schemes/'],
+    ],
+  },
+  {
+    title: 'Community',
+    links: [
+      ['Community', '/community/'],
+      ['Training', '/training/'],
+      ['Job Fairs', '/job-fairs/'],
+      ['Technology', '/technology/'],
+      ['Topics', '/topics/'],
+    ],
+  },
+  {
+    title: 'Information',
+    links: [
+      ['About', '/about/'],
+      ['Contact', '/contact/'],
+      ['Advertise', '/advertise/'],
+      ['Privacy', '/privacy/'],
+      ['Disclaimer', '/disclaimer/'],
+      ['RSS Feed', '/rss.xml'],
+    ],
+  },
+];
+
+const socialLinks = Object.entries(siteConfig.social)
+  .filter(([, href]) => Boolean(href))
+  .map(([label, href]) => ({ label, href }));
+---
+
+<footer class="mt-16 border-t-4 border-brand-500 bg-brand-700 text-white">
+  <div class="container-site py-11 sm:py-14">
+    <div class="grid gap-10 border-b border-white/10 pb-10 lg:grid-cols-[1.2fr_2fr]">
+      <div>
+        <BrandLogo inverse />
+        <p class="mt-5 max-w-md text-sm leading-6 text-white/60">
+          News, jobs, education, training, schemes and community updates for Deaf India.
+        </p>
+
+        {socialLinks.length > 0 && (
+          <div class="mt-5 flex flex-wrap gap-2">
+            {socialLinks.map((link) => (
+              <a href={link.href} class="focus-ring border border-white/15 px-3 py-2 text-[10px] font-black uppercase tracking-[0.1em] text-white/75 hover:border-white/40 hover:text-white">
+                {link.label}
+              </a>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div class="grid gap-8 sm:grid-cols-3">
+        {columns.map((column) => (
+          <div>
+            <h2 class="border-l-[3px] border-purple-200 pl-3 text-[10px] font-black uppercase tracking-[0.18em] text-white/45">{column.title}</h2>
+            <ul class="mt-5 space-y-3 text-sm font-semibold">
+              {column.links.map(([label, href]) => (
+                <li><a class="focus-ring transition hover:text-white" href={href}>{label}</a></li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <div class="flex flex-col gap-3 pt-6 text-[11px] text-white/40 sm:flex-row sm:items-center sm:justify-between">
+      <p>© 2026 DeafJobsIndia. All rights reserved.</p>
+      <p>Connecting Deaf Talent with Opportunities</p>
+    </div>
+  </div>
+</footer>

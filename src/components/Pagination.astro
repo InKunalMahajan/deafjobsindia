@@ -1,0 +1,69 @@
+---
+interface Props {
+  currentPage: number;
+  totalPages: number;
+  basePath: string;
+}
+
+const { currentPage, totalPages, basePath } = Astro.props;
+
+function pageUrl(page: number) {
+  const normalized = basePath.endsWith('/') ? basePath : `${basePath}/`;
+  return page <= 1 ? normalized : `${normalized}${page}/`;
+}
+
+const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1)
+  .filter((page) => page === 1 || page === totalPages || Math.abs(page - currentPage) <= 1);
+---
+
+{totalPages > 1 && (
+  <nav class="mt-12 border-t border-line pt-7" aria-label="Pagination">
+    <div class="flex flex-wrap items-center justify-between gap-4">
+      <div>
+        {currentPage > 1 ? (
+          <a
+            href={pageUrl(currentPage - 1)}
+            rel="prev"
+            class="focus-ring inline-flex min-h-11 items-center border border-line bg-white px-4 text-sm font-extrabold text-ink transition hover:border-brand-500 hover:text-brand-700"
+          >
+            ← Previous
+          </a>
+        ) : <span />}
+      </div>
+
+      <div class="flex flex-wrap items-center justify-center gap-2">
+        {pageNumbers.map((page, index) => (
+          <>
+            {index > 0 && page - pageNumbers[index - 1] > 1 && (
+              <span class="px-1 text-sm font-bold text-muted" aria-hidden="true">…</span>
+            )}
+            <a
+              href={pageUrl(page)}
+              aria-current={page === currentPage ? 'page' : undefined}
+              class:list={[
+                'focus-ring inline-flex h-10 min-w-10 items-center justify-center border px-3 text-sm font-black transition',
+                page === currentPage
+                  ? 'border-brand-600 bg-brand-600 text-white'
+                  : 'border-line bg-white text-ink hover:border-brand-500 hover:text-brand-700',
+              ]}
+            >
+              {page}
+            </a>
+          </>
+        ))}
+      </div>
+
+      <div>
+        {currentPage < totalPages ? (
+          <a
+            href={pageUrl(currentPage + 1)}
+            rel="next"
+            class="focus-ring inline-flex min-h-11 items-center border border-line bg-white px-4 text-sm font-extrabold text-ink transition hover:border-brand-500 hover:text-brand-700"
+          >
+            Next →
+          </a>
+        ) : <span />}
+      </div>
+    </div>
+  </nav>
+)}

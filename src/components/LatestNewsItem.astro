@@ -1,0 +1,48 @@
+---
+import CategoryBadge from './CategoryBadge.astro';
+
+interface Props {
+  category: string;
+  title: string;
+  summary: string;
+  date: string;
+  href: string;
+  image: string;
+  imageAlt?: string;
+}
+
+const { category, title, summary, date, href, image, imageAlt = '' } = Astro.props;
+---
+
+<article class="border-b border-line py-6 first:pt-0 last:border-b-0">
+  <a href={href} class="focus-ring group grid gap-4 sm:grid-cols-[180px_1fr] lg:grid-cols-[210px_1fr]">
+    <div class="aspect-[16/10] overflow-hidden rounded-xl bg-surface sm:aspect-[4/3]">
+      <img
+        src={image}
+        alt={imageAlt}
+        width="440"
+        height="330"
+        loading="lazy"
+        decoding="async"
+        class="h-full w-full object-cover transition duration-300 group-hover:scale-[1.025]"
+      />
+    </div>
+
+    <div class="self-center">
+      <div class="flex flex-wrap items-center gap-2">
+        <CategoryBadge category={category} />
+        <time class="text-[10px] font-bold uppercase tracking-[0.08em] text-muted">{date}</time>
+      </div>
+
+      <h3 class="mt-2.5 text-lg font-black leading-[1.12] tracking-[-0.03em] text-ink transition group-hover:text-brand-700 sm:text-xl">
+        {title}
+      </h3>
+
+      <p class="mt-2 line-clamp-2 text-sm leading-6 text-muted">{summary}</p>
+
+      <span class="mt-3 inline-flex text-[11px] font-black uppercase tracking-[0.08em] text-brand-700">
+        Read story →
+      </span>
+    </div>
+  </a>
+</article>

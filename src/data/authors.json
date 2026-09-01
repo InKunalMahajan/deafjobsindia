@@ -1,0 +1,9 @@
+{
+  "desk": {
+    "id": "desk",
+    "name": "DeafJobsIndia Desk",
+    "role": "Editorial Desk",
+    "bio": "The DeafJobsIndia editorial desk publishes verified news, opportunities, education and community updates.",
+    "avatar": "/images/author-desk.svg"
+  }
+}

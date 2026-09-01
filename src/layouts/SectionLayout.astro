@@ -1,0 +1,51 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import TopBar from '../components/TopBar.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import Navbar from '../components/Navbar.astro';
+import BreakingNews from '../components/BreakingNews.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+
+interface BreadcrumbItem {
+  label: string;
+  href?: string;
+}
+
+interface Props {
+  title: string;
+  description: string;
+  eyebrow?: string;
+  noindex?: boolean;
+  breadcrumbs?: BreadcrumbItem[];
+}
+
+const {
+  title,
+  description,
+  eyebrow = 'DeafJobsIndia',
+  noindex = false,
+  breadcrumbs = [{ label: 'Home', href: '/' }, { label: title }],
+} = Astro.props;
+---
+
+<BaseLayout title={`${title} — DeafJobsIndia`} description={description} noindex={noindex}>
+  <TopBar />
+  <SiteHeader />
+  <Navbar />
+  <BreakingNews />
+  <main id="main-content" tabindex="-1">
+    <section class="container-site py-10 sm:py-14 lg:py-16">
+      <div class="max-w-3xl">
+        <Breadcrumbs items={breadcrumbs} />
+        <p class="mt-6 text-[11px] font-black uppercase tracking-[0.18em] text-brand-700">{eyebrow}</p>
+        <h1 class="mt-2 text-3xl font-black tracking-[-0.045em] text-ink sm:text-4xl">{title}</h1>
+        <p class="mt-4 text-base leading-7 text-muted sm:text-base">{description}</p>
+      </div>
+      <div class="mt-9 border-t border-line pt-8 sm:mt-10">
+        <slot />
+      </div>
+    </section>
+  </main>
+  <SiteFooter />
+</BaseLayout>

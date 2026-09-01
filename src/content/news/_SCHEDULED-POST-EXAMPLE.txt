@@ -1,0 +1,22 @@
+---
+title: "Scheduled Story Example"
+description: "This example shows how to prepare a future story."
+category: "Community"
+publishedAt: 2026-09-10T08:00:00+05:30
+image: "/images/featured.svg"
+imageAlt: "Scheduled story image"
+author: "DeafJobsIndia Desk"
+authorId: desk
+status: scheduled
+tags:
+  - Community
+featured: false
+trending: false
+breaking: false
+draft: false
+demo: false
+---
+
+This story becomes eligible for publication only after its `publishedAt` time.
+
+Because DeafJobsIndia is statically generated with Astro, the site must be rebuilt/deployed after that time before the scheduled story appears publicly.

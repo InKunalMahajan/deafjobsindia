@@ -1,0 +1,118 @@
+---
+const items = [
+  { label: 'Home', href: '/' },
+  { label: 'Latest', href: '/latest/' },
+  { label: 'Jobs', href: '/jobs/' },
+  { label: 'Education', href: '/education/' },
+  { label: 'Govt Schemes', href: '/schemes/' },
+  { label: 'Training', href: '/training/' },
+  { label: 'Job Fairs', href: '/job-fairs/' },
+  { label: 'Community', href: '/community/' },
+  { label: 'Technology', href: '/technology/' },
+  { label: 'Career', href: '/career/' },
+];
+
+const currentPath = Astro.url.pathname;
+const isActive = (href: string) => href === '/' ? currentPath === '/' : currentPath.startsWith(href);
+---
+
+<nav class="sticky top-0 z-50 border-y border-brand-600 bg-brand-700 text-white shadow-[0_4px_18px_rgba(91,33,182,.16)]" aria-label="Main navigation">
+  <div class="container-site">
+    <div class="flex min-h-13 items-center justify-between gap-3">
+      <div class="hidden min-w-0 flex-1 items-stretch overflow-x-auto [scrollbar-width:none] lg:flex">
+        {items.map((item) => (
+          <a
+            href={item.href}
+            class:list={[
+              'focus-ring relative flex shrink-0 items-center px-3 py-4 text-[11px] font-black uppercase tracking-[0.065em] transition hover:bg-white/10 xl:px-4',
+              isActive(item.href) ? 'bg-white/10 text-white' : 'text-white/80',
+            ]}
+          >
+            {item.label}
+            {isActive(item.href) && <span class="absolute inset-x-3 bottom-0 h-[3px] rounded-t-full bg-white"></span>}
+          </a>
+        ))}
+      </div>
+
+      <button
+        id="menu-toggle"
+        type="button"
+        class="focus-ring inline-flex min-h-12 items-center gap-2 px-1 text-xs font-black uppercase tracking-[0.1em] lg:hidden"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+      >
+        <svg aria-hidden="true" viewBox="0 0 24 24" class="size-5 fill-none stroke-current" stroke-width="2">
+          <path d="M4 7h16M4 12h16M4 17h16" />
+        </svg>
+        Menu
+      </button>
+
+      <a href="/latest/" class="focus-ring text-[11px] font-black uppercase tracking-[0.12em] text-white/85 lg:hidden">Latest</a>
+
+      <button
+        id="search-toggle"
+        class="focus-ring inline-flex size-10 shrink-0 items-center justify-center rounded-full border border-white/15 transition hover:bg-white/10"
+        aria-label="Open search"
+        aria-expanded="false"
+        aria-controls="search-panel"
+      >
+        <svg aria-hidden="true" viewBox="0 0 24 24" class="size-5 fill-none stroke-current" stroke-width="2">
+          <circle cx="11" cy="11" r="6" />
+          <path d="m16 16 4 4" />
+        </svg>
+      </button>
+    </div>
+
+    <div id="mobile-menu" class="hidden border-t border-white/10 pb-4 lg:hidden">
+      <div class="grid grid-cols-2 gap-1.5 pt-3 sm:grid-cols-3">
+        {items.map((item) => (
+          <a
+            href={item.href}
+            class:list={[
+              'focus-ring rounded-lg border-l-2 px-3 py-3 text-sm font-bold transition hover:bg-white/10',
+              isActive(item.href) ? 'border-white bg-white/10 text-white' : 'border-transparent text-white/78',
+            ]}
+          >
+            {item.label}
+          </a>
+        ))}
+      </div>
+    </div>
+
+    <div id="search-panel" class="hidden border-t border-white/10 py-4">
+      <form action="/search/" class="flex gap-2">
+        <label for="site-search" class="sr-only">Search DeafJobsIndia</label>
+        <input
+          id="site-search"
+          name="q"
+          type="search"
+          placeholder="Search jobs, education, schemes, community..."
+          class="min-w-0 flex-1 rounded-lg bg-white px-4 py-3 text-sm font-semibold text-ink outline-none placeholder:text-muted"
+        />
+        <button type="submit" class="focus-ring rounded-lg border border-white bg-white px-5 py-3 text-xs font-black uppercase tracking-wide text-brand-700 transition hover:bg-brand-600 hover:text-white">
+          Search
+        </button>
+      </form>
+    </div>
+  </div>
+</nav>
+
+<script>
+  const menuToggle = document.querySelector('#menu-toggle');
+  const mobileMenu = document.querySelector('#mobile-menu');
+  const searchToggle = document.querySelector('#search-toggle');
+  const searchPanel = document.querySelector('#search-panel');
+
+  menuToggle?.addEventListener('click', () => {
+    const isOpen = menuToggle.getAttribute('aria-expanded') === 'true';
+    menuToggle.setAttribute('aria-expanded', String(!isOpen));
+    mobileMenu?.classList.toggle('hidden');
+  });
+
+  searchToggle?.addEventListener('click', () => {
+    const isOpen = searchToggle.getAttribute('aria-expanded') === 'true';
+    searchToggle.setAttribute('aria-expanded', String(!isOpen));
+    searchPanel?.classList.toggle('hidden');
+    if (!isOpen) document.querySelector<HTMLInputElement>('#site-search')?.focus();
+  });
+</script>
