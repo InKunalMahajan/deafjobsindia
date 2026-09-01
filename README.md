@@ -1,4 +1,4 @@
-# DeafJobsIndia — Step 14 GitHub → Hostinger
+# DeafJobsIndia — 
 
 DeafJobsIndia is a custom Astro + Tailwind CSS digital newsroom for Deaf India.
 
