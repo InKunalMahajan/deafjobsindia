@@ -2,7 +2,7 @@ import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 
-const site = process.env.SITE_URL || 'https://www.deafjobsindia.com';
+const site = process.env.SITE_URL || 'https://deafjobsindia.in';
 
 export default defineConfig({
   site,
