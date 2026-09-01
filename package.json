@@ -1,6 +1,6 @@
 {
   "name": "deafjobsindia",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -12,6 +12,7 @@
     "content:audit": "node scripts/content-audit.mjs",
     "release:scheduled": "node scripts/release-scheduled.mjs",
     "verify:dist": "node scripts/verify-dist.mjs",
+    "launch:audit": "node scripts/launch-audit.mjs",
     "post:publish": "node scripts/publish-post.mjs",
     "post:schedule": "node scripts/schedule-post.mjs",
     "newsroom:status": "node scripts/newsroom-status.mjs"
