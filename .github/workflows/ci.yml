@@ -34,6 +34,11 @@ jobs:
         run: npm run build
         env:
           SITE_URL: https://deafjobsindia.in
+          PUBLIC_GOOGLE_SITE_VERIFICATION: ${{ vars.PUBLIC_GOOGLE_SITE_VERIFICATION }}
+          PUBLIC_GA_MEASUREMENT_ID: ${{ vars.PUBLIC_GA_MEASUREMENT_ID }}
 
       - name: Verify production output
         run: npm run verify:dist
+
+      - name: Run launch audit
+        run: npm run launch:audit
