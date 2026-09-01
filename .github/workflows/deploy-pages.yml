@@ -1,0 +1,112 @@
+name: Deploy DeafJobsIndia to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+  schedule:
+    - cron: "23 * * * *"
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: deafjobsindia-pages-production
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build site
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    outputs:
+      should_deploy: ${{ steps.decision.outputs.should_deploy }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22.12.0"
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Release due scheduled stories
+        id: release
+        if: github.event_name == 'schedule'
+        shell: bash
+        run: |
+          npm run release:scheduled
+
+          if git diff --quiet -- src/content/news; then
+            echo "released=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "released=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Decide whether to deploy
+        id: decision
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "schedule" ] && [ "${{ steps.release.outputs.released }}" != "true" ]; then
+            echo "should_deploy=false" >> "$GITHUB_OUTPUT"
+            echo "No scheduled stories are due."
+          else
+            echo "should_deploy=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Audit newsroom content
+        if: steps.decision.outputs.should_deploy == 'true'
+        run: npm run content:audit
+
+      - name: Build Astro site
+        if: steps.decision.outputs.should_deploy == 'true'
+        run: npm run build
+        env:
+          SITE_URL: https://deafjobsindia.in
+
+      - name: Verify production output
+        if: steps.decision.outputs.should_deploy == 'true'
+        run: npm run verify:dist
+
+      - name: Configure GitHub Pages
+        if: steps.decision.outputs.should_deploy == 'true'
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        if: steps.decision.outputs.should_deploy == 'true'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist
+
+      - name: Save released scheduled stories
+        if: github.event_name == 'schedule' && steps.release.outputs.released == 'true'
+        shell: bash
+        run: |
+          git config user.name "deafjobsindia-publisher"
+          git config user.email "actions@users.noreply.github.com"
+          git add src/content/news
+          git commit -m "Publish scheduled stories"
+          git push
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    if: needs.build.outputs.should_deploy == 'true'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
