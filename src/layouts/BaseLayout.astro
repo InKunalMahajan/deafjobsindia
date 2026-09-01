@@ -21,9 +21,12 @@ const {
   noindex = false,
 } = Astro.props;
 
-const site = Astro.site ?? new URL(Astro.url.origin);
+const site = Astro.site ?? new URL('https://deafjobsindia.in');
 const canonicalUrl = canonical ? new URL(canonical, site) : new URL(Astro.url.pathname, site);
 const imageUrl = new URL(image, site);
+const googleSiteVerification = import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION?.trim();
+const gaMeasurementId = import.meta.env.PUBLIC_GA_MEASUREMENT_ID?.trim();
+
 const websiteSchema = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
@@ -36,6 +39,15 @@ const websiteSchema = {
     'query-input': 'required name=search_term_string',
   },
 };
+
+const organizationSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'DeafJobsIndia',
+  url: site.href,
+  logo: new URL('/images/deafjobsindia-logo.svg', site).href,
+  description: 'Independent news, jobs, education, training, schemes and community updates for Deaf India.',
+};
 ---
 
 <!doctype html>
@@ -47,10 +59,19 @@ const websiteSchema = {
     <meta name="color-scheme" content="light" />
     <meta name="description" content={description} />
     <meta name="generator" content={Astro.generator} />
-    {noindex && <meta name="robots" content="noindex,follow" />}
+    <meta
+      name="robots"
+      content={noindex
+        ? 'noindex,follow'
+        : 'index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1'}
+    />
+    {googleSiteVerification && (
+      <meta name="google-site-verification" content={googleSiteVerification} />
+    )}
 
     <link rel="canonical" href={canonicalUrl.href} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="manifest" href="/site.webmanifest" />
     <link rel="alternate" type="application/rss+xml" title="DeafJobsIndia RSS" href="/rss.xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />
 
@@ -68,6 +89,18 @@ const websiteSchema = {
     <meta name="twitter:image" content={imageUrl.href} />
 
     <script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />
+
+    {gaMeasurementId && (
+      <>
+        <script async src={`https://www.googletagmanager.com/gtag/js?id=${gaMeasurementId}`}></script>
+        <script
+          is:inline
+          set:html={`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${gaMeasurementId.replace(/[^A-Za-z0-9-]/g, '')}');`}
+        ></script>
+      </>
+    )}
+
     <slot name="head" />
     <title>{title}</title>
   </head>
