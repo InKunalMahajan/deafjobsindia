@@ -9,15 +9,15 @@ const required = [
   'robots.txt',
   'rss.xml',
   'sitemap-index.xml',
-  '.htaccess',
+  'CNAME',
 ];
-
-const missing = required.filter((name) => !fs.existsSync(path.join(dist, name)));
 
 if (!fs.existsSync(dist)) {
   console.error('dist/ does not exist. Run npm run build first.');
   process.exit(1);
 }
+
+const missing = required.filter((name) => !fs.existsSync(path.join(dist, name)));
 
 if (missing.length) {
   console.error('Production verification failed. Missing build artifacts:');
