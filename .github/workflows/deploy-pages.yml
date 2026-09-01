@@ -72,10 +72,16 @@ jobs:
         run: npm run build
         env:
           SITE_URL: https://deafjobsindia.in
+          PUBLIC_GOOGLE_SITE_VERIFICATION: ${{ vars.PUBLIC_GOOGLE_SITE_VERIFICATION }}
+          PUBLIC_GA_MEASUREMENT_ID: ${{ vars.PUBLIC_GA_MEASUREMENT_ID }}
 
       - name: Verify production output
         if: steps.decision.outputs.should_deploy == 'true'
         run: npm run verify:dist
+
+      - name: Run launch audit
+        if: steps.decision.outputs.should_deploy == 'true'
+        run: npm run launch:audit
 
       - name: Configure GitHub Pages
         if: steps.decision.outputs.should_deploy == 'true'
