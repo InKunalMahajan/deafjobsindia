@@ -2,8 +2,6 @@ import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 
-import node from '@astrojs/node';
-
 const site = process.env.SITE_URL || 'https://deafjobsindia.in';
 
 export default defineConfig({
@@ -20,8 +18,4 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
   },
-
-  adapter: node({
-    mode: 'standalone',
-  }),
 });
