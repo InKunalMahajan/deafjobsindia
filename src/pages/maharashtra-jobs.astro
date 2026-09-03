@@ -1,0 +1,30 @@
+---
+import SeoJobsLanding from '../components/SeoJobsLanding.astro';
+---
+
+<SeoJobsLanding
+  title="Jobs for Deaf & PwD Candidates in Maharashtra"
+  description="Latest verified job and recruitment updates in Maharashtra for Deaf, Hard of Hearing and PwD candidates, including government opportunities, eligibility, deadlines and official sources."
+  eyebrow="Maharashtra Jobs"
+  intro={[
+    'Find job and recruitment updates connected to Maharashtra for Deaf, Hard of Hearing and PwD candidates. This page is designed to collect relevant opportunities from Maharashtra government bodies, public-sector recruitment and employers when verified information is available.',
+    'For every opportunity, candidates should confirm the work location, disability suitability, reservation conditions and application instructions in the official notification before applying.',
+  ]}
+  highlights={[
+    'Maharashtra government recruitment updates',
+    'MPSC and state-level opportunities',
+    'Jobs connected to Pune, Mumbai and other Maharashtra locations',
+    'Deaf, Hard of Hearing and PwBD eligibility when stated',
+    'Application deadlines and selection details',
+    'Links to official recruitment sources',
+  ]}
+  matchTags={['Maharashtra', 'MPSC', 'Pune', 'Mumbai']}
+  matchTerms={['maharashtra', 'mpsc', 'pune', 'mumbai', 'nagpur', 'nashik', 'thane']}
+  relatedLinks={[
+    { label: 'Deaf Jobs', href: '/deaf-jobs/', description: 'Jobs relevant specifically to Deaf and Hard of Hearing candidates.' },
+    { label: 'Government Jobs', href: '/government-jobs/', description: 'Central and state government recruitment updates.' },
+    { label: 'PwD Jobs', href: '/pwd-jobs/', description: 'Recruitment with PwD or PwBD eligibility and reservation.' },
+    { label: 'All Jobs', href: '/jobs/', description: 'Browse all published employment and recruitment updates.' },
+  ]}
+  emptyMessage="No verified Maharashtra-specific job updates are published yet. New Maharashtra opportunities will appear here as they are added."
+/>
