@@ -1,0 +1,103 @@
+---
+import { getCollection } from 'astro:content';
+import SectionLayout from '../layouts/SectionLayout.astro';
+import NewsArchive from './NewsArchive.astro';
+import { getPublicPosts } from '../utils/news';
+
+interface RelatedLink {
+  label: string;
+  href: string;
+  description: string;
+}
+
+interface Props {
+  title: string;
+  description: string;
+  eyebrow: string;
+  intro: string[];
+  highlights: string[];
+  matchTags?: string[];
+  matchTerms?: string[];
+  relatedLinks?: RelatedLink[];
+  emptyMessage?: string;
+}
+
+const {
+  title,
+  description,
+  eyebrow,
+  intro,
+  highlights,
+  matchTags = [],
+  matchTerms = [],
+  relatedLinks = [],
+  emptyMessage = 'No matching job updates are published yet. Check again for verified opportunities.',
+} = Astro.props;
+
+const normalizedTags = matchTags.map((tag) => tag.toLowerCase());
+const normalizedTerms = matchTerms.map((term) => term.toLowerCase());
+
+const posts = getPublicPosts(await getCollection('news')).filter((post) => {
+  if (post.data.category !== 'Jobs') return false;
+
+  const postTags = post.data.tags.map((tag) => tag.toLowerCase());
+  const searchable = [
+    post.data.title,
+    post.data.description,
+    post.data.location ?? '',
+    ...post.data.tags,
+  ].join(' ').toLowerCase();
+
+  const tagMatch = normalizedTags.some((tag) => postTags.includes(tag));
+  const termMatch = normalizedTerms.some((term) => searchable.includes(term));
+
+  return tagMatch || termMatch;
+});
+---
+
+<SectionLayout title={title} description={description} eyebrow={eyebrow}>
+  <div class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_300px] lg:items-start">
+    <div>
+      <div class="space-y-4 text-sm leading-7 text-muted sm:text-base">
+        {intro.map((paragraph) => <p>{paragraph}</p>)}
+      </div>
+
+      <section class="mt-8 rounded-2xl border border-line bg-surface p-5 sm:p-6" aria-labelledby="what-you-find">
+        <h2 id="what-you-find" class="text-xl font-black tracking-[-0.03em] text-ink">What you can find here</h2>
+        <ul class="mt-4 grid gap-3 text-sm leading-6 text-muted sm:grid-cols-2">
+          {highlights.map((item) => (
+            <li class="flex gap-2">
+              <span aria-hidden="true" class="mt-0.5 font-black text-brand-700">✓</span>
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+    </div>
+
+    {relatedLinks.length > 0 && (
+      <aside class="rounded-2xl border border-line bg-white p-5" aria-labelledby="related-job-searches">
+        <h2 id="related-job-searches" class="text-base font-black text-ink">Related job searches</h2>
+        <div class="mt-4 divide-y divide-line">
+          {relatedLinks.map((link) => (
+            <a href={link.href} class="focus-ring group block py-4 first:pt-0 last:pb-0">
+              <span class="text-sm font-extrabold text-ink transition group-hover:text-brand-700">{link.label} →</span>
+              <span class="mt-1 block text-xs leading-5 text-muted">{link.description}</span>
+            </a>
+          ))}
+        </div>
+      </aside>
+    )}
+  </div>
+
+  <section class="mt-12 border-t border-line pt-9" aria-labelledby="latest-matching-jobs">
+    <div class="mb-6 flex flex-wrap items-end justify-between gap-3">
+      <div>
+        <p class="text-[10px] font-black uppercase tracking-[0.16em] text-brand-700">Verified updates</p>
+        <h2 id="latest-matching-jobs" class="mt-1 text-2xl font-black tracking-[-0.035em] text-ink">Latest matching jobs</h2>
+      </div>
+      <p class="text-sm font-semibold text-muted">{posts.length} {posts.length === 1 ? 'update' : 'updates'}</p>
+    </div>
+    <NewsArchive posts={posts} emptyMessage={emptyMessage} />
+  </section>
+</SectionLayout>
