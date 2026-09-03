@@ -1,9 +1,9 @@
 export const homepageEditorial = {
-  leadStoryId: 'deafjobsindia-newsroom-launch',
-  sideStoryIds: ['jobs-news-format', 'education-news-format'],
-  breakingStoryId: 'deafjobsindia-newsroom-launch',
+  leadStoryId: 'upsc-epfo-assistant-provident-fund-commissioner-recruitment-2026',
+  sideStoryIds: ['deafjobsindia-newsroom-launch', 'education-news-format'],
+  breakingStoryId: 'upsc-epfo-assistant-provident-fund-commissioner-recruitment-2026',
   pinnedTrendingIds: [
-    'jobs-news-format',
+    'upsc-epfo-assistant-provident-fund-commissioner-recruitment-2026',
     'government-schemes-format',
     'training-skills-format',
   ],
