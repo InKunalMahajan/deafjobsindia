@@ -31,12 +31,12 @@ const verifiedDate = verifiedAt
   <aside class="mt-9 rounded-2xl border border-brand-100 bg-brand-50 p-5 sm:p-6" aria-labelledby="source-heading">
     <div class="flex flex-wrap items-start justify-between gap-3">
       <div>
-        <p class="text-[9px] font-black uppercase tracking-[0.18em] text-brand-700">Editorial transparency</p>
-        <h2 id="source-heading" class="mt-1 text-lg font-black tracking-[-0.025em] text-ink">Source & verification</h2>
+        <p class="text-[10px] font-bold uppercase tracking-[0.14em] text-brand-700">Editorial transparency</p>
+        <h2 id="source-heading" class="mt-1 text-lg font-extrabold tracking-[-0.02em] text-ink">Source & verification</h2>
       </div>
 
       {verificationStatus === 'verified' && (
-        <span class="inline-flex items-center gap-1.5 rounded-full border border-brand-100 bg-white px-3 py-1.5 text-[9px] font-black uppercase tracking-[0.1em] text-brand-700">
+        <span class="inline-flex items-center gap-1.5 rounded-full border border-brand-100 bg-white px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.08em] text-brand-700">
           <span class="grid h-4 w-4 place-items-center rounded-full bg-brand-700 text-[9px] text-white" aria-hidden="true">✓</span>
           Verified
         </span>
@@ -46,22 +46,22 @@ const verifiedDate = verifiedAt
     <dl class="mt-4 grid gap-3 text-sm sm:grid-cols-2">
       {sourceName && (
         <div>
-          <dt class="text-[9px] font-black uppercase tracking-[0.13em] text-muted">Source</dt>
-          <dd class="mt-1 font-bold text-ink">{sourceName}</dd>
+          <dt class="text-[10px] font-bold uppercase tracking-[0.1em] text-muted">Source</dt>
+          <dd class="mt-1 font-semibold text-ink">{sourceName}</dd>
         </div>
       )}
 
       {sourceType && (
         <div>
-          <dt class="text-[9px] font-black uppercase tracking-[0.13em] text-muted">Source type</dt>
-          <dd class="mt-1 font-bold text-ink">{sourceType}</dd>
+          <dt class="text-[10px] font-bold uppercase tracking-[0.1em] text-muted">Source type</dt>
+          <dd class="mt-1 font-semibold text-ink">{sourceType}</dd>
         </div>
       )}
 
       {verifiedAt && (
         <div>
-          <dt class="text-[9px] font-black uppercase tracking-[0.13em] text-muted">Verified</dt>
-          <dd class="mt-1 font-bold text-ink">{verifiedDate}</dd>
+          <dt class="text-[10px] font-bold uppercase tracking-[0.1em] text-muted">Verified</dt>
+          <dd class="mt-1 font-semibold text-ink">{verifiedDate}</dd>
         </div>
       )}
     </dl>
@@ -73,9 +73,10 @@ const verifiedDate = verifiedAt
         href={sourceUrl}
         target="_blank"
         rel="noopener noreferrer"
-        class="focus-ring mt-5 inline-flex rounded-lg bg-brand-700 px-4 py-2.5 text-[10px] font-black uppercase tracking-[0.08em] text-white transition hover:bg-brand-600"
+        class="focus-ring mt-5 inline-flex items-center gap-2 rounded-lg border border-brand-600 bg-white px-4 py-2.5 text-sm font-semibold text-brand-700 transition hover:bg-brand-50 hover:text-brand-600"
       >
-        Open official/source link ↗
+        <span>Open official source</span>
+        <span aria-hidden="true">↗</span>
       </a>
     )}
   </aside>
