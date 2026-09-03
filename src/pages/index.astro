@@ -64,6 +64,13 @@ const featuredSide = sidePosts.map((post) => ({
   date: formatNewsDate(post.data.publishedAt),
 }));
 
+const seoJobLinks = [
+  ['Government Jobs', '/government-jobs/'],
+  ['Deaf Jobs', '/deaf-jobs/'],
+  ['PwD Jobs', '/pwd-jobs/'],
+  ['Maharashtra Jobs', '/maharashtra-jobs/'],
+];
+
 const quickCategories = [
   ['Jobs', '/jobs/'],
   ['Education', '/education/'],
@@ -90,8 +97,8 @@ const coverage = [
 ---
 
 <BaseLayout
-  title="DeafJobsIndia — News, Education, Jobs & Community"
-  description="Independent news, jobs, education, government schemes, training and community updates focused on Deaf India."
+  title="DeafJobsIndia – Jobs for Deaf & Hard of Hearing in India"
+  description="Latest verified government and private job updates for Deaf, Hard of Hearing and PwD candidates in India. Find eligibility, reservation details, deadlines and official application links."
 >
   <TopBar />
   <SiteHeader />
@@ -101,7 +108,7 @@ const coverage = [
   <main id="main-content" tabindex="-1">
     {featuredLead && <FeaturedNews lead={featuredLead} side={featuredSide} />}
 
-    <section class="border-y border-line bg-surface" aria-label="Browse categories">
+    <section class="border-y border-line bg-surface" aria-label="Browse jobs and categories">
       <div class="container-site flex items-center gap-2 overflow-x-auto py-3.5 [scrollbar-width:none]">
         <a
           href="/latest/"
@@ -109,6 +116,14 @@ const coverage = [
         >
           Latest News
         </a>
+        {seoJobLinks.map(([label, href]) => (
+          <a
+            href={href}
+            class="focus-ring shrink-0 rounded-full border border-brand-200 bg-white px-4 py-2 text-[10px] font-black uppercase tracking-[0.08em] text-brand-700 transition hover:border-brand-600 hover:bg-brand-50"
+          >
+            {label}
+          </a>
+        ))}
         {quickCategories.map(([category, href]) => (
           <CategoryBadge category={category} href={href} />
         ))}
@@ -191,10 +206,10 @@ const coverage = [
         <div>
           <p class="text-[10px] font-black uppercase tracking-[0.18em] text-brand-700">DeafJobsIndia</p>
           <h2 class="mt-1 text-2xl font-black tracking-[-0.035em] text-ink">
-            Connecting Deaf Talent with Opportunities
+            Verified Jobs and Opportunities for Deaf India
           </h2>
           <p class="mt-2 max-w-2xl text-sm leading-6 text-muted">
-            Follow reliable updates on jobs, education, training, schemes, technology and the Deaf community in India.
+            Follow verified government and private job updates for Deaf, Hard of Hearing and PwD candidates, with official sources, eligibility and important deadlines.
           </p>
         </div>
         <a
