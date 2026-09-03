@@ -1,0 +1,30 @@
+---
+import SeoJobsLanding from '../components/SeoJobsLanding.astro';
+---
+
+<SeoJobsLanding
+  title="Jobs for Deaf & Hard of Hearing Candidates in India"
+  description="Verified job updates for Deaf and Hard of Hearing candidates in India, including government and private opportunities, eligibility details, deadlines and official sources."
+  eyebrow="Deaf Jobs India"
+  intro={[
+    'This page brings together job updates that are specifically relevant to Deaf and Hard of Hearing candidates in India. DeafJobsIndia highlights official disability suitability information whenever it is available so candidates can quickly understand whether a post may be appropriate for them.',
+    'Recruitment rules can vary between employers and government departments. Candidates should confirm the exact Deaf or Hard of Hearing eligibility, disability certificate requirements and reservation conditions in the official notification before applying.',
+  ]}
+  highlights={[
+    'Jobs where Deaf or Hard of Hearing eligibility is stated',
+    'Government and public-sector recruitment updates',
+    'Private employment opportunities when available',
+    'PwBD reservation information',
+    'Important dates and application deadlines',
+    'Official source and application links',
+  ]}
+  matchTags={['Deaf', 'Hard of Hearing']}
+  matchTerms={['deaf', 'hard of hearing', 'hearing impairment', 'hearing disability']}
+  relatedLinks={[
+    { label: 'Government Jobs', href: '/government-jobs/', description: 'Government recruitment updates relevant to Deaf and PwBD candidates.' },
+    { label: 'PwD Jobs', href: '/pwd-jobs/', description: 'Jobs with PwD or PwBD eligibility and reservation information.' },
+    { label: 'Maharashtra Jobs', href: '/maharashtra-jobs/', description: 'Recruitment and employment updates connected to Maharashtra.' },
+    { label: 'All Jobs', href: '/jobs/', description: 'Browse all employment and recruitment news on DeafJobsIndia.' },
+  ]}
+  emptyMessage="No matching Deaf or Hard of Hearing job updates are published yet. Verified opportunities will appear here when available."
+/>
