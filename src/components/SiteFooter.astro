@@ -38,6 +38,9 @@ const columns = [
 const socialLinks = Object.entries(siteConfig.social)
   .filter(([, href]) => Boolean(href))
   .map(([label, href]) => ({ label, href }));
+
+const visitorBadgeUrl = 'https://api.visitorbadge.io/api/visitors?path=deafjobsindia.in&label=Website%20Visitors&countColor=%237c3aed&style=flat';
+const visitorStatusUrl = 'https://visitorbadge.io/status?path=deafjobsindia.in';
 ---
 
 <footer class="mt-16 border-t-4 border-brand-500 bg-brand-700 text-white">
@@ -58,6 +61,27 @@ const socialLinks = Object.entries(siteConfig.social)
             ))}
           </div>
         )}
+
+        <div class="mt-6">
+          <a
+            href={visitorStatusUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="focus-ring inline-flex items-center rounded-md border border-white/15 bg-white/5 p-1.5 transition hover:border-white/30 hover:bg-white/10"
+            aria-label="View DeafJobsIndia website visitor count"
+          >
+            <img
+              src={visitorBadgeUrl}
+              alt="DeafJobsIndia website visitor count"
+              loading="lazy"
+              width="150"
+              height="20"
+            />
+          </a>
+          <p class="mt-2 text-[10px] leading-4 text-white/40">
+            Public visit counter starts from the date it was added.
+          </p>
+        </div>
       </div>
 
       <div class="grid gap-8 sm:grid-cols-3">
