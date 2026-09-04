@@ -25,7 +25,7 @@ const site = Astro.site ?? new URL('https://deafjobsindia.in');
 const canonicalUrl = canonical ? new URL(canonical, site) : new URL(Astro.url.pathname, site);
 const imageUrl = new URL(image, site);
 const googleSiteVerification = import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION?.trim();
-const gaMeasurementId = import.meta.env.PUBLIC_GA_MEASUREMENT_ID?.trim();
+const gaMeasurementId = import.meta.env.PUBLIC_GA_MEASUREMENT_ID?.trim() || 'G-C93YWKLZF9';
 
 const websiteSchema = {
   '@context': 'https://schema.org',
