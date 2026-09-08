@@ -38,6 +38,8 @@ const columns = [
 const socialLinks = Object.entries(siteConfig.social)
   .filter(([, href]) => Boolean(href))
   .map(([label, href]) => ({ label, href }));
+
+const analyticsEndpoint = 'https://script.google.com/macros/s/AKfycbwwQdJF075JQAOeqXe-IeW-_JNqLNenH9vFjhdweYpk2qNJPnfioymM_v6OfNgidY7_/exec';
 ---
 
 <footer class="mt-16 border-t-4 border-brand-500 bg-brand-700 text-white">
@@ -58,6 +60,25 @@ const socialLinks = Object.entries(siteConfig.social)
             ))}
           </div>
         )}
+
+        <div
+          id="ga-footer-stats"
+          class="mt-6 hidden max-w-sm rounded-xl border border-white/15 bg-white/5 p-4"
+          aria-live="polite"
+        >
+          <p class="text-[10px] font-bold uppercase tracking-[0.14em] text-white/45">Website statistics</p>
+          <div class="mt-3 grid grid-cols-2 gap-4">
+            <div>
+              <p id="ga-total-users" class="text-xl font-bold leading-none text-white">—</p>
+              <p class="mt-1 text-[11px] text-white/55">Visitors</p>
+            </div>
+            <div>
+              <p id="ga-page-views" class="text-xl font-bold leading-none text-white">—</p>
+              <p class="mt-1 text-[11px] text-white/55">Page views</p>
+            </div>
+          </div>
+          <p class="mt-3 text-[10px] leading-4 text-white/35">Source: Google Analytics</p>
+        </div>
       </div>
 
       <div class="grid gap-8 sm:grid-cols-3">
@@ -80,3 +101,36 @@ const socialLinks = Object.entries(siteConfig.social)
     </div>
   </div>
 </footer>
+
+<script is:inline define:vars={{ analyticsEndpoint }}>
+  (() => {
+    const stats = document.getElementById('ga-footer-stats');
+    const users = document.getElementById('ga-total-users');
+    const views = document.getElementById('ga-page-views');
+    if (!stats || !users || !views) return;
+
+    const formatNumber = (value) => new Intl.NumberFormat('en-IN').format(Number(value) || 0);
+    const controller = new AbortController();
+    const timer = window.setTimeout(() => controller.abort(), 8000);
+
+    fetch(analyticsEndpoint, {
+      method: 'GET',
+      cache: 'no-store',
+      signal: controller.signal,
+    })
+      .then((response) => {
+        if (!response.ok) throw new Error('Analytics endpoint request failed');
+        return response.json();
+      })
+      .then((data) => {
+        if (!data || data.success !== true) throw new Error('Analytics endpoint returned an error');
+        users.textContent = formatNumber(data.totalUsers);
+        views.textContent = formatNumber(data.pageViews);
+        stats.classList.remove('hidden');
+      })
+      .catch(() => {
+        // Keep the statistics panel hidden if Google Analytics data is unavailable.
+      })
+      .finally(() => window.clearTimeout(timer));
+  })();
+</script>
