@@ -20,12 +20,15 @@ const { lead, side } = Astro.props;
 ---
 
 <section class="container-site py-6 sm:py-8 lg:py-10" aria-labelledby="featured-heading">
-  <div class="mb-4 flex items-center justify-between gap-4">
+  <div class="mb-4 flex items-start justify-between gap-4">
     <div>
       <p class="text-[10px] font-black uppercase tracking-[0.2em] text-brand-700">Verified jobs & recruitment updates</p>
       <h1 id="featured-heading" class="mt-1 text-2xl font-black tracking-[-0.04em] text-ink sm:text-3xl">
         Jobs for Deaf & Hard of Hearing Candidates in India
       </h1>
+      <p class="mt-2 max-w-3xl text-sm leading-6 text-muted sm:text-base">
+        Latest verified government and private job updates for Deaf, Hard of Hearing and PwD candidates in India, with eligibility, reservation details, deadlines and official application links.
+      </p>
     </div>
     <a href="/latest/" class="focus-ring hidden text-xs font-black uppercase tracking-[0.08em] text-brand-700 hover:text-brand-500 sm:block">
       All news →
@@ -62,9 +65,11 @@ const { lead, side } = Astro.props;
           </h2>
 
           {lead.excerpt && (
-            <p class="mt-4 max-w-3xl text-sm leading-6 text-muted sm:text-base sm:leading-7">
-              {lead.excerpt}
-            </p>
+            <div data-nosnippet>
+              <p class="mt-4 max-w-3xl text-sm leading-6 text-muted sm:text-base sm:leading-7">
+                {lead.excerpt}
+              </p>
+            </div>
           )}
 
           <span class="mt-5 inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.08em] text-brand-700">
