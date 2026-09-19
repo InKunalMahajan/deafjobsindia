@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+<title id="title">SSC CHSL 2026 Deaf and Hard of Hearing job update</title>
+<desc id="desc">DeafJobsIndia infographic for SSC CHSL 2026 showing LDC, JSA, DEO posts and application deadlines.</desc>
+<defs>
+  <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#4c1d95"/>
+    <stop offset="1" stop-color="#7e22ce"/>
+  </linearGradient>
+  <filter id="s"><feDropShadow dx="0" dy="6" stdDeviation="12" flood-opacity=".12"/></filter>
+</defs>
+<rect width="1600" height="900" fill="#ffffff"/>
+<rect x="0" y="0" width="1600" height="16" fill="url(#g)"/>
+<circle cx="1370" cy="90" r="210" fill="#f3e8ff"/>
+<circle cx="1490" cy="160" r="120" fill="#ede9fe"/>
+<g font-family="Arial, Helvetica, sans-serif">
+  <text x="70" y="85" font-size="36" font-weight="700" fill="#111827">STAFF SELECTION COMMISSION (SSC)</text>
+  <text x="70" y="125" font-size="26" fill="#4b5563">Government of India</text>
+  <text x="1110" y="90" font-size="42" font-weight="800" fill="#111827">DeafJobs<tspan fill="#6d28d9">India</tspan></text>
+  <text x="1110" y="126" font-size="22" fill="#4b5563">Connecting Deaf Talent with Opportunities</text>
+
+  <text x="70" y="265" font-size="88" font-weight="900" fill="#5b21b6">SSC CHSL 2026</text>
+  <text x="70" y="335" font-size="48" font-weight="800" fill="#111827">Job Update for Deaf &amp;</text>
+  <text x="70" y="392" font-size="48" font-weight="800" fill="#111827">Hard of Hearing Candidates</text>
+  <text x="70" y="438" font-size="27" fill="#6b7280">Combined Higher Secondary (10+2) Level Examination, 2026</text>
+
+  <g>
+    <rect x="70" y="475" rx="24" ry="24" width="170" height="54" fill="#f3e8ff"/>
+    <text x="105" y="511" font-size="24" font-weight="700" fill="#5b21b6">LDC / JSA</text>
+    <rect x="260" y="475" rx="24" ry="24" width="255" height="54" fill="#f3e8ff"/>
+    <text x="294" y="511" font-size="24" font-weight="700" fill="#5b21b6">DEO / DEO Grade A</text>
+    <rect x="535" y="475" rx="24" ry="24" width="285" height="54" fill="#f3e8ff"/>
+    <text x="575" y="511" font-size="24" font-weight="700" fill="#5b21b6">Central Government Jobs</text>
+  </g>
+
+  <g filter="url(#s)">
+    <rect x="930" y="180" width="570" height="350" rx="34" fill="url(#g)"/>
+    <rect x="970" y="225" width="490" height="260" rx="28" fill="#ffffff" opacity=".96"/>
+    <text x="1015" y="285" font-size="34" font-weight="800" fill="#5b21b6">Deaf / HH Relevant</text>
+    <text x="1015" y="335" font-size="27" fill="#111827">✓ Read post-wise suitability</text>
+    <text x="1015" y="380" font-size="27" fill="#111827">✓ Apply online at ssc.gov.in</text>
+    <text x="1015" y="425" font-size="27" fill="#111827">✓ 2026 HH vacancy count pending</text>
+    <text x="1015" y="467" font-size="22" fill="#6b7280">We will update when SSC publishes</text>
+    <text x="1015" y="495" font-size="22" fill="#6b7280">the official vacancy table.</text>
+  </g>
+
+  <g filter="url(#s)">
+    <rect x="70" y="585" width="350" height="150" rx="26" fill="#fafafa" stroke="#ede9fe"/>
+    <text x="105" y="635" font-size="22" font-weight="700" fill="#6d28d9">NOTIFICATION DATE</text>
+    <text x="105" y="686" font-size="31" font-weight="800" fill="#111827">7 September 2026</text>
+
+    <rect x="445" y="585" width="350" height="150" rx="26" fill="#fafafa" stroke="#ede9fe"/>
+    <text x="480" y="635" font-size="22" font-weight="700" fill="#6d28d9">LAST DATE TO APPLY</text>
+    <text x="480" y="681" font-size="31" font-weight="800" fill="#111827">7 October 2026</text>
+    <text x="480" y="713" font-size="22" fill="#4b5563">11:00 PM</text>
+
+    <rect x="820" y="585" width="350" height="150" rx="26" fill="#fafafa" stroke="#ede9fe"/>
+    <text x="855" y="635" font-size="22" font-weight="700" fill="#6d28d9">FEE DEADLINE</text>
+    <text x="855" y="681" font-size="31" font-weight="800" fill="#111827">8 October 2026</text>
+    <text x="855" y="713" font-size="22" fill="#4b5563">11:00 PM</text>
+
+    <rect x="1195" y="585" width="305" height="150" rx="26" fill="#fafafa" stroke="#ede9fe"/>
+    <text x="1230" y="635" font-size="22" font-weight="700" fill="#6d28d9">APPLY ONLINE</text>
+    <text x="1230" y="681" font-size="31" font-weight="800" fill="#111827">ssc.gov.in</text>
+    <text x="1230" y="713" font-size="22" fill="#4b5563">or mySSC app</text>
+  </g>
+
+  <rect x="0" y="790" width="1600" height="110" fill="url(#g)"/>
+  <text x="70" y="842" font-size="32" font-weight="800" fill="#ffffff">Verified Deaf/HH Job Update</text>
+  <text x="70" y="875" font-size="22" fill="#ede9fe">DeafJobsIndia • Official SSC information • Check post suitability before applying</text>
+  <text x="1190" y="854" font-size="31" font-weight="800" fill="#ffffff">deafjobsindia.in</text>
+</g>
+</svg>
