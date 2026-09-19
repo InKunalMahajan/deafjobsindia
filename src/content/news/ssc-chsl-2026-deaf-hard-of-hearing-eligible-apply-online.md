@@ -3,8 +3,8 @@ title: "SSC CHSL 2026: Deaf & Hard of Hearing Candidates Eligible — Apply Onli
 description: "SSC CHSL 2026 applications are open for Group C posts. Deaf and Hard of Hearing candidates are included in the disability-suitability framework for CHSL posts; the exact 2026 HH vacancy count will be updated when SSC publishes the vacancy table."
 category: "Jobs"
 publishedAt: 2026-09-14
-updatedAt: 2026-09-14
-image: "/images/jobs.svg"
+updatedAt: 2026-09-19
+image: "/images/ssc-chsl-2026-deaf-hard-of-hearing.svg"
 imageAlt: "SSC CHSL 2026 job update for Deaf and Hard of Hearing candidates"
 author: "DeafJobsIndia Desk"
 authorId: desk
