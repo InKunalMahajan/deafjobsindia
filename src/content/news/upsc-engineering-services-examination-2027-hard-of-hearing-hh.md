@@ -3,9 +3,9 @@ title: "UPSC Engineering Services Examination 2027: 6 Vacancies for Hard of Hear
 description: "UPSC ESE 2027 has approximately 480 vacancies, including 19 PwBD vacancies. Of these, 6 are for Hard of Hearing (HH) candidates. Apply online by 6 October 2026."
 category: "Jobs"
 publishedAt: 2026-09-18
-updatedAt: 2026-09-18
-image: "/images/jobs.svg"
-imageAlt: "UPSC Engineering Services Examination 2027 recruitment for Hard of Hearing candidates"
+updatedAt: 2026-09-20
+image: "/images/upsc-ese-2027-hh.svg"
+imageAlt: "UPSC ESE 2027 banner highlighting 6 vacancies for Hard of Hearing (HH) candidates and 6 October 2026 application deadline"
 author: "DeafJobsIndia Desk"
 authorId: desk
 status: published
