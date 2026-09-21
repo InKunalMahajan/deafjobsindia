@@ -4,8 +4,8 @@ description: "Hindustan Copper Limited recruitment 2026 has 43 Fixed Term Execut
 category: "Jobs"
 publishedAt: 2026-09-21
 updatedAt: 2026-09-21
-image: "/images/jobs.svg"
-imageAlt: "Hindustan Copper Limited recruitment 2026 for Hard of Hearing candidates"
+image: "/images/hindustan-copper-recruitment-2026-hh.svg"
+imageAlt: "Hindustan Copper Recruitment 2026 infographic showing 43 executive posts and 1 Hard of Hearing reserved vacancy"
 author: "DeafJobsIndia Desk"
 authorId: desk
 status: published
@@ -18,11 +18,11 @@ demo: false
 verificationStatus: verified
 verifiedAt: 2026-09-21
 sourceName: "Hindustan Copper Limited (HCL)"
-sourceUrl: "https://www.hindustancopper.com/"
+sourceUrl: "https://hindustancopper.com/Upload/Notice/0-639251985693346250-NoticeFILE.pdf"
 sourceType: "Official"
 sourceNote: "Advertisement No. Estt./1/2036/2026-27. The official notification reserves 1 post for HH and identifies Geology, Electrical, Mechanical, Civil, Human Resources and Finance as disciplines suitable for HH candidates."
 actionLabel: "Apply on HCL Careers"
-actionUrl: "https://www.hindustancopper.com/"
+actionUrl: "https://hindustancopper.com/RecruitmentCareer/RegistrationForRecruitment"
 deadline: 2026-10-05
 location: "All India"
 ---
