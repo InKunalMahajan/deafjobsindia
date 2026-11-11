@@ -14,6 +14,12 @@ class ArticleSearch extends Component
     public string $query = '';
     public string $category = '';
 
+    public function mount(string $initialQuery = '', string $category = ''): void
+    {
+        $this->query = mb_substr(trim($initialQuery), 0, 120);
+        $this->category = $category;
+    }
+
     public function updatedQuery(): void
     {
         $this->resetPage();
@@ -40,8 +46,6 @@ class ArticleSearch extends Component
             ->latest('published_at')
             ->paginate(10);
 
-        return view('livewire.article-search', [
-            'articles' => $articles,
-        ]);
+        return view('livewire.article-search', ['articles' => $articles]);
     }
 }

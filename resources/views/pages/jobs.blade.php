@@ -1,8 +1,1 @@
-<x-layouts.site title="Find Jobs">
-    <div class="mx-auto max-w-6xl px-5 py-16 sm:px-8">
-        <p class="text-xs font-semibold uppercase tracking-widest text-neutral-600">Employment</p>
-        <h1 class="mt-3 text-4xl font-bold tracking-tight">Find Jobs</h1>
-        <p class="mt-4 max-w-2xl leading-7 text-neutral-600">Search recruitment announcements. Eligibility varies by post: read the official notice before applying.</p>
-        <livewire:article-search category="Jobs" />
-    </div>
-</x-layouts.site>
+<x-layouts.site title="Find jobs" description="Search open job opportunities by title, employer, sector, location and work mode."><section class="dji-container py-14 sm:py-16"><x-ui.section-heading eyebrow="Employment" title="Find your next job" description="Search open vacancies, compare requirements and check the original recruitment notice before applying."/><livewire:job-search :initial-query="request()->query('q', '')" /></section></x-layouts.site>
