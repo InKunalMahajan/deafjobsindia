@@ -45,10 +45,13 @@ class JobController extends Controller {
             'source_url'=>['required','url','starts_with:https://','max:2048'],
             'apply_url'=>['required','url','starts_with:https://','max:2048'],
             'deadline'=>['nullable','date'],
+            'application_method'=>['nullable',Rule::in(['external'])],
+            'application_instructions'=>['nullable','string','max:5000'],
             'status'=>['required',Rule::in(['draft','published'])],
             'is_deaf_friendly'=>['sometimes','boolean'],
             'is_pwd_eligible'=>['sometimes','boolean'],
         ]);
+        $data['application_method']='external';
         $data['is_deaf_friendly']=$request->boolean('is_deaf_friendly');
         $data['is_pwd_eligible']=$request->boolean('is_pwd_eligible');
         if ($data['status']==='published') {
