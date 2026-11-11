@@ -2,10 +2,13 @@
 
 namespace Tests\Feature;
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class StageNineLayoutAuditTest extends TestCase
 {
+    use RefreshDatabase;
+
     public function test_public_listing_and_search_pages_have_primary_headings(): void
     {
         foreach (['/jobs' => 'Find your next job', '/latest' => 'Latest Updates', '/search' => 'Search news and resources'] as $url => $heading) {
