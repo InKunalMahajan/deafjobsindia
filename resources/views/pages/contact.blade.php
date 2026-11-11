@@ -1,11 +1,18 @@
-<x-layouts.site title="Contact">
-    <section class="mx-auto max-w-3xl px-5 py-20 sm:px-8">
-        <p class="text-xs font-semibold uppercase tracking-widest text-neutral-600">Contact</p>
-        <h1 class="mt-4 text-5xl font-bold tracking-tight">Get in touch.</h1>
-        <p class="mt-7 text-lg leading-8 text-neutral-600">For job-seeker support, recruitment notices, corrections or partnerships, DeafJobsIndia encourages accessible text-based communication.</p>
-        <div class="mt-10 rounded-xl border border-neutral-200 bg-neutral-50 p-7">
-            <p class="font-semibold">Contact form coming soon</p>
-            <p class="mt-2 text-sm leading-6 text-neutral-600">The previous static form did not have a confirmed working submission endpoint. A validated Laravel contact form with spam protection and delivery will be introduced in a later stage.</p>
-        </div>
-    </section>
-</x-layouts.site>
+<x-layouts.site title="Contact DeafJobsIndia" description="Send a text-based enquiry, recruitment correction or accessibility feedback to DeafJobsIndia.">
+<section class="mx-auto max-w-3xl px-5 py-16 sm:px-8">
+<p class="text-xs font-semibold uppercase tracking-widest text-neutral-600">Contact</p>
+<h1 class="mt-4 text-4xl font-bold tracking-tight sm:text-5xl">Get in touch</h1>
+<p class="mt-5 leading-8 text-neutral-600">Send a written message about jobs, corrections, accessibility or partnerships. Do not include passwords, identity documents, CVs or sensitive personal information.</p>
+@if(session('contact_sent'))<div role="status" class="mt-8 rounded-lg border border-neutral-300 bg-neutral-50 p-4 font-medium">Thank you. Your message has been submitted.</div>@endif
+@if($errors->has('contact'))<div role="alert" class="mt-8 rounded-lg border border-red-400 bg-red-50 p-4 text-red-900">{{ $errors->first('contact') }}</div>@endif
+<form method="POST" action="{{ route('contact.store') }}" class="mt-9 space-y-6 rounded-xl border border-neutral-200 bg-white p-6 sm:p-8">
+@csrf
+<div><label for="contact-name" class="block text-sm font-semibold">Your name <span aria-hidden="true">*</span></label><input id="contact-name" name="name" value="{{ old('name') }}" autocomplete="name" maxlength="100" required aria-invalid="{{ $errors->has('name') ? 'true' : 'false' }}" @if($errors->has('name')) aria-describedby="error-name" @endif class="mt-2 min-h-11 w-full rounded-lg border border-neutral-300 px-3 py-2">@error('name')<p id="error-name" class="mt-2 text-sm text-red-700">{{ $message }}</p>@enderror</div>
+<div><label for="contact-email" class="block text-sm font-semibold">Email address <span aria-hidden="true">*</span></label><input id="contact-email" type="email" name="email" value="{{ old('email') }}" autocomplete="email" maxlength="254" required aria-invalid="{{ $errors->has('email') ? 'true' : 'false' }}" @if($errors->has('email')) aria-describedby="error-email" @endif class="mt-2 min-h-11 w-full rounded-lg border border-neutral-300 px-3 py-2">@error('email')<p id="error-email" class="mt-2 text-sm text-red-700">{{ $message }}</p>@enderror</div>
+<div><label for="contact-topic" class="block text-sm font-semibold">Topic <span aria-hidden="true">*</span></label><select id="contact-topic" name="topic" required aria-invalid="{{ $errors->has('topic') ? 'true' : 'false' }}" @if($errors->has('topic')) aria-describedby="error-topic" @endif class="mt-2 min-h-11 w-full rounded-lg border border-neutral-300 px-3 py-2"><option value="">Select a topic</option>@foreach(['job_enquiry'=>'Job enquiry','correction'=>'Report a correction','accessibility'=>'Accessibility feedback','partnership'=>'Partnership','other'=>'Other'] as $value=>$label)<option value="{{ $value }}" @selected(old('topic')===$value)>{{ $label }}</option>@endforeach</select>@error('topic')<p id="error-topic" class="mt-2 text-sm text-red-700">{{ $message }}</p>@enderror</div>
+<div><label for="contact-message" class="block text-sm font-semibold">Your message <span aria-hidden="true">*</span></label><textarea id="contact-message" name="message" rows="7" minlength="10" maxlength="3000" required aria-invalid="{{ $errors->has('message') ? 'true' : 'false' }}" @if($errors->has('message')) aria-describedby="error-message" @endif class="mt-2 w-full rounded-lg border border-neutral-300 px-3 py-2">{{ old('message') }}</textarea><p class="mt-1 text-xs text-neutral-600">10–3,000 characters.</p>@error('message')<p id="error-message" class="mt-2 text-sm text-red-700">{{ $message }}</p>@enderror</div>
+<div class="absolute -left-[9999px]" aria-hidden="true"><label for="contact-website">Leave this field empty</label><input id="contact-website" type="text" name="website" tabindex="-1" autocomplete="off"></div>
+<p class="text-sm leading-6 text-neutral-600">We use your details to respond to your enquiry. Read our <a class="underline" href="{{ route('privacy') }}">privacy information</a>.</p>
+<button type="submit" class="min-h-11 rounded-lg bg-black px-6 py-3 font-semibold text-white hover:bg-neutral-800">Send message</button>
+</form>
+</section></x-layouts.site>

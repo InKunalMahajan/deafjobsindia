@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\EmployerProfileController;
 use App\Http\Controllers\Admin\ArticleController as AdminArticleController;
@@ -55,7 +56,8 @@ foreach ([
     Route::get('/'.$path,fn (NewsController $news)=>$news->index($category));
 }
 Route::view('/about','pages.about')->name('about');
-Route::view('/contact','pages.contact')->name('contact');
+Route::get('/contact',[ContactController::class,'create'])->name('contact');
+Route::post('/contact',[ContactController::class,'store'])->middleware('throttle:3,1')->name('contact.store');
 Route::view('/privacy','pages.privacy')->name('privacy');
 Route::view('/disclaimer','pages.disclaimer')->name('disclaimer');
 Route::view('/advertise','pages.advertise')->name('advertise');
