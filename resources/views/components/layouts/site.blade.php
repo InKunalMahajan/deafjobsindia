@@ -7,6 +7,11 @@
     <meta name="theme-color" content="#ffffff">
     <meta name="description" content="{{ $description }}">
     <title>{{ $title }} | DeafJobsIndia</title>
+    <link rel="canonical" href="{{ url()->current() }}">
+    <meta property="og:title" content="{{ $title }} | DeafJobsIndia">
+    <meta property="og:description" content="{{ $description }}">
+    <meta property="og:type" content="website">
+    @if(request()->is('admin*') || request()->is('search'))<meta name="robots" content="noindex,nofollow">@endif
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="flex min-h-screen flex-col bg-white text-neutral-900 antialiased">

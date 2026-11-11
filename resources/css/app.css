@@ -44,3 +44,7 @@
 @media (min-width: 640px) {
   .dji-container { padding-inline: 2rem; }
 }
+
+/* Stage 7: keyboard visibility and reduced-motion preferences */
+:focus-visible { outline: 3px solid currentColor; outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) { *,*::before,*::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; } }
