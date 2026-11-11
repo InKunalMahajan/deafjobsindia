@@ -1,6 +1,1 @@
-<x-layouts.site title="Find Jobs">
-    <section class="dji-container py-16">
-        <x-ui.section-heading eyebrow="Employment" title="Find Jobs" description="Browse published job listings, filter by location and work type, and check the original recruitment notice." />
-        <livewire:job-search :initial-query="request()->query('q', '')" />
-    </section>
-</x-layouts.site>
+<x-layouts.site title="Find jobs" description="Search open job opportunities by title, employer, sector, location and work mode."><section class="dji-container py-14 sm:py-16"><x-ui.section-heading eyebrow="Employment" title="Find your next job" description="Search open vacancies, compare requirements and check the original recruitment notice before applying."/><livewire:job-search :initial-query="request()->query('q', '')" /></section></x-layouts.site>
