@@ -1,154 +1,78 @@
-# DeafJobsIndia — 
+# DeafJobsIndia — Laravel migration
 
-DeafJobsIndia is a custom Astro + Tailwind CSS digital newsroom for Deaf India.
+DeafJobsIndia is moving from **Astro** to **Laravel 13 + MySQL + Livewire + Flux UI + Tailwind CSS v4**.
 
-## Current design
+This migration branch replaces the static-site code with a PHP application. The original Astro version remains available on the main branch until this pull request is merged. Original Markdown recruitment stories are preserved in src/content/news, ready to import into MySQL.
 
-Main palette:
+## Requirements
 
-- Purple
-- White
-- Light Gray
-- Black
+- PHP 8.3+ and its Laravel extensions (including pdo_mysql and mbstring)
+- Composer 2
+- Node.js 22.12+ and npm
+- MySQL 8+
+- No Laravel starter kit required
 
-Category colors are used only as small visual accents.
+## Local installation
 
-Brand tagline:
+1. Clone the migration branch and install dependencies:
 
-**Connecting Deaf Talent with Opportunities**
+    git clone --branch migration/laravel-13 https://github.com/InKunalMahajan/deafjobsindia.git
+    cd deafjobsindia
+    composer install
+    npm install
 
-## Main sections
+2. Create a MySQL database and a dedicated database user. Use a strong password, and do not commit it.
 
-- Latest News
-- Jobs
-- Education
-- Government Schemes
-- Training
-- Job Fairs
-- Community
-- Technology
-- Career
+    CREATE DATABASE deafjobsindia CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+    CREATE USER 'deafjobs'@'127.0.0.1' IDENTIFIED BY 'CHOOSE_A_STRONG_PASSWORD';
+    GRANT ALL PRIVILEGES ON deafjobsindia.* TO 'deafjobs'@'127.0.0.1';
 
-## Technology
+3. Configure the environment:
 
-- Astro
-- Tailwind CSS
-- Astro Content Collections
-- Markdown newsroom content
-- static production output
-- GitHub Actions
-- Hostinger static hosting
-- secure SSH/rsync deployment
+    cp .env.example .env
+    php artisan key:generate
 
-No downloaded/default Astro theme is used.
+   Edit .env with the password and local DB settings. On Windows PowerShell, use Copy-Item .env.example .env.
 
-## Local development
+4. Create schema and import content:
 
-Requires Node.js 22.12+.
+    php artisan migrate
+    php artisan news:import --dry-run
+    php artisan news:import
 
-```bash
-npm install
-npm run dev
-```
+5. Build assets and start both development servers:
 
-## Newsroom commands
+    npm run build
+    php artisan serve
 
-Create a story:
+   For live CSS updates, run npm run dev in a second terminal.
 
-```bash
-npm run new:post -- "Headline" "Jobs"
-```
+Open http://127.0.0.1:8000
 
-Check newsroom status:
+## Testing
 
-```bash
-npm run newsroom:status
-```
+    php artisan test
+    php artisan route:list
+    npm run build
 
-Publish:
+Before merging, run composer update and npm install on a networked development machine to create **composer.lock** and **package-lock.json**, then commit both lock files. This migration was authored without package-download access and must be installation-tested.
 
-```bash
-npm run post:publish -- "story-slug"
-```
+## Content migration
 
-Schedule:
+The original articles are stored as Markdown with YAML front matter in src/content/news/*.md. The repeatable command news:import maps the fields to the articles table and preserves article slugs, official sources, deadlines and publishing status. Demo, draft and article-format examples are intentionally not published.
 
-```bash
-npm run post:schedule -- "story-slug" "2026-09-05T09:00:00+05:30"
-```
+Existing article URLs use /news/{slug}. Previous images remain under public/images.
 
-Audit:
+## Accessibility and visual style
 
-```bash
-npm run content:audit
-```
+- Minimal black-and-white Tailwind CSS styles
+- Native mobile navigation and visible focus rings
+- Text-first recruitment detail pages
+- Livewire search with Flux UI form components
+- Google Sans is declared as a preferred font but is not bundled; use a properly licensed font file or the Arial/system fallback
 
-## Production build
+## Production warning
 
-```bash
-npm run content:audit
-npm run build
-npm run verify:dist
-```
+**GitHub Pages cannot run Laravel PHP or MySQL**. The old static publishing workflow is removed from this migration branch. Deploy to a PHP 8.3+ host with MySQL and point the web server's document root to the Laravel public directory. Set APP_ENV=production and APP_DEBUG=false, set a production APP_KEY, create database backups, and use a secure deployment process.
 
-Production output is created in:
-
-```text
-dist/
-```
-
-## Automatic Hostinger deployment
-
-Step 14 adds:
-
-```text
-.github/workflows/deploy-hostinger.yml
-```
-
-On a push to `main`:
-
-```text
-GitHub
-  ↓
-Content audit
-  ↓
-Astro build
-  ↓
-dist verification
-  ↓
-SSH / rsync
-  ↓
-Hostinger public_html
-  ↓
-Live-site verification
-```
-
-Scheduled stories are checked hourly and deployed when due.
-
-## One-time setup
-
-Read:
-
-```text
-docs/HOSTINGER-AUTO-DEPLOY.md
-docs/STEP-14-FIRST-DEPLOY-CHECKLIST.md
-docs/GITHUB-SETUP.md
-```
-
-## Editorial workflow
-
-Read:
-
-```text
-docs/EDITORIAL-WORKFLOW.md
-docs/NEWSROOM-CHECKLIST.md
-```
-
-## Important
-
-Never commit:
-
-- Hostinger passwords
-- private SSH keys
-- GitHub Actions secrets
-- API credentials
+This branch is a foundation, not yet a completed employer portal or admin CMS. See docs/LARAVEL-MIGRATION.md for the migration checklist.

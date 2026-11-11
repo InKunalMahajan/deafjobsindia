@@ -1,44 +1,55 @@
-name: CI
+name: Laravel CI
 
 on:
   pull_request:
   push:
     branches:
-      - "**"
+      - main
+      - migration/laravel-13
 
 permissions:
   contents: read
 
 jobs:
-  validate:
-    name: Audit and build
+  test:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 25
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v6
+      - name: Check out repository
+        uses: actions/checkout@v4
 
-      - name: Set up Node.js
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, dom, fileinfo, pdo_sqlite, sqlite3
+          coverage: none
+
+      - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: "22.12.0"
+          node-version: '22.16.0'
 
-      - name: Install dependencies
+      - name: Validate Composer metadata
+        run: composer validate --no-check-publish
+
+      - name: Install PHP packages
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: Install frontend packages
         run: npm install --no-audit --no-fund
 
-      - name: Audit newsroom content
-        run: npm run content:audit
+      - name: Configure testing environment
+        run: |
+          cp .env.example .env
+          php artisan key:generate
 
-      - name: Build Astro site
+      - name: Compile Tailwind and Vite
         run: npm run build
-        env:
-          SITE_URL: https://deafjobsindia.in
-          PUBLIC_GOOGLE_SITE_VERIFICATION: ${{ vars.PUBLIC_GOOGLE_SITE_VERIFICATION }}
-          PUBLIC_GA_MEASUREMENT_ID: ${{ vars.PUBLIC_GA_MEASUREMENT_ID }}
 
-      - name: Verify production output
-        run: npm run verify:dist
+      - name: Run Laravel tests
+        run: php artisan test
 
-      - name: Run launch audit
-        run: npm run launch:audit
+      - name: Check migration source count
+        run: php artisan news:import --dry-run

@@ -1,0 +1,28 @@
+@import 'tailwindcss';
+@import '../../vendor/livewire/flux/dist/flux.css';
+
+@source '../**/*.blade.php';
+@source '../../app/Livewire/**/*.php';
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+
+@theme {
+    --font-sans: 'Google Sans', Arial, ui-sans-serif, system-ui, sans-serif;
+    --color-ink: #111111;
+    --color-paper: #ffffff;
+    --color-subtle: #fafafa;
+    --color-line: #e5e5e5;
+}
+
+@layer base {
+    html { color-scheme: light; }
+    body { background: white; color: #111; font-family: var(--font-sans); }
+    :focus-visible { outline: 2px solid #111; outline-offset: 3px; }
+}
+
+@layer theme {
+    :root {
+        --color-accent: var(--color-neutral-900);
+        --color-accent-content: var(--color-neutral-900);
+        --color-accent-foreground: var(--color-white);
+    }
+}
