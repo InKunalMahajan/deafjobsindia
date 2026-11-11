@@ -22,6 +22,8 @@
 <flux:input name="salary_text" label="Salary information" :value="old('salary_text',$job->salary_text)" />
 <flux:input name="source_url" label="Original source URL (HTTPS)" type="url" required :value="old('source_url',$job->source_url)" />
 <flux:input name="apply_url" label="Application URL (HTTPS)" type="url" required :value="old('apply_url',$job->apply_url)" />
+<flux:input name="application_method" label="Application method" value="external" readonly />
+<flux:textarea name="application_instructions" label="Application instructions">{{ old('application_instructions',$job->application_instructions) }}</flux:textarea>
 <flux:input name="deadline" label="Application deadline" type="date" :value="old('deadline',$job->deadline?->format('Y-m-d'))" />
 <input type="hidden" name="is_deaf_friendly" value="0"><label class="flex gap-3"><input type="checkbox" name="is_deaf_friendly" value="1" @checked(old('is_deaf_friendly',$job->is_deaf_friendly))> Employer reports Deaf-friendly accommodations</label>
 <input type="hidden" name="is_pwd_eligible" value="0"><label class="flex gap-3"><input type="checkbox" name="is_pwd_eligible" value="1" @checked(old('is_pwd_eligible',$job->is_pwd_eligible))> Source reports PwD eligibility</label>

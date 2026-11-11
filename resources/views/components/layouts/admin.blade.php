@@ -16,6 +16,7 @@
 <nav aria-label="Admin navigation" class="flex flex-wrap items-center gap-4 text-sm">
 <a href="{{ route('admin.dashboard') }}" class="underline">Dashboard</a>
 @can('employers.manage')<a href="{{ route('admin.employers.index') }}" class="underline">Employers</a>@endcan
+@can('articles.edit')<a href="{{ route('admin.articles.index') }}" class="underline">Articles</a>@endcan
 @can('jobs.edit')<a href="{{ route('admin.jobs.index') }}" class="underline">Jobs</a>@endcan
 @can('users.manage')<a href="{{ route('admin.users.index') }}" class="underline">Users</a>@endcan
 <a href="{{ route('home') }}" class="underline">Public site</a>

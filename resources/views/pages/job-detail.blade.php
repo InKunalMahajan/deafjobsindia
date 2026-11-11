@@ -9,7 +9,7 @@
                 @if($job->is_pwd_eligible)<x-ui.badge variant="outline">PwD eligible (reported)</x-ui.badge>@endif
             </div>
             <h1 class="mt-5 text-4xl font-extrabold tracking-tight sm:text-5xl">{{ $job->title }}</h1>
-            <p class="mt-4 text-lg text-neutral-600">{{ $job->employer->name }} · {{ $job->location }}</p>
+            <p class="mt-4 text-lg text-neutral-600"><a class="underline" href="{{ $job->employer->verified ? route('employers.show',$job->employer->slug) : route('jobs.index') }}">{{ $job->employer->name }}</a> · {{ $job->location }}</p>
             <div class="mt-7 grid gap-3 rounded-xl border border-neutral-200 bg-neutral-50 p-6 text-sm sm:grid-cols-2">
                 <p><strong>Employment:</strong> {{ ucfirst(str_replace('-',' ',$job->employment_type)) }}</p>
                 <p><strong>Work mode:</strong> {{ ucfirst($job->work_mode) }}</p>
@@ -25,7 +25,9 @@
                 <div class="dji-prose mt-4">{!! \Illuminate\Support\Str::markdown($job->requirements, ['html_input'=>'strip','allow_unsafe_links'=>false]) !!}</div>
             @endif
             <div class="mt-10 rounded-xl border border-neutral-200 p-6">
-                <h2 class="text-lg font-bold">Application information</h2>
+                <h2 class="text-lg font-bold">How to apply</h2>
+                @if($job->application_instructions)<p class="mt-3 whitespace-pre-line text-sm">{{ $job->application_instructions }}</p>@endif
+                <p class="mt-3 text-sm">Application link review: {{ str_replace('_',' ',$job->application_review_status) }}. External application only; DeafJobsIndia does not collect CVs or submit applications.</p>
                 <p class="mt-3 text-sm leading-7 text-neutral-600">Eligibility, disability accommodations and deadlines must be confirmed with the recruiting organisation. Reported accessibility labels are not independently guaranteed.</p>
                 @if($job->is_closed)
                     <p class="mt-4 font-semibold">Application closed. Check the source for any extension.</p>

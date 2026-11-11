@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\EmployerProfileController;
+use App\Http\Controllers\Admin\ArticleController as AdminArticleController;
+use App\Http\Controllers\Admin\ApplicationReviewController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\Auth\AdminLoginController;
@@ -21,11 +24,15 @@ Route::prefix('admin')->name('admin.')->middleware(['auth','can:admin.view'])->g
     Route::get('/',DashboardController::class)->name('dashboard');
     Route::resource('employers',AdminEmployerController::class)->except('show')->middleware('can:employers.manage');
     Route::resource('jobs',AdminJobController::class)->except('show')->middleware('can:jobs.edit');
+    Route::resource('articles',AdminArticleController::class)->except('show')->middleware('can:articles.edit');
+    Route::patch('jobs/{job}/application-review',[ApplicationReviewController::class,'update'])->middleware('can:applications.review')->name('jobs.application-review');
     Route::resource('users',AdminUserController::class)->except('show')->middleware('can:users.manage');
 });
 
 Route::get('/',[HomeController::class,'index'])->name('home');
 Route::get('/latest',[NewsController::class,'index'])->name('latest');
+Route::get('/employers',[EmployerProfileController::class,'index'])->name('employers.index');
+Route::get('/employers/{slug}',[EmployerProfileController::class,'show'])->name('employers.show');
 Route::get('/jobs',[JobController::class,'index'])->name('jobs.index');
 Route::get('/jobs/{slug}',[JobController::class,'show'])->name('jobs.show');
 Route::view('/search','pages.search')->name('search');

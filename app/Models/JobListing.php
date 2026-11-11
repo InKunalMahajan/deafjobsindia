@@ -11,11 +11,11 @@ class JobListing extends Model {
         'employer_id','slug','title','location','state','employment_type',
         'work_mode','sector','is_deaf_friendly','is_pwd_eligible','summary',
         'description','requirements','salary_text','source_url','apply_url',
-        'deadline','status','published_at',
+        'deadline','status','published_at','application_method','application_instructions','application_review_status','application_reviewed_at','application_reviewed_by',
     ];
     protected function casts(): array {
         return ['is_deaf_friendly'=>'boolean','is_pwd_eligible'=>'boolean',
-            'deadline'=>'date','published_at'=>'datetime'];
+            'deadline'=>'date','published_at'=>'datetime','application_reviewed_at'=>'datetime'];
     }
     public function employer(): BelongsTo { return $this->belongsTo(Employer::class); }
     public function scopePublished(Builder $query): Builder {

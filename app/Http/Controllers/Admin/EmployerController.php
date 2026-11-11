@@ -29,6 +29,8 @@ class EmployerController extends Controller {
             'slug'=>['required','alpha_dash','max:255',Rule::unique('employers','slug')->ignore($employer?->id)],
             'website'=>['nullable','url','starts_with:https://','max:2048'],
             'description'=>['nullable','string','max:5000'],
+            'location'=>['nullable','string','max:255'],
+            'contact_email'=>['nullable','email','max:255'],
             'verified'=>['sometimes','boolean'],
         ]);
         $data['verified']=$request->boolean('verified');

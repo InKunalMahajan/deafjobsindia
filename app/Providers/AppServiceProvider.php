@@ -10,6 +10,9 @@ class AppServiceProvider extends ServiceProvider {
         Gate::define('admin.view',fn (User $user) => in_array($user->role,['admin','editor','viewer'],true));
         Gate::define('employers.manage',fn (User $user) => $user->role==='admin');
         Gate::define('jobs.edit',fn (User $user) => in_array($user->role,['admin','editor'],true));
+        Gate::define('articles.edit',fn (User $user) => in_array($user->role,['admin','editor'],true));
+        Gate::define('articles.publish',fn (User $user) => $user->role==='admin');
+        Gate::define('applications.review',fn (User $user) => $user->role==='admin');
         Gate::define('jobs.publish',fn (User $user) => $user->role==='admin');
         Gate::define('users.manage',fn (User $user) => false);
     }
