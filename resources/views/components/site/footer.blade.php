@@ -1,15 +1,5 @@
-<footer class="border-t border-neutral-200 bg-neutral-50">
-    <div class="dji-container flex flex-col justify-between gap-5 py-10 text-sm text-neutral-600 md:flex-row">
-        <div>
-            <p class="font-bold text-neutral-900">DeafJobsIndia.</p>
-            <p class="mt-2">&copy; {{ date('Y') }} DeafJobsIndia. Inclusive careers for everyone.</p>
-        </div>
-        <nav aria-label="Footer navigation" class="flex flex-wrap items-start gap-5">
-            <a class="hover:underline" href="{{ route('about') }}">About</a>
-            <a class="hover:underline" href="{{ route('contact') }}">Contact</a>
-            <a class="hover:underline" href="{{ route('privacy') }}">Privacy</a>
-            <a class="hover:underline" href="{{ route('disclaimer') }}">Disclaimer</a>
-            <a class="hover:underline" href="{{ route('rss') }}">RSS</a>
-        </nav>
-    </div>
-</footer>
+<footer class="border-t border-neutral-200 bg-neutral-50"><div class="dji-container grid gap-8 py-12 md:grid-cols-3">
+<div><p class="text-xl font-extrabold">DeafJobsIndia.</p><p class="mt-3 text-sm leading-7 text-neutral-600">Inclusive jobs and career resources for Deaf and Hard of Hearing people in India.</p></div>
+<nav aria-label="Explore footer navigation" class="grid content-start gap-3 text-sm"><strong>Explore</strong><a href="{{ route('jobs.index') }}">Jobs</a><a href="{{ route('latest') }}">Latest News</a><a href="{{ route('section.show','training') }}">Training</a><a href="{{ route('section.show','career') }}">Career Guidance</a></nav>
+<nav aria-label="Information footer navigation" class="grid content-start gap-3 text-sm"><strong>Information</strong><a href="{{ route('about') }}">About</a><a href="{{ route('contact') }}">Contact</a><a href="{{ route('privacy') }}">Privacy</a><a href="{{ route('disclaimer') }}">Disclaimer</a><a href="{{ route('rss') }}">RSS</a></nav>
+</div><div class="border-t border-neutral-200"><div class="dji-container flex flex-wrap justify-between gap-3 py-5 text-xs text-neutral-600"><span>&copy; {{ date('Y') }} DeafJobsIndia</span><span>Always verify recruitment notices with official sources.</span></div></div></footer>
