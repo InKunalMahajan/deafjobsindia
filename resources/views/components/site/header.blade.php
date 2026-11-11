@@ -7,8 +7,8 @@
 @endforeach
 <a href="{{ route('section.show','career') }}" class="rounded-lg border border-neutral-900 px-4 py-2 hover:bg-neutral-100">Career Resources</a>
 </nav>
-<details class="relative lg:hidden"><summary class="cursor-pointer rounded-lg border border-neutral-300 px-4 py-2 font-semibold">Menu</summary>
-<nav aria-label="Mobile navigation" class="absolute right-0 z-30 mt-2 w-64 rounded-xl border border-neutral-200 bg-white p-3 shadow-lg">
+<details class="relative lg:hidden"><summary class="flex min-h-11 cursor-pointer list-none items-center rounded-lg border border-neutral-300 px-4 py-2 font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black">Menu</summary>
+<nav aria-label="Mobile navigation" class="absolute right-0 z-30 mt-2 w-[min(16rem,calc(100vw-2.5rem))] rounded-xl border border-neutral-200 bg-white p-3 shadow-lg">
 @foreach(['home'=>'Home','jobs.index'=>'Find Jobs','employers.index'=>'Employers','latest'=>'News & Updates','about'=>'About','contact'=>'Contact'] as $route=>$label)
 <x-site.nav-link mobile :href="route($route)" :active="request()->routeIs($route)">{{ $label }}</x-site.nav-link>
 @endforeach
