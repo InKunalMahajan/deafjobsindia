@@ -1,6 +1,6 @@
 <div class="mt-9">
     <div class="grid gap-4 rounded-xl border border-neutral-200 bg-neutral-50 p-5 sm:grid-cols-[2fr_1fr]">
-        <flux:input wire:model.live.debounce.400ms="query" label="Search" placeholder="Job title, skill or location" />
+        <flux:input wire:model.live.debounce.400ms="query" label="Search" placeholder="Article topic, skill or location" />
         <flux:select wire:model.live="category" label="Category">
             <flux:select.option value="">All categories</flux:select.option>
             <flux:select.option value="Jobs">Jobs</flux:select.option>

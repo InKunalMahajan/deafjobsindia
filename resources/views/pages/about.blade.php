@@ -10,5 +10,5 @@
 <h2 class="mt-12 text-2xl font-bold">Applying for a job</h2>
 <p class="mt-4 leading-8 text-neutral-700">Applications take place on external recruitment websites. DeafJobsIndia does not currently collect CVs or submit job applications for visitors.</p>
 <h2 class="mt-12 text-2xl font-bold">Corrections and accessibility feedback</h2>
-<p class="mt-4 leading-8 text-neutral-700">If information is outdated or difficult to access, please review our <a class="underline" href="{{ route('contact') }}">contact information</a>. A direct message submission service is not yet available.</p>
+<p class="mt-4 leading-8 text-neutral-700">If information is outdated or difficult to access, send a written message through our <a class="underline" href="{{ route('contact') }}">contact form</a>. Message delivery depends on the website email service being available.</p>
 </section></x-layouts.site>

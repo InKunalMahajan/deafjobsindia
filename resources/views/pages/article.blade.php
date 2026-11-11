@@ -14,7 +14,7 @@
                 </span>
             @endif
         </div>
-        <div class="prose prose-neutral mt-10 max-w-none leading-relaxed [&_a]:underline [&_h2]:mt-8 [&_h2]:text-2xl [&_h2]:font-bold [&_h3]:mt-6 [&_h3]:text-xl [&_h3]:font-semibold [&_p]:mb-5 [&_ul]:mb-5 [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:mb-5 [&_ol]:list-decimal [&_ol]:pl-6 [&_table]:w-full [&_table]:text-sm [&_th]:border [&_th]:p-2 [&_td]:border [&_td]:p-2">
+        <div class="dji-prose mt-10 min-w-0 max-w-none leading-relaxed [&_a]:underline [&_h2]:mt-8 [&_h2]:text-2xl [&_h2]:font-bold [&_h3]:mt-6 [&_h3]:text-xl [&_h3]:font-semibold [&_p]:mb-5 [&_ul]:mb-5 [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:mb-5 [&_ol]:list-decimal [&_ol]:pl-6 [&_table]:w-full [&_table]:text-sm [&_th]:border [&_th]:p-2 [&_td]:border [&_td]:p-2">
             {!! \Illuminate\Support\Str::markdown($article->body, ['html_input' => 'strip', 'allow_unsafe_links' => false]) !!}
         </div>
         @if($article->source_url && str_starts_with($article->source_url, 'https://'))
