@@ -11,14 +11,23 @@ Route::view('/jobs', 'pages.jobs')->name('jobs.index');
 Route::view('/search', 'pages.search')->name('search');
 Route::get('/news/{slug}', [NewsController::class, 'show'])->name('news.show');
 
+Route::get('/{section}', function (string $section, NewsController $news) {
+    $categories = [
+        'education' => 'Education',
+        'training' => 'Training',
+        'career' => 'Career',
+    ];
+
+    abort_unless(array_key_exists($section, $categories), 404);
+
+    return $news->index($categories[$section]);
+})->whereIn('section', ['education', 'training', 'career'])->name('section.show');
+
 foreach ([
-    'education' => 'Education',
     'schemes' => 'Government Schemes',
-    'training' => 'Training',
     'job-fairs' => 'Job Fairs',
     'community' => 'Community',
     'technology' => 'Technology',
-    'career' => 'Career',
     'government-jobs' => 'Jobs',
     'deaf-jobs' => 'Jobs',
     'pwd-jobs' => 'Jobs',
