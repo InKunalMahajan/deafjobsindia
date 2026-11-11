@@ -13,7 +13,7 @@ class HomepageTest extends TestCase
     {
         $this->get('/')
             ->assertOk()
-            ->assertSee('Find work.')
+            ->assertSee('Find opportunities.')
             ->assertSee('DeafJobsIndia')
             ->assertSee('Skip to main content');
     }

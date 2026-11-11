@@ -25,7 +25,7 @@ class DesignSystemTest extends TestCase
             ->assertOk()
             ->assertSee('Primary navigation')
             ->assertSee('Mobile navigation')
-            ->assertSee('Information footer navigation');
+            ->assertSee('Legal and information');
     }
 
     public function test_internal_preview_is_not_available_in_production(): void

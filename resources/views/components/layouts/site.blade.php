@@ -15,7 +15,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="flex min-h-screen flex-col bg-white text-neutral-900 antialiased">
-    <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:bg-white focus:p-3 focus:text-black">Skip to main content</a>
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:border focus:border-black focus:bg-white focus:p-3 focus:text-black">Skip to main content</a>
     <x-site.header />
     <main id="main-content" tabindex="-1" class="w-full flex-1">{{ $slot }}</main>
     <x-site.footer />

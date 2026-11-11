@@ -9,7 +9,7 @@ class PublicPagesTest extends TestCase {
   foreach (['/','/jobs','/latest','/education','/training','/career','/about','/contact','/privacy','/disclaimer','/search'] as $url) $this->get($url)->assertOk();
  }
  public function test_homepage_navigation_search_and_footer(): void {
-  $this->get('/')->assertOk()->assertSee('Explore Jobs')->assertSee('Search jobs and news')->assertSee('Mobile navigation')->assertSee('Information footer navigation');
+  $this->get('/')->assertOk()->assertSee('Browse all jobs')->assertSee('Find your next opportunity')->assertSee('Mobile navigation')->assertSee('Legal and information');
  }
  public function test_query_populates_search(): void { $this->get('/search?q=designer')->assertOk()->assertSee('designer'); }
  public function test_homepage_displays_published_articles(): void {
