@@ -44,3 +44,9 @@ Route::get('/rss.xml', function () {
         'articles' => Article::published()->latest('published_at')->limit(25)->get(),
     ])->header('Content-Type', 'application/rss+xml; charset=UTF-8');
 })->name('rss');
+
+Route::get('/design-system', function () {
+    abort_unless(app()->environment('local', 'testing'), 404);
+
+    return view('pages.design-system');
+})->name('design-system');
