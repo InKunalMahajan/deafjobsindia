@@ -1,5 +1,6 @@
 <x-layouts.site title="Contact DeafJobsIndia" description="Send a text-based enquiry, recruitment correction or accessibility feedback to DeafJobsIndia.">
-<section class="mx-auto max-w-3xl px-5 py-16 sm:px-8">
+<section class="dji-container py-16">
+<div class="dji-content">
 <p class="text-xs font-semibold uppercase tracking-widest text-neutral-600">Contact</p>
 <h1 class="mt-4 text-4xl font-bold tracking-tight sm:text-5xl">Get in touch</h1>
 <p class="mt-5 leading-8 text-neutral-600">Send a written message about jobs, corrections, accessibility or partnerships. Do not include passwords, identity documents, CVs or sensitive personal information.</p>
@@ -15,4 +16,5 @@
 <p class="text-sm leading-6 text-neutral-600">We use your details to respond to your enquiry. Read our <a class="underline" href="{{ route('privacy') }}">privacy information</a>.</p>
 <button type="submit" class="min-h-11 rounded-lg bg-black px-6 py-3 font-semibold text-white hover:bg-neutral-800">Send message</button>
 </form>
+</div>
 </section></x-layouts.site>

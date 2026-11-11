@@ -1,5 +1,6 @@
 <x-layouts.site :title="$article->title" :description="$article->description">
-    <article class="mx-auto max-w-3xl px-5 py-14 sm:px-8">
+    <article class="dji-container py-14">
+<div class="dji-content">
         <a href="{{ route('latest') }}" class="text-sm font-semibold underline underline-offset-4">Back to latest updates</a>
         <p class="mt-9 text-xs font-semibold uppercase tracking-[0.14em] text-neutral-600">{{ $article->category }}</p>
         <h1 class="mt-3 text-4xl font-bold leading-tight tracking-tight sm:text-5xl">{{ $article->title }}</h1>
@@ -33,5 +34,6 @@
                 @endif
             </div>
         @endif
-    </article>
+    </div>
+</article>
 </x-layouts.site>

@@ -1,5 +1,6 @@
 <x-layouts.site title="About DeafJobsIndia">
-<section class="mx-auto max-w-3xl px-5 py-16 sm:px-8">
+<section class="dji-container py-16">
+<div class="dji-content">
 <p class="text-xs font-semibold uppercase tracking-widest text-neutral-600">About the platform</p>
 <h1 class="mt-4 text-4xl font-bold tracking-tight sm:text-5xl">Career information without unnecessary barriers.</h1>
 <p class="mt-6 text-lg leading-8 text-neutral-600">DeafJobsIndia shares job notices, employer information and career resources for Deaf and Hard of Hearing people in India.</p>
@@ -11,4 +12,5 @@
 <p class="mt-4 leading-8 text-neutral-700">Applications take place on external recruitment websites. DeafJobsIndia does not currently collect CVs or submit job applications for visitors.</p>
 <h2 class="mt-12 text-2xl font-bold">Corrections and accessibility feedback</h2>
 <p class="mt-4 leading-8 text-neutral-700">If information is outdated or difficult to access, send a written message through our <a class="underline" href="{{ route('contact') }}">contact form</a>. Message delivery depends on the website email service being available.</p>
+</div>
 </section></x-layouts.site>

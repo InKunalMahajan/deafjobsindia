@@ -11,7 +11,7 @@
 <body class="min-h-screen bg-white text-neutral-950">
 <a class="sr-only focus:not-sr-only" href="#admin-main">Skip to main content</a>
 <header class="border-b border-neutral-200">
-<div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-5 py-5">
+<div class="dji-container flex flex-wrap items-center justify-between gap-4 py-5">
 <a href="{{ route('admin.dashboard') }}" class="font-bold">DeafJobsIndia / Admin</a>
 <nav aria-label="Admin navigation" class="flex flex-wrap items-center gap-4 text-sm">
 <a href="{{ route('admin.dashboard') }}" class="underline">Dashboard</a>
@@ -23,7 +23,7 @@
 <form method="POST" action="{{ route('admin.logout') }}">@csrf <button class="rounded border border-neutral-900 px-3 py-2 font-semibold" type="submit">Sign out</button></form>
 </nav>
 </div></header>
-<main id="admin-main" class="mx-auto max-w-6xl px-5 py-10">
+<main id="admin-main" class="dji-container min-w-0 py-10">
 <h1 class="mb-7 text-3xl font-bold">{{ $title }}</h1>
 @if(session('status'))<p role="status" class="mb-5 rounded border border-neutral-300 p-4">{{ session('status') }}</p>@endif
 @if($errors->any())<div role="alert" class="mb-5 rounded border border-neutral-900 p-4"><strong>Please fix:</strong><ul class="list-disc pl-6">@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul></div>@endif

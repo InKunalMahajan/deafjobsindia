@@ -30,7 +30,12 @@
   }
 }
 @layer components {
-  .dji-container { width: 100%; max-width: var(--container-dji); margin-inline: auto; padding-inline: 1.25rem; }
+  .dji-container { box-sizing: border-box; width: 100%; max-width: var(--container-dji); margin-inline: auto; padding-inline: 1.25rem; }
+  .dji-content { width: 100%; max-width: 48rem; margin-inline: auto; min-width: 0; }
+  .dji-container > *, .dji-content > * { min-width: 0; }
+  .dji-prose img, .dji-prose video, .dji-prose iframe { max-width: 100%; height: auto; }
+  .dji-prose pre { max-width: 100%; overflow-x: auto; }
+  .dji-prose { min-width: 0; }
   .dji-prose { line-height: 1.8; overflow-wrap: anywhere; }
   .dji-prose h2 { font-size: 1.5rem; font-weight: 700; margin-block: 2rem 1rem; }
   .dji-prose h3 { font-size: 1.25rem; font-weight: 700; margin-block: 1.5rem .75rem; }
