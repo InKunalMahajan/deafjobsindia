@@ -17,6 +17,7 @@ use App\Http\Controllers\JobSeeker\AuthController as SeekerAuthController;
 use App\Http\Controllers\JobSeeker\DashboardController as SeekerDashboardController;
 use App\Http\Controllers\JobSeeker\GoogleController as SeekerGoogleController;
 use App\Models\JobListing;
+use App\Http\Controllers\JobSeeker\PrivacyController as SeekerPrivacyController;
 use App\Http\Controllers\JobSeeker\RecruitmentApplicationController as SeekerRecruitmentController;
 use App\Http\Controllers\EmployerPortal\ApplicationsController as EmployerApplicationsController;
 use App\Http\Controllers\EmployerPortal\AuthController as EmployerAuthController;
@@ -55,6 +56,8 @@ Route::prefix('account')->name('seeker.')->group(function () {
     });
     Route::middleware(['auth','can:seeker.view'])->group(function () {
         Route::get('/',[SeekerDashboardController::class,'index'])->name('dashboard');
+        Route::get('/privacy',[SeekerPrivacyController::class,'index'])->name('privacy');
+        Route::get('/privacy/export',[SeekerPrivacyController::class,'export'])->middleware('throttle:3,60')->name('privacy.export');
         Route::get('/profile',[SeekerDashboardController::class,'profile'])->name('profile');
         Route::patch('/profile',[SeekerDashboardController::class,'updateProfile'])->name('profile.update');
         Route::post('/saved-jobs/{job}',[SeekerDashboardController::class,'save'])->name('jobs.save');
