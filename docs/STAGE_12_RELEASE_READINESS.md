@@ -2,8 +2,8 @@
 
 Status: **BLOCKED — source audit only; no tests executed or deployment approved.**
 
-Branch: `feature/stage-12-release-readiness-audit`  
-Baseline: `feature/stage-11b-security-quality-audit`
+Branch: `feature/stage-12b-release-quality-audit`  
+Baseline: `feature/stage-12-release-readiness-audit`
 
 ## Scope and preservation rules
 
@@ -54,3 +54,25 @@ Baseline: `feature/stage-11b-security-quality-audit`
 | Deployment | Blocked |
 
 **No release approval is implied by this document.**
+
+## Stage 12B quality audit (source only)
+
+### Confirmed changes
+
+- User administration: make the self-demotion guard explicitly apply to a Super Admin editing their own account. Existing role gates are unchanged.
+- Add four tests in `tests/Feature/StageTwelveBReleaseAuditTest.php` for self-demotion, allowed self-edit, editor authorization and guest-only login. Tests **not run**.
+- No migrations, dependency changes, record updates, route changes or deployment.
+
+### Remaining blockers and checks
+
+- **Dependencies:** `composer.json` declares Laravel ^13.17, PHP ^8.3 and PHPUnit ^12.5; `package.json` declares Vite ^8, Tailwind v4 and Livewire/Flux integration. Exact package compatibility, PHP extensions, `composer.lock` and `package-lock.json` availability remain unverified; do not assume `npm ci` can work without a valid lockfile.
+- **Migration safety:** Stage 06 discovery migration adds nullable salary and experience columns. Its rollback removes these columns and would erase populated values. Do not use rollback as the production recovery plan; rehearse a forward fix with a backup.
+- **Test portability:** SQLite in-memory tests are configured in `phpunit.xml`. MySQL-specific schema behavior is not established by those tests alone. Confirm both SQLite tests and a separate disposable MySQL migration rehearsal when execution is authorized.
+- **Authorization:** Route gates protect admin resources. Validate user-role permissions, editor publication restrictions, employer verification, review metadata and CSRF through tests before release.
+- **Public routes/SEO:** Verify home, jobs, employers, articles, RSS, sitemap, robots and canonical/JSON-LD output after dependency installation. Dynamic content must not expose draft, future, demo or expired records contrary to visibility rules.
+- **Production environment:** `.env.example` is a local-development template, **not** production configuration. Check `APP_DEBUG=false`, HTTPS `APP_URL`, strong `APP_KEY`, secure cookie/session settings, storage permissions, queues, mail, logging and restricted DB credentials in an approved environment. Never commit credentials.
+- **Operational safeguards:** Backups, restoration drill, release owner, maintenance window, monitoring, failure recovery, dependency locking and successful regression tests are all outstanding.
+
+### Explicit release decision
+
+**NO-GO**. Source changes are committed but not executed or verified. Keep merge, local execution, deployment and accessibility-specific enhancements on hold. No release approval is implied.
