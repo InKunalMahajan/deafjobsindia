@@ -59,7 +59,7 @@ class ArticleController extends Controller
             'title' => ['required', 'string', 'max:255'],
             'slug' => ['required', 'alpha_dash', 'max:255', Rule::unique('articles', 'slug')->ignore($article?->id)],
             'description' => ['required', 'string', 'max:2000'],
-            'category' => ['required', Rule::in(['Jobs','Education','Training','Career','Government Schemes','Job Fairs','Community','Technology'])],
+            'category' => ['required', 'string', 'max:100'],
             'body' => ['required', 'string', 'max:100000'],
             'source_name' => ['nullable', 'string', 'max:255'],
             'source_url' => ['nullable', 'url', 'starts_with:https://', 'max:2048'],
