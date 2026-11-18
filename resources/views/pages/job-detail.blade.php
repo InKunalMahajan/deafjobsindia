@@ -87,10 +87,21 @@ if (!$job->is_closed && $job->published_at && $validApplyUrl && $job->work_mode 
       @if($job->application_instructions)
         <p class="mt-3 whitespace-pre-line break-words text-sm leading-7">{{ $job->application_instructions }}</p>
       @endif
-      <p class="mt-3 text-sm text-neutral-600">Applications are completed on external recruitment websites. DeafJobsIndia does not collect CVs.</p>
+      <p class="mt-3 text-sm text-neutral-600">{{ $job->application_method==='internal' ? 'Apply through DeafJobsIndia. Your name, professional profile and cover note will be shared with this employer. Your resume is not shared automatically.' : 'Applications are completed on external recruitment websites. DeafJobsIndia does not send your application to the employer.' }}</p>
       <p class="mt-2 text-sm text-neutral-600">Confirm eligibility and deadlines with the employer.</p>
       @if($job->is_closed)
         <p class="mt-5 font-semibold">Application closed. Check the source for any extension.</p>
+      @elseif($job->application_method==='internal')
+        @if(auth()->check() && auth()->user()->role==='job_seeker')
+          @if($errors->any())<p role="alert" class="mt-3">{{ $errors->first() }}</p>@endif
+          <form method="POST" action="{{ route('seeker.apply',$job) }}" class="mt-5 grid gap-3">@csrf
+            <label class="grid gap-2">Cover note (optional)<textarea name="cover_note" maxlength="3000" rows="4" class="rounded-lg border border-neutral-500 p-3">{{ old('cover_note') }}</textarea></label>
+            <label class="flex items-start gap-2"><input type="checkbox" name="consent" value="1" required> I agree to share my name, professional profile and cover note with this employer.</label>
+            <button type="submit" class="min-h-12 rounded-lg bg-black px-5 text-white">Submit application</button>
+          </form>
+        @else
+          <p class="mt-5"><a class="underline" href="{{ route('seeker.login') }}">Sign in as a job seeker to apply</a></p>
+        @endif
       @elseif(filter_var($job->apply_url, FILTER_VALIDATE_URL) && str_starts_with($job->apply_url, 'https://'))
         <div class="mt-5"><x-ui.button :href="$job->apply_url" target="_blank" rel="noopener noreferrer">Apply on official site</x-ui.button></div>
       @endif
