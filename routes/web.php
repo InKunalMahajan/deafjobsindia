@@ -17,6 +17,7 @@ use App\Http\Controllers\JobSeeker\AuthController as SeekerAuthController;
 use App\Http\Controllers\JobSeeker\DashboardController as SeekerDashboardController;
 use App\Http\Controllers\JobSeeker\GoogleController as SeekerGoogleController;
 use App\Models\JobListing;
+use App\Http\Controllers\JobSeeker\ApplicationsController as SeekerApplicationsController;
 use App\Http\Controllers\JobSeeker\ResumeController as SeekerResumeController;
 use App\Http\Controllers\JobSeeker\DiscoveryController as SeekerDiscoveryController;
 use Illuminate\Support\Facades\Route;
@@ -37,6 +38,8 @@ Route::prefix('account')->name('seeker.')->group(function () {
         Route::patch('/profile',[SeekerDashboardController::class,'updateProfile'])->name('profile.update');
         Route::post('/saved-jobs/{job}',[SeekerDashboardController::class,'save'])->name('jobs.save');
         Route::delete('/saved-jobs/{job}',[SeekerDashboardController::class,'unsave'])->name('jobs.unsave');
+        Route::get('/applications',[SeekerApplicationsController::class,'index'])->name('applications');
+        Route::get('/applications/{job}/history',[SeekerApplicationsController::class,'history'])->name('applications.history');
         Route::post('/applications/{job}',[SeekerDashboardController::class,'track'])->name('jobs.track');
         Route::post('/resume',[SeekerResumeController::class,'store'])->middleware('throttle:10,1')->name('resume.store');
         Route::get('/resume',[SeekerResumeController::class,'download'])->name('resume.download');
