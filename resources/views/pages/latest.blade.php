@@ -1,6 +1,6 @@
 <x-layouts.site :title="$category ?? 'Latest Updates'">
 <section class="dji-container py-10 sm:py-16">
-  <x-ui.section-heading eyebrow="Newsroom" :title="$category ?? 'Latest Updates'" description="Browse published announcements and verify deadlines with the issuing organisation."/>
+  <x-ui.section-heading :level="1" eyebrow="Newsroom" :title="$category ?? 'Latest Updates'" description="Browse published announcements and verify deadlines with the issuing organisation."/>
   <div class="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
     @forelse($articles as $article)
       <x-article-card :article="$article"/>
