@@ -31,6 +31,11 @@ class ApplicationsController extends Controller {
             'interview_at'=>['nullable','date','after:now'],
             'interview_instructions'=>['nullable','string','max:2000'],
         ]);
+        if($data['status']==='interview' && empty($data['interview_at'])) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'interview_at'=>'An interview date and time is required for interview status.',
+            ]);
+        }
         if($data['status']!=='interview') {
             $data['interview_at']=null;
             $data['interview_instructions']=null;

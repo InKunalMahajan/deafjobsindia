@@ -20,6 +20,8 @@ class RecruitmentApplicationController extends Controller {
     public function store(Request $request,JobListing $job): RedirectResponse {
         abort_unless($job->status==='published' && $job->published_at?->lte(now()) && !$job->is_closed,404);
         abort_unless($job->application_method==='internal',404);
+        // An approved job must not accept new private applications after its employer loses verification.
+        abort_unless($job->employer?->verified,404);
         $data=$request->validate([
             'cover_note'=>['nullable','string','max:3000'],
             'consent'=>['accepted'],
