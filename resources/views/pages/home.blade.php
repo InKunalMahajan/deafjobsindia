@@ -4,6 +4,7 @@
     <div>
       <p class="text-xs font-semibold uppercase tracking-widest text-neutral-600">Jobs across India</p>
       <h1 class="mt-4 max-w-xl text-4xl font-extrabold tracking-tight sm:text-6xl">Find your next opportunity</h1>
+      <p class="mt-2 text-sm font-semibold text-neutral-700">Find a job. Find opportunities.</p>
       <p class="mt-5 max-w-lg text-base leading-8 text-neutral-600">Explore vacancies, compare employers and apply through official recruitment websites.</p>
       <div class="mt-6 flex flex-wrap gap-3"><x-ui.button :href="route('jobs.index')">Browse jobs</x-ui.button><x-ui.button variant="secondary" :href="route('employers.index')">Explore employers</x-ui.button></div>
     </div>
