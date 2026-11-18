@@ -1,4 +1,4 @@
-<x-layouts.site :title="$employer->name">
+<x-layouts.site :title="$employer->name" :description="\Illuminate\Support\Str::limit($employer->description ?: 'Reviewed employer profile and job opportunities on DeafJobsIndia.', 155)" :canonical="route('employers.show', $employer->slug)">
 <section class="dji-container py-10 sm:py-16">
   <div class="mx-auto max-w-5xl">
     <a href="{{ route('employers.index') }}" class="text-sm font-semibold underline underline-offset-4">All employers</a>
