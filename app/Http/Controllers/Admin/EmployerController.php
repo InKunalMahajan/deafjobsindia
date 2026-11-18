@@ -14,7 +14,7 @@ class EmployerController extends Controller
     public function index(): View
     {
         return view('admin.employers.index', [
-            'employers' => Employer::latest()->paginate(15),
+            'employers' => Employer::withCount('jobs')->orderBy('verified')->orderBy('name')->orderBy('id')->paginate(15),
         ]);
     }
 
