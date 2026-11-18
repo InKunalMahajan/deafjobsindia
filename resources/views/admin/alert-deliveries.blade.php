@@ -4,12 +4,12 @@
 <p class="mt-3">Administrator view. Retry does not send an email immediately.</p>
 @if(session('status'))<p role="status" class="mt-3">{{ session('status') }}</p>@endif
 <div class="mt-6 flex flex-wrap gap-3">
-<a class="underline" href="{{ route('admin.alert-deliveries.index') }}">All</a>
+<a class="min-h-11 rounded border border-neutral-500 px-3 py-2 underline" href="{{ route('admin.alert-deliveries.index') }}" @if(!$status) aria-current="page" @endif>All</a>
 @foreach(['pending','failed','exhausted','sent','cancelled'] as $option)
-<a class="underline" href="{{ route('admin.alert-deliveries.index',['status'=>$option]) }}">{{ ucfirst($option) }} ({{ $counts[$option] ?? 0 }})</a>
+<a class="min-h-11 rounded border border-neutral-500 px-3 py-2 underline" href="{{ route('admin.alert-deliveries.index',['status'=>$option]) }}" @if($status===$option) aria-current="page" @endif>{{ ucfirst($option) }} ({{ $counts[$option] ?? 0 }})</a>
 @endforeach
 </div>
-<div class="mt-6 overflow-x-auto"><table class="w-full border-collapse text-left text-sm">
+<div class="mt-6 max-w-full overflow-x-auto"><table class="min-w-[44rem] w-full border-collapse text-left text-sm">
 <thead><tr>
 <th scope="col" class="border-b p-3">Delivery ID</th>
 <th scope="col" class="border-b p-3">Alert ID</th>
