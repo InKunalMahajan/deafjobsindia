@@ -9,11 +9,10 @@ class NewsController extends Controller
 {
     public function index(?string $category = null): View
     {
-        $query = Article::published()->latest('published_at');
-
-        if ($category !== null) {
-            $query->where('category', $category);
-        }
+        $query = Article::published()
+            ->when($category !== null, fn ($builder) => $builder->where('category', $category))
+            ->latest('published_at')
+            ->orderByDesc('id');
 
         return view('pages.latest', [
             'articles' => $query->paginate(12),
@@ -23,9 +22,7 @@ class NewsController extends Controller
 
     public function show(string $slug): View
     {
-        $article = Article::published()
-            ->where('slug', $slug)
-            ->firstOrFail();
+        $article = Article::published()->where('slug', $slug)->firstOrFail();
 
         return view('pages.article', ['article' => $article]);
     }
