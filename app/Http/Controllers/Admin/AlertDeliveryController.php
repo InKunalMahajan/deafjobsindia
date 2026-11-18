@@ -23,12 +23,19 @@ class AlertDeliveryController extends Controller {
     }
 
     public function retry(Request $request,int $delivery): RedirectResponse {
-        $changed=DB::table('job_alert_outbox')->where('id',$delivery)
-            ->whereIn('status',['failed','exhausted'])
-            ->update([
-                'status'=>'pending','attempts'=>0,'next_attempt_at'=>null,
-                'last_error'=>null,'updated_at'=>now(),
+        $changed=DB::transaction(function() use($delivery,$request) {
+            $changed=DB::table('job_alert_outbox')->where('id',$delivery)
+                ->whereIn('status',['failed','exhausted'])
+                ->update([
+                    'status'=>'pending','attempts'=>0,'next_attempt_at'=>null,
+                    'last_error'=>null,'updated_at'=>now(),
+                ]);
+            if($changed) DB::table('alert_delivery_audits')->insert([
+                'delivery_id'=>$delivery,'actor_id'=>$request->user()->id,
+                'action'=>'retry_queued','created_at'=>now(),
             ]);
+            return $changed;
+        });
         abort_unless($changed,404);
         // Retry only queues an outbox row. No mail is sent by this HTTP request.
         return back()->with('status','Delivery queued for a future attempt. Email delivery remains controlled by server settings.');
