@@ -17,6 +17,8 @@ use App\Http\Controllers\JobSeeker\AuthController as SeekerAuthController;
 use App\Http\Controllers\JobSeeker\DashboardController as SeekerDashboardController;
 use App\Http\Controllers\JobSeeker\GoogleController as SeekerGoogleController;
 use App\Models\JobListing;
+use App\Http\Controllers\JobSeeker\RecruitmentApplicationController as SeekerRecruitmentController;
+use App\Http\Controllers\EmployerPortal\ApplicationsController as EmployerApplicationsController;
 use App\Http\Controllers\EmployerPortal\AuthController as EmployerAuthController;
 use App\Http\Controllers\EmployerPortal\DashboardController as EmployerDashboardController;
 use App\Http\Controllers\JobSeeker\ApplicationsController as SeekerApplicationsController;
@@ -35,6 +37,8 @@ Route::prefix('employer-account')->name('employer.')->group(function() {
     Route::middleware(['auth','can:employer.view'])->group(function() {
         Route::get('/',[EmployerDashboardController::class,'index'])->name('dashboard');
         Route::post('/jobs',[EmployerDashboardController::class,'storeJob'])->middleware('throttle:10,1')->name('jobs.store');
+        Route::get('/jobs/{job}/applications',[EmployerApplicationsController::class,'index'])->name('applications');
+        Route::patch('/jobs/{job}/applications/{application}',[EmployerApplicationsController::class,'update'])->middleware('throttle:30,1')->name('applications.update');
         Route::post('/logout',[EmployerAuthController::class,'logout'])->name('logout');
     });
 });
@@ -55,6 +59,8 @@ Route::prefix('account')->name('seeker.')->group(function () {
         Route::patch('/profile',[SeekerDashboardController::class,'updateProfile'])->name('profile.update');
         Route::post('/saved-jobs/{job}',[SeekerDashboardController::class,'save'])->name('jobs.save');
         Route::delete('/saved-jobs/{job}',[SeekerDashboardController::class,'unsave'])->name('jobs.unsave');
+        Route::get('/submitted-applications',[SeekerRecruitmentController::class,'index'])->name('submitted');
+        Route::post('/apply/{job}',[SeekerRecruitmentController::class,'store'])->middleware('throttle:10,1')->name('apply');
         Route::get('/applications',[SeekerApplicationsController::class,'index'])->name('applications');
         Route::get('/applications/{job}/history',[SeekerApplicationsController::class,'history'])->name('applications.history');
         Route::post('/applications/{job}',[SeekerDashboardController::class,'track'])->name('jobs.track');
