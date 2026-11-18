@@ -40,17 +40,53 @@ class StageElevenSecurityAuditTest extends TestCase
 
     public function test_admin_login_is_not_cacheable(): void
     {
-        $this->get(route('admin.login'))->assertOk()
-            ->assertHeader('Cache-Control', 'no-store, private')
+        $response = $this->get(route('admin.login'))->assertOk()
             ->assertHeader('X-Content-Type-Options', 'nosniff')
             ->assertHeader('X-Frame-Options', 'DENY');
+
+        $directives = array_map('trim', explode(',', $response->headers->get('Cache-Control', '')));
+        $this->assertContains('no-store', $directives);
+        $this->assertContains('private', $directives);
     }
 
     public function test_admin_dashboard_is_not_cacheable(): void
     {
-        $this->actingAs(User::factory()->create(['role' => 'admin']))
-            ->get(route('admin.dashboard'))->assertOk()
-            ->assertHeader('Cache-Control', 'no-store, private');
+        $response = $this->actingAs(User::factory()->create(['role' => 'admin']))
+            ->get(route('admin.dashboard'))->assertOk();
+
+        $directives = array_map('trim', explode(',', $response->headers->get('Cache-Control', '')));
+        $this->assertContains('no-store', $directives);
+        $this->assertContains('private', $directives);
+    }
+
+    public function test_public_home_keeps_security_headers_without_private_cache_policy(): void
+    {
+        $response = $this->get(route('home'))->assertOk()
+            ->assertHeader('X-Content-Type-Options', 'nosniff')
+            ->assertHeader('X-Frame-Options', 'DENY');
+
+        $this->assertStringNotContainsString('no-store', $response->headers->get('Cache-Control', ''));
+    }
+
+    public function test_viewer_cannot_access_employer_management(): void
+    {
+        $this->actingAs(User::factory()->create(['role' => 'viewer']))
+            ->get(route('admin.employers.index'))->assertForbidden();
+    }
+
+    public function test_editor_cannot_publish_new_article(): void
+    {
+        $this->actingAs(User::factory()->create(['role' => 'editor']))
+            ->post(route('admin.articles.store'), [
+                'title' => 'Unauthorized publication',
+                'slug' => 'unauthorized-publication',
+                'description' => 'Should not publish',
+                'category' => 'Career',
+                'body' => 'Article body',
+                'status' => 'published',
+            ])->assertForbidden();
+
+        $this->assertDatabaseMissing('articles', ['slug' => 'unauthorized-publication']);
     }
 
     public function test_guest_cannot_modify_job_review(): void
