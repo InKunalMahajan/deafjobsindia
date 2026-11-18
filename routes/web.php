@@ -17,10 +17,27 @@ use App\Http\Controllers\JobSeeker\AuthController as SeekerAuthController;
 use App\Http\Controllers\JobSeeker\DashboardController as SeekerDashboardController;
 use App\Http\Controllers\JobSeeker\GoogleController as SeekerGoogleController;
 use App\Models\JobListing;
+use App\Http\Controllers\EmployerPortal\AuthController as EmployerAuthController;
+use App\Http\Controllers\EmployerPortal\DashboardController as EmployerDashboardController;
 use App\Http\Controllers\JobSeeker\ApplicationsController as SeekerApplicationsController;
 use App\Http\Controllers\JobSeeker\ResumeController as SeekerResumeController;
 use App\Http\Controllers\JobSeeker\DiscoveryController as SeekerDiscoveryController;
 use Illuminate\Support\Facades\Route;
+
+// Employer portal is separate from both administrator and job-seeker routes.
+Route::prefix('employer-account')->name('employer.')->group(function() {
+    Route::middleware('guest')->group(function() {
+        Route::get('/register',[EmployerAuthController::class,'registerForm'])->name('register');
+        Route::post('/register',[EmployerAuthController::class,'register'])->middleware('throttle:5,1')->name('register.store');
+        Route::get('/login',[EmployerAuthController::class,'loginForm'])->name('login');
+        Route::post('/login',[EmployerAuthController::class,'login'])->middleware('throttle:5,1')->name('login.store');
+    });
+    Route::middleware(['auth','can:employer.view'])->group(function() {
+        Route::get('/',[EmployerDashboardController::class,'index'])->name('dashboard');
+        Route::post('/jobs',[EmployerDashboardController::class,'storeJob'])->middleware('throttle:10,1')->name('jobs.store');
+        Route::post('/logout',[EmployerAuthController::class,'logout'])->name('logout');
+    });
+});
 
 // Job-seeker authentication is separate from the existing /admin/login routes.
 Route::prefix('account')->name('seeker.')->group(function () {
