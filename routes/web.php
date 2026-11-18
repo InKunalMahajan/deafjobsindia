@@ -70,6 +70,7 @@ Route::prefix('account')->name('seeker.')->group(function () {
         Route::get('/recommendations',[SeekerDiscoveryController::class,'recommendations'])->name('recommendations');
         Route::get('/alerts',[SeekerDiscoveryController::class,'alerts'])->name('alerts');
         Route::post('/alerts',[SeekerDiscoveryController::class,'storeAlert'])->middleware('throttle:10,1')->name('alerts.store');
+        Route::patch('/alerts/{alert}',[SeekerDiscoveryController::class,'updateAlert'])->middleware('throttle:20,1')->name('alerts.update');
         Route::delete('/alerts/{alert}',[SeekerDiscoveryController::class,'deleteAlert'])->name('alerts.delete');
         Route::post('/logout',[SeekerAuthController::class,'logout'])->name('logout');
     });
