@@ -9,8 +9,8 @@
 @foreach(['Jobs','Education','Training','Career','Government Schemes','Job Fairs','Community','Technology'] as $categoryOption)
 <option value="{{ $categoryOption }}" @selected(old('category',$article->category)===$categoryOption)>{{ $categoryOption }}</option>
 @endforeach
-@if($article->category && !in_array($article->category, ['Jobs','Education','Training','Career','Government Schemes','Job Fairs','Community','Technology'], true))
-<option value="{{ $article->category }}" selected>{{ $article->category }} (existing category)</option>
+@if(old('category',$article->category) && !in_array(old('category',$article->category), ['Jobs','Education','Training','Career','Government Schemes','Job Fairs','Community','Technology'], true))
+<option value="{{ old('category',$article->category) }}" selected>{{ old('category',$article->category) }} (existing category)</option>
 @endif
 </select>
 </div>
