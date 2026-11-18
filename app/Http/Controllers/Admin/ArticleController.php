@@ -14,7 +14,7 @@ class ArticleController extends Controller
 {
     public function index(): View
     {
-        return view('admin.articles.index', ['articles' => Article::latest()->paginate(20)]);
+        return view('admin.articles.index', ['articles' => Article::latest()->orderByDesc('id')->paginate(20)]);
     }
 
     public function create(): View
