@@ -6,6 +6,10 @@ use Illuminate\Support\ServiceProvider;
 class AppServiceProvider extends ServiceProvider {
     public function register(): void {}
     public function boot(): void {
+        \Illuminate\Auth\Notifications\ResetPassword::createUrlUsing(function(User $user,string $token) {
+            $portal=$user->role==='employer' ? 'employer' : 'seeker';
+            return route($portal.'.password.reset',['token'=>$token,'email'=>$user->getEmailForPasswordReset()]);
+        });
         Gate::before(fn (User $user,string $ability) => in_array($ability,['seeker.view','employer.view'],true) ? $user->role === ($ability === 'seeker.view' ? 'job_seeker' : 'employer') : ($user->isSuperAdmin() ? true : null));
         Gate::define('employer.view',fn (User $user) => $user->role==='employer');
         Gate::define('seeker.view',fn (User $user) => $user->role==='job_seeker');
