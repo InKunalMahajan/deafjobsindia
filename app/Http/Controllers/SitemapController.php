@@ -20,7 +20,7 @@ class SitemapController extends Controller
             ['loc' => route('contact')],
         ];
 
-        Article::published()->select(['slug', 'updated_at'])->orderBy('id')->chunkById(500, function ($articles) use (&$urls) {
+        Article::published()->select(['id', 'slug', 'updated_at'])->orderBy('id')->chunkById(500, function ($articles) use (&$urls) {
             foreach ($articles as $article) {
                 $urls[] = ['loc' => route('news.show', $article->slug), 'lastmod' => $article->updated_at?->toAtomString()];
             }
