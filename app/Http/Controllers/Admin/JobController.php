@@ -17,7 +17,7 @@ class JobController extends Controller {
         return redirect()->route('admin.jobs.index')->with('status','Job created.');
     }
     public function edit(JobListing $job): View {
-        return view('admin.jobs.form',['job'=>$job,'employers'=>Employer::orderBy('name')->get()]);
+        return view('admin.jobs.form',['job'=>$job,'employers'=>Employer::orderBy('name')->get(),'categories'=>JobCategory::orderBy('name')->get()]);
     }
     public function update(Request $request,JobListing $job): RedirectResponse {
         $job->update($this->validated($request,$job));
@@ -44,10 +44,10 @@ class JobController extends Controller {
             'requirements'=>['nullable','string','max:20000'],
             'salary_text'=>['nullable','string','max:255'],
             'job_category_id'=>['nullable','exists:job_categories,id'],
-            'salary_min_annual'=>['nullable','integer','min:0','max:999999999'],
-            'salary_max_annual'=>['nullable','integer','min:0','max:999999999','gte:salary_min_annual'],
-            'experience_min_years'=>['nullable','integer','between:0,60'],
-            'experience_max_years'=>['nullable','integer','between:0,60','gte:experience_min_years'],
+            'salary_min_annual'=>['nullable','required_with:salary_max_annual','integer','min:0','max:999999999'],
+            'salary_max_annual'=>['nullable','required_with:salary_min_annual','integer','min:0','max:999999999','gte:salary_min_annual'],
+            'experience_min_years'=>['nullable','required_with:experience_max_years','integer','between:0,60'],
+            'experience_max_years'=>['nullable','required_with:experience_min_years','integer','between:0,60','gte:experience_min_years'],
             'is_featured'=>['sometimes','boolean'],
             'source_url'=>['required','url','starts_with:https://','max:2048'],
             'apply_url'=>['required','url','starts_with:https://','max:2048'],
@@ -61,8 +61,14 @@ class JobController extends Controller {
         $data['application_method']='external';
         $data['is_deaf_friendly']=$request->boolean('is_deaf_friendly');
         $data['is_pwd_eligible']=$request->boolean('is_pwd_eligible');
-        if ($request->boolean('is_featured') || $job?->is_featured) Gate::authorize('jobs.publish');
-        $data['is_featured']=$request->boolean('is_featured');
+        if (Gate::allows('jobs.publish')) {
+            $data['is_featured']=$request->boolean('is_featured');
+        } else {
+            if ($request->has('is_featured')) {
+                Gate::authorize('jobs.publish');
+            }
+            unset($data['is_featured']);
+        }
         if ($data['status']==='published') {
             Gate::authorize('jobs.publish');
             $data['published_at']=$job?->published_at ?? now();
