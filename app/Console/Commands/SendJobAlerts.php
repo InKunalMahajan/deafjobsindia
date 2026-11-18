@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
 class SendJobAlerts extends Command {
@@ -17,9 +18,16 @@ class SendJobAlerts extends Command {
     public function handle(): int {
         $dryRun=(bool)$this->option('dry-run');
         $processed=0;
+        $failed=0;
+        $skipped=0;
         DB::table('job_alerts')->where('enabled',true)->where('email_opt_in',true)
-            ->orderBy('id')->chunkById(100,function($alerts) use($dryRun,&$processed) {
+            ->orderBy('id')->chunkById(100,function($alerts) use($dryRun,&$processed,&$failed,&$skipped) {
                 foreach($alerts as $alert) {
+                    // A shared cache lock prevents concurrent workers sending the same alert.
+                    // Dry runs never acquire locks or modify delivery state.
+                    $lock=$dryRun ? null : Cache::lock('job-alert-digest:'.$alert->id,300);
+                    if($lock && !$lock->get()) { $skipped++; continue; }
+                    try {
                     $user=User::find($alert->user_id);
                     if(!$user || $user->role!=='job_seeker' || !$user->email_verified_at) continue;
                     $hours=$alert->frequency==='weekly' ? 168 : 24;
@@ -59,11 +67,16 @@ class SendJobAlerts extends Command {
                         });
                     } catch(\Throwable $e) {
                         report($e);
+                        $failed++;
                         $this->error('Unable to send alert '.$alert->id);
+                    }
+                    } finally {
+                        if($lock) $lock->release();
                     }
                 }
             });
-        $this->info(($dryRun ? 'Matched alerts: ' : 'Processed alert digests: ').$processed);
-        return self::SUCCESS;
+        $this->info(($dryRun ? 'Matched alerts: ' : 'Attempted alert digests: ').$processed);
+        if(!$dryRun) $this->info('Failed: '.$failed.'; skipped (locked): '.$skipped);
+        return $failed ? self::FAILURE : self::SUCCESS;
     }
 }
