@@ -1,6 +1,11 @@
 @php
 $jobSchema = null;
-if (!$job->is_closed && $job->published_at && $job->apply_url) {
+// Only mark up vacancies with a usable application link and grounded location.
+// Remote eligibility cannot be inferred from the website's country alone.
+$validApplyUrl = is_string($job->apply_url)
+    && filter_var($job->apply_url, FILTER_VALIDATE_URL)
+    && str_starts_with($job->apply_url, 'https://');
+if (!$job->is_closed && $job->published_at && $validApplyUrl && $job->work_mode !== 'remote' && filled($job->location)) {
     $jobSchema = [
         '@context' => 'https://schema.org',
         '@type' => 'JobPosting',
@@ -16,15 +21,15 @@ if (!$job->is_closed && $job->published_at && $job->apply_url) {
         'url' => route('jobs.show', $job->slug),
     ];
     if ($job->deadline) $jobSchema['validThrough'] = $job->deadline->endOfDay()->toIso8601String();
-    if ($job->work_mode === 'remote') {
-        $jobSchema['jobLocationType'] = 'TELECOMMUTE';
-        $jobSchema['applicantLocationRequirements'] = ['@type' => 'Country', 'name' => 'India'];
-    } else {
-        $jobSchema['jobLocation'] = [
-            '@type' => 'Place',
-            'address' => ['@type' => 'PostalAddress', 'addressLocality' => $job->location, 'addressRegion' => $job->state, 'addressCountry' => 'IN'],
-        ];
-    }
+    $jobSchema['jobLocation'] = [
+        '@type' => 'Place',
+        'address' => array_filter([
+            '@type' => 'PostalAddress',
+            'addressLocality' => $job->location,
+            'addressRegion' => $job->state,
+            'addressCountry' => 'IN',
+        ], fn ($value) => $value !== null && $value !== ''),
+    ];
 }
 @endphp
 <x-layouts.site :title="$job->title" :description="$job->summary" :canonical="route('jobs.show', $job->slug)" :robots="$job->is_closed ? 'noindex,follow' : null" :structured-data="$jobSchema">
