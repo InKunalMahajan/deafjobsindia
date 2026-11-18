@@ -32,7 +32,11 @@
 <flux:input name="salary_text" label="Salary information" :value="old('salary_text',$job->salary_text)" />
 <flux:input name="source_url" label="Original source URL (HTTPS)" type="url" required :value="old('source_url',$job->source_url)" />
 <flux:input name="apply_url" label="Application URL (HTTPS)" type="url" required :value="old('apply_url',$job->apply_url)" />
-<flux:input name="application_method" label="Application method" value="external" readonly />
+<div><label class="mb-2 block text-sm font-medium" for="application_method">Application method</label>
+<select id="application_method" name="application_method" class="w-full rounded border border-neutral-300 p-3">
+<option value="external" @selected(old('application_method',$job->application_method ?? 'external')==='external')>External employer website</option>
+@can('jobs.publish')<option value="internal" @selected(old('application_method',$job->application_method)==='internal')>DeafJobsIndia application (verified employers only)</option>@endcan
+</select></div>
 <flux:textarea name="application_instructions" label="Application instructions">{{ old('application_instructions',$job->application_instructions) }}</flux:textarea>
 <flux:input name="deadline" label="Application deadline" type="date" :value="old('deadline',$job->deadline?->format('Y-m-d'))" />
 <input type="hidden" name="is_deaf_friendly" value="0"><label class="flex gap-3"><input type="checkbox" name="is_deaf_friendly" value="1" @checked(old('is_deaf_friendly',$job->is_deaf_friendly))> Employer reports Deaf-friendly accommodations</label>
