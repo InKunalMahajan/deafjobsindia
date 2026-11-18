@@ -7,7 +7,9 @@
 <label class="grid gap-2 font-semibold">Email<input class="min-h-12 rounded-lg border border-neutral-500 px-3" type="email" name="email" autocomplete="email" required value="{{ old('email') }}"></label>
 <label class="grid gap-2 font-semibold">Password<input class="min-h-12 rounded-lg border border-neutral-500 px-3" type="password" name="password" autocomplete="current-password" required></label>
 <button class="min-h-12 rounded-lg bg-black px-4 text-white" type="submit">Sign in</button></form>
-<a class="mt-4 inline-block underline" href="{{ route('seeker.password.request') }}">Forgot password?</a>
-<a class="mt-4 inline-block underline" href="{{ route('seeker.google.redirect') }}">Continue with Google</a>
+<div class="mt-4 flex flex-wrap items-center gap-x-6 gap-y-3">
+<a class="underline underline-offset-4" href="{{ route('seeker.password.request') }}">Forgot password?</a>
+<a class="underline underline-offset-4" href="{{ route('seeker.google.redirect') }}">Continue with Google</a>
+</div>
 <p class="mt-6">New here? <a class="font-semibold underline" href="{{ route('seeker.register') }}">Create an account</a></p>
 </div></section></x-layouts.site>
