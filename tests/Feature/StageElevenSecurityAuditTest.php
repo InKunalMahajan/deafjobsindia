@@ -89,6 +89,41 @@ class StageElevenSecurityAuditTest extends TestCase
         $this->assertDatabaseMissing('articles', ['slug' => 'unauthorized-publication']);
     }
 
+    public function test_oversized_login_input_is_rejected(): void
+    {
+        $this->post(route('admin.login.store'), [
+            'email' => str_repeat('a', 260).'@example.org',
+            'password' => str_repeat('p', 4097),
+        ])->assertSessionHasErrors(['email', 'password']);
+    }
+
+    public function test_unsafe_job_source_url_is_rejected_before_publishing(): void
+    {
+        $employer = Employer::create([
+            'name' => 'Source Employer',
+            'slug' => 'source-employer',
+            'verified' => true,
+        ]);
+
+        $this->actingAs(User::factory()->create(['role' => 'admin']))
+            ->post(route('admin.jobs.store'), [
+                'employer_id' => $employer->id,
+                'slug' => 'unsafe-source',
+                'title' => 'Unsafe source job',
+                'location' => 'Pune',
+                'employment_type' => 'full-time',
+                'work_mode' => 'onsite',
+                'sector' => 'private',
+                'summary' => 'Job summary',
+                'description' => 'Job description',
+                'source_url' => 'javascript:alert(1)',
+                'apply_url' => 'https://example.org/apply',
+                'status' => 'draft',
+            ])->assertSessionHasErrors('source_url');
+
+        $this->assertDatabaseMissing('job_listings', ['slug' => 'unsafe-source']);
+    }
+
     public function test_guest_cannot_modify_job_review(): void
     {
         $job = $this->job();
