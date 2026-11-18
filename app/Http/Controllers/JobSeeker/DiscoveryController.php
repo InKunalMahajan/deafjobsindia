@@ -35,14 +35,14 @@ class DiscoveryController extends Controller {
         $data=$request->validate([
             'keywords'=>['nullable','string','max:150'],
             'location'=>['nullable','string','max:150'],
-            'frequency'=>['required',\Illuminate\Validation\Rule::in(['daily','weekly'])],
+            'frequency'=>['sometimes',\Illuminate\Validation\Rule::in(['daily','weekly'])],
             'email_opt_in'=>['sometimes','boolean'],
         ]);
         if(blank($data['keywords'] ?? null) && blank($data['location'] ?? null)) {
             return back()->withErrors(['keywords'=>'Enter keywords or a location.']);
         }
         abort_if(DB::table('job_alerts')->where('user_id',$request->user()->id)->count()>=10,422);
-        DB::table('job_alerts')->insert([...$data,'email_opt_in'=>$request->boolean('email_opt_in'),'user_id'=>$request->user()->id,'enabled'=>true,'created_at'=>now(),'updated_at'=>now()]);
+        DB::table('job_alerts')->insert([...$data,'frequency'=>$data['frequency'] ?? 'daily','email_opt_in'=>$request->boolean('email_opt_in'),'user_id'=>$request->user()->id,'enabled'=>true,'created_at'=>now(),'updated_at'=>now()]);
         return back()->with('status','Job alert saved. Emails are sent only when you opt in and verify your email address.');
     }
     public function updateAlert(Request $request,int $alert): RedirectResponse {
