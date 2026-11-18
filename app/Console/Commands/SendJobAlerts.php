@@ -23,7 +23,7 @@ class SendJobAlerts extends Command {
                     $user=User::find($alert->user_id);
                     if(!$user || $user->role!=='job_seeker' || !$user->email_verified_at) continue;
                     $hours=$alert->frequency==='weekly' ? 168 : 24;
-                    if($alert->last_sent_at && now()->diffInMinutes($alert->last_sent_at)<$hours*60) continue;
+                    if($alert->last_sent_at && \Illuminate\Support\Carbon::parse($alert->last_sent_at)->diffInMinutes(now())<$hours*60) continue;
                     $query=JobListing::query()->published()->open()
                         ->whereNotIn('id',DB::table('job_alert_deliveries')->select('job_listing_id')->where('job_alert_id',$alert->id));
                     if(filled($alert->location)) $query->where('location','like','%'.$alert->location.'%');
