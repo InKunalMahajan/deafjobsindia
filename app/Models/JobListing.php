@@ -12,7 +12,8 @@ class JobListing extends Model {
         'employer_id','slug','title','location','state','employment_type',
         'work_mode','sector','is_deaf_friendly','is_pwd_eligible','summary',
         'description','requirements','salary_text','source_url','apply_url',
-        'deadline','status','published_at','job_category_id','is_featured','application_method','application_instructions','application_review_status','application_reviewed_at','application_reviewed_by',
+        'deadline','status','published_at','job_category_id','is_featured',
+        'salary_min_annual','salary_max_annual','experience_min_years','experience_max_years','application_method','application_instructions','application_review_status','application_reviewed_at','application_reviewed_by',
     ];
     protected function casts(): array {
         return ['is_deaf_friendly'=>'boolean','is_pwd_eligible'=>'boolean',
