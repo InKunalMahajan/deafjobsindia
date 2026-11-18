@@ -19,6 +19,16 @@
 <flux:textarea name="summary" label="Short summary" required>{{ old('summary',$job->summary) }}</flux:textarea>
 <flux:textarea name="description" label="Full description (Markdown supported)" required>{{ old('description',$job->description) }}</flux:textarea>
 <flux:textarea name="requirements" label="Requirements">{{ old('requirements',$job->requirements) }}</flux:textarea>
+<div><label class="mb-2 block text-sm font-medium" for="job_category_id">Job category</label><select id="job_category_id" name="job_category_id" class="w-full rounded border border-neutral-300 p-3"><option value="">Uncategorised</option>@foreach($categories as $category)<option value="{{ $category->id }}" @selected(old('job_category_id',$job->job_category_id)==$category->id)>{{ $category->name }}</option>@endforeach</select></div>
+<div class="grid gap-4 sm:grid-cols-2">
+  <flux:input name="salary_min_annual" type="number" min="0" label="Minimum annual salary (INR)" :value="old('salary_min_annual',$job->salary_min_annual)" />
+  <flux:input name="salary_max_annual" type="number" min="0" label="Maximum annual salary (INR)" :value="old('salary_max_annual',$job->salary_max_annual)" />
+  <flux:input name="experience_min_years" type="number" min="0" max="60" label="Minimum experience (years)" :value="old('experience_min_years',$job->experience_min_years)" />
+  <flux:input name="experience_max_years" type="number" min="0" max="60" label="Maximum experience (years)" :value="old('experience_max_years',$job->experience_max_years)" />
+</div>
+@can('jobs.publish')
+<input type="hidden" name="is_featured" value="0"><label class="flex gap-3"><input type="checkbox" name="is_featured" value="1" @checked(old('is_featured',$job->is_featured))> Featured job</label>
+@endcan
 <flux:input name="salary_text" label="Salary information" :value="old('salary_text',$job->salary_text)" />
 <flux:input name="source_url" label="Original source URL (HTTPS)" type="url" required :value="old('source_url',$job->source_url)" />
 <flux:input name="apply_url" label="Application URL (HTTPS)" type="url" required :value="old('apply_url',$job->apply_url)" />
