@@ -65,7 +65,13 @@ class EmployerController extends Controller
             'verified' => ['sometimes', 'boolean'],
         ]);
 
-        $data['verified'] = $request->boolean('verified');
+        // The form sends an explicit 0 or 1. An omitted field must not
+        // silently change the review status of an existing employer.
+        if ($request->exists('verified')) {
+            $data['verified'] = $request->boolean('verified');
+        } elseif ($employer === null) {
+            $data['verified'] = false;
+        }
 
         return $data;
     }
