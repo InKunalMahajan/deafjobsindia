@@ -5,31 +5,27 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class DesignSystemTest extends TestCase
-{
+class DesignSystemTest extends TestCase {
     use RefreshDatabase;
 
-    public function test_internal_preview_is_available_in_local_environment(): void
-    {
+    public function test_internal_preview_is_available_in_local_environment(): void {
         app()->detectEnvironment(fn () => 'local');
-        $this->get('/design-system')
-            ->assertOk()
+        $this->get('/design-system')->assertOk()
             ->assertSee('Design system')
             ->assertSee('Verified source')
             ->assertSee('Skip to main content');
     }
 
-    public function test_navigation_has_accessible_labels(): void
-    {
-        $this->get('/')
-            ->assertOk()
+    public function test_navigation_has_labels_and_footer_links(): void {
+        $this->get('/')->assertOk()
             ->assertSee('Primary navigation')
             ->assertSee('Mobile navigation')
-            ->assertSee('Legal and information');
+            ->assertSee('Information links')
+            ->assertSee('Find Jobs')
+            ->assertSee('Privacy');
     }
 
-    public function test_internal_preview_is_not_available_in_production(): void
-    {
+    public function test_internal_preview_is_not_available_in_production(): void {
         app()->detectEnvironment(fn () => 'production');
         $this->get('/design-system')->assertNotFound();
     }
