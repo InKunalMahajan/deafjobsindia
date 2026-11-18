@@ -9,6 +9,8 @@
         <div class="hidden items-center gap-2 lg:flex">
             @if(auth()->check() && auth()->user()->role === 'job_seeker')
                 <x-site.nav-link :href="route('seeker.dashboard')" :active="request()->routeIs('seeker.*')">My account</x-site.nav-link>
+            @elseif(auth()->check() && auth()->user()->role === 'employer')
+                <x-site.nav-link :href="route('employer.dashboard')" :active="request()->routeIs('employer.*')">Employer dashboard</x-site.nav-link>
             @elseif(auth()->guest())
                 <x-site.nav-link :href="route('seeker.login')" :active="request()->routeIs('seeker.login')">Job-seeker login</x-site.nav-link>
             @endif
@@ -24,6 +26,8 @@
                 @endforeach
                 @if(auth()->check() && auth()->user()->role === 'job_seeker')
                     <x-site.nav-link mobile :href="route('seeker.dashboard')" :active="request()->routeIs('seeker.*')">My account</x-site.nav-link>
+                @elseif(auth()->check() && auth()->user()->role === 'employer')
+                    <x-site.nav-link mobile :href="route('employer.dashboard')" :active="request()->routeIs('employer.*')">Employer dashboard</x-site.nav-link>
                 @elseif(auth()->guest())
                     <x-site.nav-link mobile :href="route('seeker.login')" :active="request()->routeIs('seeker.login')">Job-seeker login</x-site.nav-link>
                 @endif
