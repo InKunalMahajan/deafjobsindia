@@ -45,6 +45,18 @@ class JobAlertEmailTest extends TestCase {
         $this->assertDatabaseHas('job_alerts',['id'=>$id,'email_opt_in'=>false,'frequency'=>'daily']);
     }
 
+    public function test_unsubscribed_alert_is_excluded_from_digest(): void {
+        Mail::fake();
+        $user=User::factory()->create(['role'=>'job_seeker','email_verified_at'=>now()]);
+        DB::table('job_alerts')->insert([
+            'user_id'=>$user->id,'keywords'=>'PHP','frequency'=>'daily',
+            'enabled'=>true,'email_opt_in'=>false,
+            'created_at'=>now(),'updated_at'=>now(),
+        ]);
+        $this->artisan('jobs:send-alerts')->assertSuccessful();
+        Mail::assertNothingSent();
+    }
+
     public function test_dry_run_sends_no_emails(): void {
         Mail::fake();
         $this->artisan('jobs:send-alerts',['--dry-run'=>true])->assertSuccessful();
