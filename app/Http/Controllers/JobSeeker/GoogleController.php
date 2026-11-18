@@ -20,6 +20,7 @@ class GoogleController extends Controller {
         $google=Socialite::driver('google')->user();
         $email=$google->getEmail();
         abort_unless($email && filter_var($email,FILTER_VALIDATE_EMAIL),403);
+        abort_unless(in_array($google->user['email_verified'] ?? false,[true,'true','1',1],true),403,'Google email must be verified.');
         // Never silently link Google to an existing password/admin account.
         $user=User::where('google_id',$google->getId())->first();
         if (! $user) {
