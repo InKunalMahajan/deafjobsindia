@@ -16,6 +16,12 @@
     </form>
   </div>
 </section>
+@if($featuredJobs->isNotEmpty())
+<section class="dji-container py-12 sm:py-16">
+  <x-ui.section-heading eyebrow="Selected opportunities" title="Featured jobs"/>
+  <div class="mt-7 grid gap-5 md:grid-cols-2 lg:grid-cols-3">@foreach($featuredJobs as $job)<x-job-card :job="$job"/>@endforeach</div>
+</section>
+@endif
 <section class="dji-container py-12 sm:py-16">
   <div class="flex flex-wrap items-end justify-between gap-4"><x-ui.section-heading eyebrow="Opportunities" title="Latest open jobs" description="Recently published vacancies from across India."/><a href="{{ route('jobs.index') }}" class="text-sm font-semibold underline">View all jobs</a></div>
   <div class="mt-7 grid gap-5 md:grid-cols-2 lg:grid-cols-3">@forelse($jobs as $job)<x-job-card :job="$job"/>@empty<div class="col-span-full"><x-ui.empty-state title="No open jobs yet" description="Please check again soon."/></div>@endforelse</div>
