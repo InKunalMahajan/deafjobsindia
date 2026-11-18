@@ -17,6 +17,8 @@ use App\Http\Controllers\JobSeeker\AuthController as SeekerAuthController;
 use App\Http\Controllers\JobSeeker\DashboardController as SeekerDashboardController;
 use App\Http\Controllers\JobSeeker\GoogleController as SeekerGoogleController;
 use App\Models\JobListing;
+use App\Http\Controllers\JobSeeker\ResumeController as SeekerResumeController;
+use App\Http\Controllers\JobSeeker\DiscoveryController as SeekerDiscoveryController;
 use Illuminate\Support\Facades\Route;
 
 // Job-seeker authentication is separate from the existing /admin/login routes.
@@ -36,6 +38,13 @@ Route::prefix('account')->name('seeker.')->group(function () {
         Route::post('/saved-jobs/{job}',[SeekerDashboardController::class,'save'])->name('jobs.save');
         Route::delete('/saved-jobs/{job}',[SeekerDashboardController::class,'unsave'])->name('jobs.unsave');
         Route::post('/applications/{job}',[SeekerDashboardController::class,'track'])->name('jobs.track');
+        Route::post('/resume',[SeekerResumeController::class,'store'])->middleware('throttle:10,1')->name('resume.store');
+        Route::get('/resume',[SeekerResumeController::class,'download'])->name('resume.download');
+        Route::delete('/resume',[SeekerResumeController::class,'destroy'])->name('resume.destroy');
+        Route::get('/recommendations',[SeekerDiscoveryController::class,'recommendations'])->name('recommendations');
+        Route::get('/alerts',[SeekerDiscoveryController::class,'alerts'])->name('alerts');
+        Route::post('/alerts',[SeekerDiscoveryController::class,'storeAlert'])->middleware('throttle:10,1')->name('alerts.store');
+        Route::delete('/alerts/{alert}',[SeekerDiscoveryController::class,'deleteAlert'])->name('alerts.delete');
         Route::post('/logout',[SeekerAuthController::class,'logout'])->name('logout');
     });
 });
