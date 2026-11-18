@@ -24,7 +24,7 @@
     'Unverified employers' => $pendingEmployers,
     'Articles in draft' => $draftArticles,
     'Jobs needing application updates' => $jobsNeedingReview,
-    'Unreviewed job applications' => $jobsUnreviewed,
+    'Unreviewed application guidance' => $jobsUnreviewed,
 ] as $label => $value)
 <div class="rounded-xl border border-neutral-200 bg-neutral-50 p-5">
   <p class="text-sm text-neutral-600">{{ $label }}</p>
