@@ -50,9 +50,8 @@ class DiscoveryController extends Controller {
             'frequency'=>['required',\Illuminate\Validation\Rule::in(['daily','weekly'])],
             'email_opt_in'=>['sometimes','boolean'],
         ]);
-        $owned=DB::table('job_alerts')->where('user_id',$request->user()->id)->where('id',$alert);
-        abort_unless((clone $owned)->exists(),404);
-        $owned->update([
+        DB::table('job_alerts')->where('user_id',$request->user()->id)
+            ->where('id',$alert)->update([
                 'frequency'=>$data['frequency'],
                 'email_opt_in'=>$request->boolean('email_opt_in'),
                 'updated_at'=>now(),
@@ -60,9 +59,7 @@ class DiscoveryController extends Controller {
         return back()->with('status','Alert preferences updated.');
     }
     public function deleteAlert(Request $request,int $alert): RedirectResponse {
-        $owned=DB::table('job_alerts')->where('user_id',$request->user()->id)->where('id',$alert);
-        abort_unless((clone $owned)->exists(),404);
-        $owned->delete();
+        DB::table('job_alerts')->where('user_id',$request->user()->id)->where('id',$alert)->delete();
         return back()->with('status','Job alert removed.');
     }
 }
