@@ -1,4 +1,33 @@
-<x-layouts.site :title="$job->title" :description="$job->summary">
+@php
+$jobSchema = null;
+if (!$job->is_closed && $job->published_at && $job->apply_url) {
+    $jobSchema = [
+        '@context' => 'https://schema.org',
+        '@type' => 'JobPosting',
+        'title' => $job->title,
+        'description' => \Illuminate\Support\Str::markdown($job->description, ['html_input' => 'strip', 'allow_unsafe_links' => false]),
+        'datePosted' => $job->published_at->toDateString(),
+        'hiringOrganization' => ['@type' => 'Organization', 'name' => $job->employer->name],
+        'employmentType' => match ($job->employment_type) {
+            'full-time' => 'FULL_TIME', 'part-time' => 'PART_TIME',
+            'contract' => 'CONTRACTOR', 'internship' => 'INTERN',
+            default => 'OTHER',
+        },
+        'url' => route('jobs.show', $job->slug),
+    ];
+    if ($job->deadline) $jobSchema['validThrough'] = $job->deadline->endOfDay()->toIso8601String();
+    if ($job->work_mode === 'remote') {
+        $jobSchema['jobLocationType'] = 'TELECOMMUTE';
+        $jobSchema['applicantLocationRequirements'] = ['@type' => 'Country', 'name' => 'India'];
+    } else {
+        $jobSchema['jobLocation'] = [
+            '@type' => 'Place',
+            'address' => ['@type' => 'PostalAddress', 'addressLocality' => $job->location, 'addressRegion' => $job->state, 'addressCountry' => 'IN'],
+        ];
+    }
+}
+@endphp
+<x-layouts.site :title="$job->title" :description="$job->summary" :canonical="route('jobs.show', $job->slug)" :robots="$job->is_closed ? 'noindex,follow' : null" :structured-data="$jobSchema">
 <article class="dji-container py-10 sm:py-14">
   <div class="mx-auto max-w-4xl">
     <a href="{{ route('jobs.index') }}" class="text-sm font-semibold underline underline-offset-4">Back to jobs</a>
