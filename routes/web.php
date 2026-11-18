@@ -13,7 +13,32 @@ use App\Http\Controllers\Admin\EmployerController as AdminEmployerController;
 use App\Http\Controllers\Admin\JobController as AdminJobController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Models\Article;
+use App\Http\Controllers\JobSeeker\AuthController as SeekerAuthController;
+use App\Http\Controllers\JobSeeker\DashboardController as SeekerDashboardController;
+use App\Http\Controllers\JobSeeker\GoogleController as SeekerGoogleController;
+use App\Models\JobListing;
 use Illuminate\Support\Facades\Route;
+
+// Job-seeker authentication is separate from the existing /admin/login routes.
+Route::prefix('account')->name('seeker.')->group(function () {
+    Route::middleware('guest')->group(function () {
+        Route::get('/register',[SeekerAuthController::class,'registerForm'])->name('register');
+        Route::post('/register',[SeekerAuthController::class,'register'])->middleware('throttle:5,1')->name('register.store');
+        Route::get('/login',[SeekerAuthController::class,'loginForm'])->name('login');
+        Route::post('/login',[SeekerAuthController::class,'login'])->middleware('throttle:5,1')->name('login.store');
+        Route::get('/google',[SeekerGoogleController::class,'redirect'])->middleware('throttle:10,1')->name('google.redirect');
+        Route::get('/google/callback',[SeekerGoogleController::class,'callback'])->middleware('throttle:10,1')->name('google.callback');
+    });
+    Route::middleware(['auth','can:seeker.view'])->group(function () {
+        Route::get('/',[SeekerDashboardController::class,'index'])->name('dashboard');
+        Route::get('/profile',[SeekerDashboardController::class,'profile'])->name('profile');
+        Route::patch('/profile',[SeekerDashboardController::class,'updateProfile'])->name('profile.update');
+        Route::post('/saved-jobs/{job}',[SeekerDashboardController::class,'save'])->name('jobs.save');
+        Route::delete('/saved-jobs/{job}',[SeekerDashboardController::class,'unsave'])->name('jobs.unsave');
+        Route::post('/applications/{job}',[SeekerDashboardController::class,'track'])->name('jobs.track');
+        Route::post('/logout',[SeekerAuthController::class,'logout'])->name('logout');
+    });
+});
 
 Route::get('/sitemap.xml',SitemapController::class)->name('sitemap');
 Route::get('/robots.txt',fn () => response()->view('seo.robots')->header('Content-Type','text/plain; charset=UTF-8'))->name('robots');

@@ -6,6 +6,13 @@
                 <x-site.nav-link :href="route($route)" :active="request()->routeIs($route)">{{ $label }}</x-site.nav-link>
             @endforeach
         </nav>
+        <div class="hidden items-center gap-2 lg:flex">
+            @if(auth()->check() && auth()->user()->role === 'job_seeker')
+                <x-site.nav-link :href="route('seeker.dashboard')" :active="request()->routeIs('seeker.*')">My account</x-site.nav-link>
+            @elseif(auth()->guest())
+                <x-site.nav-link :href="route('seeker.login')" :active="request()->routeIs('seeker.login')">Job-seeker login</x-site.nav-link>
+            @endif
+        </div>
         <details class="relative shrink-0 lg:hidden">
             <summary class="flex min-h-11 cursor-pointer list-none items-center gap-2 rounded-lg border border-neutral-500 px-4 py-2 text-sm font-semibold text-neutral-950 hover:bg-neutral-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black">
                 <span>Menu</span>
@@ -15,6 +22,11 @@
                 @foreach(['home'=>'Home','jobs.index'=>'Find Jobs','employers.index'=>'Employers','latest'=>'News & Updates','search'=>'Search articles','about'=>'About','contact'=>'Contact'] as $route=>$label)
                     <x-site.nav-link mobile :href="route($route)" :active="request()->routeIs($route)">{{ $label }}</x-site.nav-link>
                 @endforeach
+                @if(auth()->check() && auth()->user()->role === 'job_seeker')
+                    <x-site.nav-link mobile :href="route('seeker.dashboard')" :active="request()->routeIs('seeker.*')">My account</x-site.nav-link>
+                @elseif(auth()->guest())
+                    <x-site.nav-link mobile :href="route('seeker.login')" :active="request()->routeIs('seeker.login')">Job-seeker login</x-site.nav-link>
+                @endif
                 <div class="my-1 border-t border-neutral-200" role="separator"></div>
                 <x-site.nav-link mobile :href="route('section.show','career')" :active="request()->is('career')">Career resources</x-site.nav-link>
                 <x-site.nav-link mobile :href="route('section.show','training')" :active="request()->is('training')">Training</x-site.nav-link>
