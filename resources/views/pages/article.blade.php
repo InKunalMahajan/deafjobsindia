@@ -1,4 +1,15 @@
-<x-layouts.site :title="$article->title" :description="$article->description">
+@php
+$articleSchema = [
+    '@context' => 'https://schema.org',
+    '@type' => 'Article',
+    'headline' => $article->title,
+    'description' => $article->description,
+    'datePublished' => $article->published_at?->toIso8601String(),
+    'mainEntityOfPage' => route('news.show', $article->slug),
+    'publisher' => ['@type' => 'Organization', 'name' => 'DeafJobsIndia'],
+];
+@endphp
+<x-layouts.site :title="$article->title" :description="$article->description" :canonical="route('news.show', $article->slug)" :structured-data="$articleSchema">
 <article class="dji-container py-10 sm:py-16">
   <div class="mx-auto max-w-3xl">
     <a href="{{ route('latest') }}" class="text-sm font-semibold underline underline-offset-4">Back to latest updates</a>
