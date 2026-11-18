@@ -114,6 +114,35 @@ class StageTenSeoTest extends TestCase
             ->assertSee('Search articles');
     }
 
+    public function test_remote_job_does_not_claim_unsupported_country_eligibility(): void
+    {
+        $this->job($this->employer(), 'remote-job', ['work_mode' => 'remote']);
+
+        $this->get(route('jobs.show', 'remote-job'))->assertOk()
+            ->assertDontSee('JobPosting')
+            ->assertDontSee('applicantLocationRequirements');
+    }
+
+    public function test_job_with_invalid_application_url_has_no_jobposting_schema(): void
+    {
+        $this->job($this->employer(), 'unsafe-link', ['apply_url' => 'http://example.org/apply']);
+
+        $this->get(route('jobs.show', 'unsafe-link'))->assertOk()
+            ->assertDontSee('JobPosting');
+    }
+
+    public function test_tracking_parameters_do_not_force_noindex(): void
+    {
+        $this->get(route('home', ['utm_source' => 'newsletter']))->assertOk()
+            ->assertDontSee('noindex,follow');
+    }
+
+    public function test_filter_parameters_keep_noindex(): void
+    {
+        $this->get(route('jobs.index', ['q' => 'assistant']))->assertOk()
+            ->assertSee('noindex,follow');
+    }
+
     public function test_robots_endpoint_uses_plain_text_and_disallows_admin(): void
     {
         $this->get(route('robots'))->assertOk()
