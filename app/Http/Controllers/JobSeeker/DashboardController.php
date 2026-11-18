@@ -61,10 +61,19 @@ class DashboardController extends Controller {
             'applied_at'=>['nullable','date'],
             'notes'=>['nullable','string','max:2000'],
         ]);
-        DB::table('job_application_trackers')->updateOrInsert(
-            ['user_id'=>$request->user()->id,'job_listing_id'=>$job->id],
-            [...$data,'updated_at'=>now()]
-        );
+        DB::transaction(function() use ($request,$job,$data) {
+            $identity=['user_id'=>$request->user()->id,'job_listing_id'=>$job->id];
+            $previous=DB::table('job_application_trackers')->where($identity)->lockForUpdate()->first();
+            DB::table('job_application_trackers')->updateOrInsert(
+                $identity,[...$data,'updated_at'=>now()]
+            );
+            if (!$previous || $previous->status!==$data['status']) {
+                DB::table('job_application_status_history')->insert([
+                    ...$identity,'status'=>$data['status'],
+                    'notes'=>$data['notes'] ?? null,'created_at'=>now(),
+                ]);
+            }
+        });
         return back()->with('status','Application tracker updated.');
     }
 }
