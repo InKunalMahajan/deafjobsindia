@@ -3,7 +3,8 @@
   <div class="dji-container grid gap-10 py-12 lg:grid-cols-2 lg:items-center lg:py-20">
     <div>
       <p class="text-xs font-semibold uppercase tracking-widest text-neutral-600">Jobs across India</p>
-      <h1 class="mt-4 max-w-xl text-4xl font-extrabold tracking-tight sm:text-6xl">Find a job.<br>Build your future.</h1>
+      <h1 class="mt-4 max-w-xl text-4xl font-extrabold tracking-tight sm:text-6xl">Find your next opportunity</h1>
+      <p class="mt-2 text-sm font-semibold text-neutral-700">Find a job. Find opportunities.</p>
       <p class="mt-5 max-w-lg text-base leading-8 text-neutral-600">Explore vacancies, compare employers and apply through official recruitment websites.</p>
       <div class="mt-6 flex flex-wrap gap-3"><x-ui.button :href="route('jobs.index')">Browse jobs</x-ui.button><x-ui.button variant="secondary" :href="route('employers.index')">Explore employers</x-ui.button></div>
     </div>
@@ -12,7 +13,7 @@
       <label for="home-query" class="mt-5 block text-sm font-semibold">Job title or keyword</label>
       <input id="home-query" name="q" maxlength="120" placeholder="e.g. Office Assistant" class="mt-2 min-h-12 w-full rounded-lg border border-neutral-300 px-4 focus:border-black">
       <button type="submit" class="mt-5 min-h-12 w-full rounded-lg bg-black px-5 py-3 font-semibold text-white hover:bg-neutral-800">Find jobs</button>
-      <p class="mt-4 text-xs leading-5 text-neutral-600">Always confirm eligibility and deadlines with the employer.</p>
+      <p class="mt-4 text-xs leading-5 text-neutral-600">Complete your application on the official employer website. Always confirm eligibility and deadlines with the employer.</p>
     </form>
   </div>
 </section>

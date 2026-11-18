@@ -13,7 +13,7 @@
     <meta property="og:description" content="{{ $description }}">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="DeafJobsIndia">
-    @if($robots || request()->is('admin*') || request()->is('search') || request()->hasAny(['q', 'page', 'category', 'sort', 'salary', 'experience', 'featuredOnly']))<meta name="robots" content="{{ $robots ?? 'noindex,follow' }}">@endif
+    @if($robots || request()->is('admin*') || request()->is('search') || request()->hasAny(['q', 'page', 'category', 'sort', 'salary', 'experience', 'featuredOnly']))<meta name="robots" content="{{ $robots ?? (request()->is('admin*') ? 'noindex,nofollow' : 'noindex,follow') }}">@endif
     @if($structuredData)
     <script type="application/ld+json">{!! json_encode($structuredData, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) !!}</script>
     @endif
