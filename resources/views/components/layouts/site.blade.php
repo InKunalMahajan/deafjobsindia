@@ -1,4 +1,4 @@
-@props(['title' => 'DeafJobsIndia', 'description' => 'Inclusive employment and career information for Deaf and Hard of Hearing job seekers across India.'])
+@props(['title' => 'DeafJobsIndia', 'description' => 'Inclusive employment and career information for Deaf and Hard of Hearing job seekers across India.', 'canonical' => null, 'robots' => null, 'structuredData' => null])
 <!DOCTYPE html>
 <html lang="en" class="light">
 <head>
@@ -7,11 +7,16 @@
     <meta name="theme-color" content="#ffffff">
     <meta name="description" content="{{ $description }}">
     <title>{{ $title }} | DeafJobsIndia</title>
-    <link rel="canonical" href="{{ url()->current() }}">
+    <link rel="canonical" href="{{ $canonical ?? url()->current() }}">
+    <meta property="og:url" content="{{ $canonical ?? url()->current() }}">
     <meta property="og:title" content="{{ $title }} | DeafJobsIndia">
     <meta property="og:description" content="{{ $description }}">
     <meta property="og:type" content="website">
-    @if(request()->is('admin*') || request()->is('search'))<meta name="robots" content="noindex,nofollow">@endif
+    <meta property="og:site_name" content="DeafJobsIndia">
+    @if($robots || request()->is('admin*') || request()->is('search') || request()->query())<meta name="robots" content="{{ $robots ?? 'noindex,follow' }}">@endif
+    @if($structuredData)
+    <script type="application/ld+json">{!! json_encode($structuredData, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) !!}</script>
+    @endif
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="flex min-h-screen flex-col bg-white text-neutral-900 antialiased">
