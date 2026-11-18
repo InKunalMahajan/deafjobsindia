@@ -25,6 +25,7 @@ class AlertDeliveryController extends Controller {
     public function retry(Request $request,int $delivery): RedirectResponse {
         $changed=DB::transaction(function() use($delivery,$request) {
             $changed=DB::table('job_alert_outbox')->where('id',$delivery)
+                ->whereIn('job_alert_id',DB::table('job_alerts')->select('id')->where('enabled',true)->where('email_opt_in',true))
                 ->whereIn('status',['failed','exhausted'])
                 ->update([
                     'status'=>'pending','attempts'=>0,'next_attempt_at'=>null,
