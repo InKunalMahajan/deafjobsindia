@@ -11,6 +11,7 @@ use App\Http\Controllers\JobController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\Auth\AdminLoginController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\AlertDeliveryController;
 use App\Http\Controllers\Admin\EmployerController as AdminEmployerController;
 use App\Http\Controllers\Admin\JobController as AdminJobController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
@@ -117,6 +118,10 @@ Route::middleware('guest')->group(function () {
 });
 Route::post('/admin/logout',[AdminLoginController::class,'destroy'])->middleware('auth')->name('admin.logout');
 Route::prefix('admin')->name('admin.')->middleware(['auth','can:admin.view'])->group(function () {
+    Route::get('/alert-deliveries',[AlertDeliveryController::class,'index'])
+        ->middleware('can:employers.manage')->name('alert-deliveries.index');
+    Route::post('/alert-deliveries/{delivery}/retry',[AlertDeliveryController::class,'retry'])
+        ->middleware(['can:employers.manage','throttle:10,1'])->name('alert-deliveries.retry');
     Route::get('/',DashboardController::class)->name('dashboard');
     Route::resource('employers',AdminEmployerController::class)->except('show')->middleware('can:employers.manage');
     Route::resource('jobs',AdminJobController::class)->except('show')->middleware('can:jobs.edit');
