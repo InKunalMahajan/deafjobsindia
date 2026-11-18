@@ -57,7 +57,7 @@ class JobSearch extends Component {
             ->when($this->featuredOnly, fn ($q) => $q->where('is_featured', true))
             ->when($this->deafFriendly, fn ($q) => $q->where('is_deaf_friendly', true))
             ->when($this->pwdEligible, fn ($q) => $q->where('is_pwd_eligible', true))
-            ->when($this->category !== '', function ($q) {
+            ->when($this->category !== '' && mb_strlen($this->category) <= 150, function ($q) {
                 $q->whereHas('category', fn ($category) =>
                     $category->where('slug', $this->category)->where('is_active', true));
             })
