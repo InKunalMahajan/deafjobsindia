@@ -51,6 +51,15 @@ class StageSixDiscoveryTest extends TestCase {
             ->assertSee('junior-job')->assertDontSee('senior-job');
     }
 
+    public function test_homepage_only_features_published_open_jobs(): void {
+        $this->job('featured-open', ['is_featured' => true]);
+        $this->job('featured-draft', ['is_featured' => true, 'status' => 'draft']);
+        $this->job('featured-expired', ['is_featured' => true, 'deadline' => today()->subDay()]);
+        $this->get('/')->assertOk()->assertSee('Featured jobs')
+            ->assertSee('featured-open')->assertDontSee('featured-draft')
+            ->assertDontSee('featured-expired');
+    }
+
     public function test_reset_clears_new_filters(): void {
         $this->job('ordinary-job');
         Livewire::test(JobSearch::class)->set('featuredOnly', true)
