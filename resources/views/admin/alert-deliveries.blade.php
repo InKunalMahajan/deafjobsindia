@@ -1,6 +1,6 @@
-<x-layouts.site title="Alert delivery monitoring" robots="noindex,nofollow">
-<section class="dji-container py-12">
-<h1 class="text-3xl font-bold">Job alert delivery monitoring</h1>
+<x-layouts.admin title="Alert delivery monitoring">
+<section class="w-full min-w-0">
+<h2 class="text-xl font-bold">Job alert delivery monitoring</h2>
 <p class="mt-3">Administrator view. Retry does not send an email immediately.</p>
 @if(session('status'))<p role="status" class="mt-3">{{ session('status') }}</p>@endif
 <div class="mt-6 flex flex-wrap gap-3">
@@ -38,4 +38,4 @@
 @empty<tr><td colspan="6" class="p-3">No delivery records found.</td></tr>@endforelse
 </tbody></table></div>
 <div class="mt-4">{{ $deliveries->links() }}</div>
-</section></x-layouts.site>
+</section></x-layouts.admin>
