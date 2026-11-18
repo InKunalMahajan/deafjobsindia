@@ -2,18 +2,15 @@
 
 namespace App\Console\Commands;
 
-use App\Mail\JobAlertDigest;
 use App\Models\JobListing;
 use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Str;
 
 class SendJobAlerts extends Command {
     protected $signature='jobs:send-alerts {--dry-run : Count matches without sending email}';
-    protected $description='Send opt-in job alerts at the selected frequency';
+    protected $description='Stage opt-in job alert digests in the durable outbox (does not send email)';
 
     public function handle(): int {
         $dryRun=(bool)$this->option('dry-run');
@@ -49,22 +46,14 @@ class SendJobAlerts extends Command {
                     if($jobs->isEmpty()) continue;
                     $processed++;
                     if($dryRun) continue;
-                    $payload=$jobs->map(fn($job)=>[
-                        'title'=>$job->title,'location'=>$job->location,
-                        'url'=>route('jobs.show',$job->slug),
-                    ])->all();
                     try {
-                        Mail::to($user->email)->send(new JobAlertDigest(
-                            $user->name,$payload,route('seeker.alerts')
-                        ));
-                        DB::transaction(function() use($alert,$jobs) {
-                            foreach($jobs as $job) {
-                                DB::table('job_alert_deliveries')->insertOrIgnore([
-                                    'job_alert_id'=>$alert->id,'job_listing_id'=>$job->id,'created_at'=>now(),
-                                ]);
-                            }
-                            DB::table('job_alerts')->where('id',$alert->id)->update(['last_sent_at'=>now()]);
-                        });
+                        $ids=$jobs->pluck('id')->sort()->values()->all();
+                        $key=hash('sha256',$alert->id.':'.implode(',',$ids));
+                        DB::table('job_alert_outbox')->insertOrIgnore([
+                            'job_alert_id'=>$alert->id,'user_id'=>$user->id,
+                            'dedupe_key'=>$key,'job_ids'=>json_encode($ids),
+                            'status'=>'pending','created_at'=>now(),'updated_at'=>now(),
+                        ]);
                     } catch(\Throwable $e) {
                         report($e);
                         $failed++;
@@ -75,7 +64,7 @@ class SendJobAlerts extends Command {
                     }
                 }
             });
-        $this->info(($dryRun ? 'Matched alerts: ' : 'Attempted alert digests: ').$processed);
+        $this->info(($dryRun ? 'Matched alerts: ' : 'Staged alert digests: ').$processed);
         if(!$dryRun) $this->info('Failed: '.$failed.'; skipped (locked): '.$skipped);
         return $failed ? self::FAILURE : self::SUCCESS;
     }
