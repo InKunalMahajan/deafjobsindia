@@ -1,78 +1,61 @@
-# DeafJobsIndia — Laravel migration
+# DeafJobsIndia
 
-DeafJobsIndia is moving from **Astro** to **Laravel 13 + MySQL + Livewire + Flux UI + Tailwind CSS v4**.
+DeafJobsIndia is a Laravel 13 job and career information platform designed with Deaf and hard-of-hearing accessibility in mind.
 
-This migration branch replaces the static-site code with a PHP application. The original Astro version remains available on the main branch until this pull request is merged. Original Markdown recruitment stories are preserved in src/content/news, ready to import into MySQL.
+## Technology
 
-## Requirements
+- Laravel 13, PHP 8.4, Blade, Livewire and Flux UI
+- Tailwind CSS v4 and Vite
+- MySQL for application data; SQLite can be used for automated tests where supported
+- Job-seeker, employer and administrator portals
 
-- PHP 8.3+ and its Laravel extensions (including pdo_mysql and mbstring)
-- Composer 2
-- Node.js 22.12+ and npm
-- MySQL 8+
-- No Laravel starter kit required
+## Windows 11 local setup
 
-## Local installation
+```powershell
+composer install
+npm install
+Copy-Item .env.example .env
+php artisan key:generate
+```
 
-1. Clone the migration branch and install dependencies:
+Set database credentials in `.env`, then:
 
-    git clone --branch migration/laravel-13 https://github.com/InKunalMahajan/deafjobsindia.git
-    cd deafjobsindia
-    composer install
-    npm install
+```powershell
+php artisan migrate
+npm run build
+php artisan serve
+```
 
-2. Create a MySQL database and a dedicated database user. Use a strong password, and do not commit it.
+If `.env` already exists, **do not overwrite it or regenerate the application key**. Existing users and encrypted values may depend on that key.
 
-    CREATE DATABASE deafjobsindia CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-    CREATE USER 'deafjobs'@'127.0.0.1' IDENTIFIED BY 'CHOOSE_A_STRONG_PASSWORD';
-    GRANT ALL PRIVILEGES ON deafjobsindia.* TO 'deafjobs'@'127.0.0.1';
+## Verification
 
-3. Configure the environment:
+```powershell
+php artisan test
+composer audit
+npm audit
+npm run build
+php artisan route:list
+```
 
-    cp .env.example .env
-    php artisan key:generate
+The repository currently has no committed `package-lock.json` or `composer.lock` in the inspected Stage 30 branch. To enable reproducible installs and npm audit, generate and review lockfiles on a development machine, then commit them. Until then, `npm audit` may report `ENOLOCK`. Avoid `npm audit fix --force` without reviewing dependency changes.
 
-   Edit .env with the password and local DB settings. On Windows PowerShell, use Copy-Item .env.example .env.
+## Original news content
 
-4. Create schema and import content:
+`src/content/news/*.md` contains original article source files from the Astro website. **This is content, not an active Astro application.** Laravel still reads these Markdown files using `app/Console/Commands/ImportNews.php`.
 
-    php artisan migrate
-    php artisan news:import --dry-run
-    php artisan news:import
+Preview the import before writing data:
 
-5. Build assets and start both development servers:
+```powershell
+php artisan news:import --dry-run
+```
 
-    npm run build
-    php artisan serve
+Run `php artisan news:import` only when you intend to import or update articles in the configured database. Do not delete `src/content/news` until all articles, metadata and images have been migrated, backed up and verified. Image assets in `public/images` may still be used by published articles.
 
-   For live CSS updates, run npm run dev in a second terminal.
+## Deployment safety
 
-Open http://127.0.0.1:8000
+The recent feature stages and UI/UX audit are maintained in dependent draft pull requests. Do not assume these changes have been merged into `main` or released. Production readiness remains **NO-GO** pending full integration tests, security checks, production email configuration, database backup/restore and browser accessibility verification.
 
-## Testing
+Keep `JOB_ALERTS_SCHEDULE_ENABLED=false` and `JOB_ALERT_DELIVERY_ENABLED=false` until email readiness and operations are verified.
 
-    php artisan test
-    php artisan route:list
-    npm run build
-
-Before merging, run composer update and npm install on a networked development machine to create **composer.lock** and **package-lock.json**, then commit both lock files. This migration was authored without package-download access and must be installation-tested.
-
-## Content migration
-
-The original articles are stored as Markdown with YAML front matter in src/content/news/*.md. The repeatable command news:import maps the fields to the articles table and preserves article slugs, official sources, deadlines and publishing status. Demo, draft and article-format examples are intentionally not published.
-
-Existing article URLs use /news/{slug}. Previous images remain under public/images.
-
-## Accessibility and visual style
-
-- Minimal black-and-white Tailwind CSS styles
-- Native mobile navigation and visible focus rings
-- Text-first recruitment detail pages
-- Livewire search with Flux UI form components
-- Google Sans is declared as a preferred font but is not bundled; use a properly licensed font file or the Arial/system fallback
-
-## Production warning
-
-**GitHub Pages cannot run Laravel PHP or MySQL**. The old static publishing workflow is removed from this migration branch. Deploy to a PHP 8.3+ host with MySQL and point the web server's document root to the Laravel public directory. Set APP_ENV=production and APP_DEBUG=false, set a production APP_KEY, create database backups, and use a secure deployment process.
-
-This branch is a foundation, not yet a completed employer portal or admin CMS. See docs/LARAVEL-MIGRATION.md for the migration checklist.
+Laravel requires PHP-capable hosting; GitHub Pages cannot serve this application.
