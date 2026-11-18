@@ -21,7 +21,10 @@ class DashboardController extends Controller
             'openJobs' => JobListing::published()->open()->count(),
             'drafts' => JobListing::where('status', 'draft')->count(),
             'jobsNeedingReview' => JobListing::where('application_review_status', 'needs_update')->count(),
-            'jobsUnreviewed' => JobListing::where('application_review_status', 'unreviewed')->count(),
+            'jobsUnreviewed' => JobListing::where(function ($query) {
+                $query->where('application_review_status', 'unreviewed')
+                    ->orWhereNull('application_review_status');
+            })->count(),
             'articles' => Article::count(),
             'publishedArticles' => Article::published()->count(),
             'draftArticles' => Article::where('status', 'draft')->count(),
