@@ -23,7 +23,8 @@
 </form></section>
 <h2 class="mt-10 text-2xl font-bold">Company job submissions</h2>
 <div class="mt-4 grid gap-3">@forelse($jobs as $job)
-<div class="rounded-lg border border-neutral-300 p-4"><p class="font-semibold">{{ $job->title }}</p><p class="mt-1 text-sm">Status: {{ ucfirst($job->status) }}</p></div>
+<div class="rounded-lg border border-neutral-300 p-4"><p class="font-semibold">{{ $job->title }}</p><p class="mt-1 text-sm">Status: {{ ucfirst($job->status) }}</p>
+@if($job->application_method==='internal')<a class="mt-2 inline-block underline" href="{{ route('employer.applications',$job) }}">View applications</a>@endif</div>
 @empty<p>No job submissions yet.</p>@endforelse</div>
 <div class="mt-6">{{ $jobs->links() }}</div>
 </section></x-layouts.site>
