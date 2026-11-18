@@ -35,6 +35,7 @@ class GoogleController extends Controller {
             $user->save();
         }
         abort_unless($user->role==='job_seeker',403);
+        abort_unless(strcasecmp($user->email,$email)===0,403,'Google account email no longer matches.');
         if(!$user->hasVerifiedEmail()) $user->markEmailAsVerified();
         Auth::login($user);
         $request->session()->regenerate();

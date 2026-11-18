@@ -8,6 +8,7 @@ use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Password as PasswordRule;
@@ -26,7 +27,7 @@ class AccountRecoveryController extends Controller {
         $role=$this->role($portal);
         $data=$request->validate(['email'=>['required','email']]);
         $user=User::where('email',$data['email'])->where('role',$role)->first();
-        if($user) Password::sendResetLink(['email'=>$user->email]);
+        if($user && !$user->google_id) Password::sendResetLink(['email'=>$user->email]);
         return back()->with('status','If an eligible account exists, a password reset email will be sent.');
     }
     public function resetForm(Request $request,string $portal,string $token): View {
@@ -42,10 +43,16 @@ class AccountRecoveryController extends Controller {
             'email'=>['required','email'],
             'password'=>['required','confirmed',PasswordRule::min(12)],
         ]);
-        abort_unless(User::where('email',$data['email'])->where('role',$role)->exists(),422);
+        $eligible=User::where('email',$data['email'])->where('role',$role)->whereNull('google_id')->exists();
+        if(!$eligible) return back()->withErrors(['email'=>'The reset link is invalid or expired.']);
         $status=Password::reset($data,function(User $user,string $password) use($role) {
             abort_unless($user->role===$role,403);
+            abort_if($user->google_id,403);
             $user->forceFill(['password'=>Hash::make($password),'remember_token'=>Str::random(60)])->save();
+            // Database-backed sessions for this user are revoked after a password reset.
+            if(config('session.driver')==='database') {
+                DB::table(config('session.table','sessions'))->where('user_id',$user->id)->delete();
+            }
             event(new PasswordReset($user));
         });
         return $status===Password::PASSWORD_RESET
