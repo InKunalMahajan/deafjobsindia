@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Auth\AccountRecoveryController;
+use App\Http\Controllers\Auth\AccountVerificationController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\EmployerProfileController;
 use App\Http\Controllers\Admin\ArticleController as AdminArticleController;
@@ -26,6 +28,25 @@ use App\Http\Controllers\JobSeeker\ApplicationsController as SeekerApplicationsC
 use App\Http\Controllers\JobSeeker\ResumeController as SeekerResumeController;
 use App\Http\Controllers\JobSeeker\DiscoveryController as SeekerDiscoveryController;
 use Illuminate\Support\Facades\Route;
+
+// Separate public recovery routes for job seekers and employers.
+foreach(['seeker'=>'account','employer'=>'employer-account'] as $portal=>$prefix) {
+    Route::prefix($prefix)->name($portal.'.')->middleware('guest')->group(function() use($portal) {
+        Route::get('/forgot-password',fn(AccountRecoveryController $controller)=>$controller->requestForm($portal))->name('password.request');
+        Route::post('/forgot-password',fn(\Illuminate\Http\Request $request,AccountRecoveryController $controller)=>$controller->sendLink($request,$portal))
+            ->middleware('throttle:5,1')->name('password.email');
+        Route::get('/reset-password/{token}',fn(\Illuminate\Http\Request $request,AccountRecoveryController $controller,string $token)=>$controller->resetForm($request,$portal,$token))->name('password.reset');
+        Route::post('/reset-password',fn(\Illuminate\Http\Request $request,AccountRecoveryController $controller)=>$controller->reset($request,$portal))
+            ->middleware('throttle:5,1')->name('password.update');
+    });
+}
+Route::middleware('auth')->group(function() {
+    Route::get('/email/verify',[AccountVerificationController::class,'notice'])->name('verification.notice');
+    Route::get('/email/verify/{id}/{hash}',[AccountVerificationController::class,'verify'])
+        ->middleware(['signed','throttle:6,1'])->name('verification.verify');
+    Route::post('/email/verification-notification',[AccountVerificationController::class,'resend'])
+        ->middleware('throttle:6,1')->name('verification.send');
+});
 
 // Employer portal is separate from both administrator and job-seeker routes.
 Route::prefix('employer-account')->name('employer.')->group(function() {
