@@ -65,7 +65,7 @@ class StageElevenSecurityAuditTest extends TestCase
             ->assertHeader('X-Content-Type-Options', 'nosniff')
             ->assertHeader('X-Frame-Options', 'DENY');
 
-        $this->assertStringNotContainsString('no-store', $response->headers->get('Cache-Control', ''));
+        $this->assertStringNotContainsString('no-store', $response->headers->get('Cache-Control', '') ?? '');
     }
 
     public function test_viewer_cannot_access_employer_management(): void
