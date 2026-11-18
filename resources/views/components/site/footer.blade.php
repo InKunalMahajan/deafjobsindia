@@ -1,6 +1,9 @@
-<footer class="border-t border-neutral-200 bg-neutral-50"><div class="dji-container grid gap-9 py-12 md:grid-cols-4">
-<div><p class="text-xl font-extrabold">DeafJobsIndia.</p><p class="mt-3 text-sm leading-7 text-neutral-600">Jobs, employer information and career resources for Deaf and Hard of Hearing people in India.</p></div>
-<nav aria-label="Jobs and employers" class="grid content-start gap-3 text-sm [&_a]:underline-offset-4 [&_a]:hover:underline"><strong>Opportunities</strong><a href="{{ route('jobs.index') }}">Find Jobs</a><a href="{{ route('employers.index') }}">Employers</a><a href="{{ route('latest') }}">News & Updates</a></nav>
-<nav aria-label="Career resources" class="grid content-start gap-3 text-sm [&_a]:underline-offset-4 [&_a]:hover:underline"><strong>Resources</strong><a href="{{ route('section.show','training') }}">Training</a><a href="{{ route('section.show','education') }}">Education</a><a href="{{ route('section.show','career') }}">Career Guidance</a></nav>
-<nav aria-label="Legal and information" class="grid content-start gap-3 text-sm [&_a]:underline-offset-4 [&_a]:hover:underline"><strong>Information</strong><a href="{{ route('about') }}">About</a><a href="{{ route('contact') }}">Contact</a><a href="{{ route('privacy') }}">Privacy</a><a href="{{ route('disclaimer') }}">Disclaimer</a><a href="{{ route('rss') }}">RSS</a></nav>
-</div><div class="border-t border-neutral-200"><div class="dji-container flex flex-wrap justify-between gap-3 py-5 text-xs text-neutral-600"><span>&copy; {{ date('Y') }} DeafJobsIndia</span><span>Check official recruitment sources before applying.</span></div></div></footer>
+<footer class="border-t border-neutral-200 bg-neutral-50">
+<div class="dji-container grid gap-8 py-12 sm:grid-cols-2 lg:grid-cols-4">
+  <div><a href="{{ route('home') }}" class="text-xl font-extrabold">DeafJobsIndia.</a><p class="mt-3 text-sm leading-7 text-neutral-600">Jobs, employer information and career resources across India.</p></div>
+  <nav aria-label="Job links" class="grid content-start gap-3 text-sm"><strong>Opportunities</strong><a href="{{ route('jobs.index') }}">Find Jobs</a><a href="{{ route('employers.index') }}">Employers</a><a href="{{ route('latest') }}">News & Updates</a></nav>
+  <nav aria-label="Resource links" class="grid content-start gap-3 text-sm"><strong>Resources</strong><a href="{{ route('section.show','training') }}">Training</a><a href="{{ route('section.show','education') }}">Education</a><a href="{{ route('section.show','career') }}">Career Guidance</a></nav>
+  <nav aria-label="Information links" class="grid content-start gap-3 text-sm"><strong>Information</strong><a href="{{ route('about') }}">About</a><a href="{{ route('contact') }}">Contact</a><a href="{{ route('privacy') }}">Privacy</a><a href="{{ route('disclaimer') }}">Disclaimer</a><a href="{{ route('rss') }}">RSS</a></nav>
+</div>
+<div class="border-t border-neutral-200"><div class="dji-container flex flex-wrap justify-between gap-3 py-5 text-xs text-neutral-600"><span>&copy; {{ date('Y') }} DeafJobsIndia</span><span>Always verify job details with official sources.</span></div></div>
+</footer>
