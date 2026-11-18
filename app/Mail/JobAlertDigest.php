@@ -12,7 +12,8 @@ class JobAlertDigest extends Mailable {
     public function __construct(
         public string $recipientName,
         public array $jobs,
-        public string $settingsUrl
+        public string $settingsUrl,
+        public ?string $unsubscribeUrl=null
     ) {}
 
     public function build(): static {
