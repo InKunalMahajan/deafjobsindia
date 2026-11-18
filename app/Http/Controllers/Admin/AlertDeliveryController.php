@@ -27,6 +27,7 @@ class AlertDeliveryController extends Controller {
             $changed=DB::table('job_alert_outbox')->where('id',$delivery)
                 ->whereIn('job_alert_id',DB::table('job_alerts')->select('id')->where('enabled',true)->where('email_opt_in',true))
                 ->whereIn('status',['failed','exhausted'])
+                ->whereIn('user_id',DB::table('users')->select('id')->where('role','job_seeker')->whereNotNull('email_verified_at'))
                 ->update([
                     'status'=>'pending','attempts'=>0,'next_attempt_at'=>null,
                     'last_error'=>null,'updated_at'=>now(),
