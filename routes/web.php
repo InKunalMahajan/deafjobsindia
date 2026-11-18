@@ -27,6 +27,7 @@ use App\Http\Controllers\EmployerPortal\DashboardController as EmployerDashboard
 use App\Http\Controllers\JobSeeker\ApplicationsController as SeekerApplicationsController;
 use App\Http\Controllers\JobSeeker\ResumeController as SeekerResumeController;
 use App\Http\Controllers\JobSeeker\DiscoveryController as SeekerDiscoveryController;
+use App\Http\Controllers\JobSeeker\AlertUnsubscribeController;
 use Illuminate\Support\Facades\Route;
 
 // Separate public recovery routes for job seekers and employers.
@@ -47,6 +48,13 @@ Route::middleware('auth')->group(function() {
     Route::post('/email/verification-notification',[AccountVerificationController::class,'resend'])
         ->middleware('throttle:6,1')->name('verification.send');
 });
+
+// Signed email links permit a limited unsubscribe without requiring login.
+Route::get('/alerts/unsubscribe/{alert}/{user}',[AlertUnsubscribeController::class,'confirm'])
+    ->middleware(['signed','throttle:20,1'])->name('seeker.alerts.unsubscribe.confirm');
+Route::post('/alerts/unsubscribe/{alert}/{user}',[AlertUnsubscribeController::class,'unsubscribe'])
+    ->middleware(['signed','throttle:20,1'])->name('seeker.alerts.unsubscribe.apply');
+Route::view('/alerts/unsubscribed','job-seeker.alert-unsubscribe-done')->name('seeker.alerts.unsubscribe.done');
 
 // Employer portal is separate from both administrator and job-seeker routes.
 Route::prefix('employer-account')->name('employer.')->group(function() {
