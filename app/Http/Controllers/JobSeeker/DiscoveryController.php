@@ -29,7 +29,12 @@ class DiscoveryController extends Controller {
     }
     public function alerts(Request $request): View {
         $alerts=DB::table('job_alerts')->where('user_id',$request->user()->id)->latest()->get();
-        return view('job-seeker.alerts',compact('alerts'));
+        $history=DB::table('job_alert_outbox as o')
+            ->join('job_alerts as a','a.id','=','o.job_alert_id')
+            ->where('a.user_id',$request->user()->id)
+            ->select('o.id','o.status','o.attempts','o.created_at','o.sent_at','o.updated_at','a.keywords','a.location')
+            ->orderByDesc('o.id')->paginate(15);
+        return view('job-seeker.alerts',compact('alerts','history'));
     }
     public function storeAlert(Request $request): RedirectResponse {
         $data=$request->validate([

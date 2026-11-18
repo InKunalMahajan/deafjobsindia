@@ -51,7 +51,11 @@ class DeliverJobAlertOutbox extends Command {
                 $payload=$jobs->map(fn($job)=>[
                     'title'=>$job->title,'location'=>$job->location,'url'=>route('jobs.show',$job->slug),
                 ])->all();
-                Mail::to($user->email)->send(new JobAlertDigest($user->name,$payload,route('seeker.alerts')));
+                $unsubscribeUrl=\Illuminate\Support\Facades\URL::temporarySignedRoute(
+                    'seeker.alerts.unsubscribe.confirm',now()->addDays(30),
+                    ['alert'=>$alert->id,'user'=>$user->id]
+                );
+                Mail::to($user->email)->send(new JobAlertDigest($user->name,$payload,route('seeker.alerts'),$unsubscribeUrl));
                 DB::transaction(function() use($current,$jobs) {
                     foreach($jobs as $job) {
                         DB::table('job_alert_deliveries')->insertOrIgnore([

@@ -20,4 +20,17 @@
 <form method="POST" action="{{ route('seeker.alerts.delete',$alert->id) }}">@csrf @method('DELETE')<button class="underline" type="submit">Delete</button></form>
 </div>
 @empty<p class="mt-3">No alerts saved yet.</p>@endforelse
+<h2 class="mt-10 text-xl font-bold">Email delivery history</h2>
+<p class="mt-2 text-sm">Only you can see the delivery status of your saved alerts. No email addresses or error details are shown.</p>
+<div class="mt-4 overflow-x-auto"><table class="w-full border-collapse text-left text-sm">
+<thead><tr><th scope="col" class="border-b p-3">Alert</th><th scope="col" class="border-b p-3">Status</th><th scope="col" class="border-b p-3">Created</th><th scope="col" class="border-b p-3">Sent</th></tr></thead>
+<tbody>
+@forelse($history as $item)
+<tr><td class="border-b p-3">{{ $item->keywords ?: $item->location ?: 'Saved alert' }}</td>
+<td class="border-b p-3">{{ ucfirst($item->status) }}</td>
+<td class="border-b p-3">{{ $item->created_at }}</td>
+<td class="border-b p-3">{{ $item->sent_at ?: '—' }}</td></tr>
+@empty<tr><td colspan="4" class="p-3">No email history yet.</td></tr>@endforelse
+</tbody></table></div>
+<div class="mt-4">{{ $history->links() }}</div>
 </section></x-layouts.site>
