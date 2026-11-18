@@ -24,7 +24,7 @@ class UserController extends Controller {
             'email'=>['required','email','max:255',Rule::unique('users','email')->ignore($user->id)],
             'password'=>['nullable','string','min:12','confirmed'],
             'role'=>['required',Rule::in(['super_admin','admin','editor','viewer'])]]);
-        if ($user->is($request->user()) && $data['role']!=='super_admin') {
+        if ($user->is($request->user()) && $user->isSuperAdmin() && $data['role'] !== 'super_admin') {
             return back()->withErrors(['role'=>'You cannot remove your own Super Admin role.']);
         }
         $user->name=$data['name'];$user->email=$data['email'];$user->role=$data['role'];
