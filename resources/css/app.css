@@ -24,9 +24,9 @@
   }
   html { scroll-behavior: smooth; }
   body { background: #fff; color: #111; font-family: var(--font-sans); }
-  :focus-visible { outline: 2px solid #111; outline-offset: 3px; }
+  :focus-visible { outline: 3px solid currentColor; outline-offset: 3px; }
   @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
+    *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
   }
 }
 @layer components {
@@ -44,7 +44,3 @@
 @media (min-width: 640px) {
   .dji-container { padding-inline: 2rem; }
 }
-
-/* Stage 7: keyboard visibility and reduced-motion preferences */
-:focus-visible { outline: 3px solid currentColor; outline-offset: 3px; }
-@media (prefers-reduced-motion: reduce) { *,*::before,*::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; } }

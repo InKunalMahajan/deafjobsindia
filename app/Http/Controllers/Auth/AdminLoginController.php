@@ -8,7 +8,7 @@ use Illuminate\View\View;
 class AdminLoginController extends Controller {
     public function create(): View { return view('admin.login'); }
     public function store(Request $request): RedirectResponse {
-        $credentials=$request->validate(['email'=>['required','email'],'password'=>['required','string']]);
+        $credentials=$request->validate(['email'=>['required','email','max:255'],'password'=>['required','string','max:4096']]);
         if (! Auth::attempt($credentials)) {
             return back()->withErrors(['email'=>'These credentials do not match our records.'])->onlyInput('email');
         }

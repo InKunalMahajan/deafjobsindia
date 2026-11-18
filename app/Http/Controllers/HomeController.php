@@ -7,6 +7,7 @@ class HomeController extends Controller {
  public function index(): View {
   return view('pages.home',[
    'jobs'=>JobListing::with('employer')->published()->open()->latest('published_at')->limit(6)->get(),
+   'featuredJobs'=>JobListing::with('employer')->published()->open()->where('is_featured',true)->latest('published_at')->limit(3)->get(),
    'articles'=>Article::published()->latest('published_at')->limit(3)->get(),
   ]);
  }
