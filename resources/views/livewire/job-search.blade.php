@@ -28,14 +28,14 @@
         <flux:select.option value="hybrid">Hybrid</flux:select.option>
         <flux:select.option value="remote">Remote</flux:select.option>
       </flux:select>
-      <flux:select wire:model.live="salary" label="Annual salary (minimum)">
+      <flux:select wire:model.live="salary" label="Annual salary range reaches at least">
         <flux:select.option value="">Any salary</flux:select.option>
         <flux:select.option value="200000">₹2 lakh</flux:select.option>
         <flux:select.option value="400000">₹4 lakh</flux:select.option>
         <flux:select.option value="600000">₹6 lakh</flux:select.option>
         <flux:select.option value="1000000">₹10 lakh</flux:select.option>
       </flux:select>
-      <flux:select wire:model.live="experience" label="Experience">
+      <flux:select wire:model.live="experience" label="Experience required (years)">
         <flux:select.option value="">Any experience</flux:select.option>
         <flux:select.option value="0">Fresher (0 years)</flux:select.option>
         <flux:select.option value="1">1 year</flux:select.option>
@@ -57,7 +57,7 @@
       <flux:checkbox wire:model.live="pwdEligible" label="Reported PwD eligible" />
       <flux:button variant="ghost" wire:click="clearFilters">Clear filters</flux:button>
     </div>
-    <p class="mt-4 text-xs text-neutral-600">Salary and experience filters only include jobs with structured information.</p>
+    <p class="mt-4 text-xs text-neutral-600">Salary shows jobs whose listed annual maximum meets your selected amount. Experience shows jobs whose stated range includes your selected years. Jobs without these details are excluded when those filters are active.</p>
   </div>
   <div class="mt-7 flex flex-wrap items-center justify-between gap-3">
     <p class="text-sm font-medium text-neutral-700" role="status" aria-live="polite">{{ $jobs->total() }} jobs found</p>
