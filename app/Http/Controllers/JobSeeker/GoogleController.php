@@ -35,6 +35,7 @@ class GoogleController extends Controller {
             $user->save();
         }
         abort_unless($user->role==='job_seeker',403);
+        if(!$user->hasVerifiedEmail()) $user->markEmailAsVerified();
         Auth::login($user);
         $request->session()->regenerate();
         return redirect()->route('seeker.dashboard');
