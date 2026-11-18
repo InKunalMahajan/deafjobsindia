@@ -75,6 +75,13 @@ if (!$job->is_closed && $job->published_at && $validApplyUrl && $job->work_mode 
         <div class="dji-prose mt-4">{!! \Illuminate\Support\Str::markdown($job->requirements, ['html_input' => 'strip', 'allow_unsafe_links' => false]) !!}</div>
       </section>
     @endif
+    @if(auth()->check() && auth()->user()->role === 'job_seeker')
+      <form class="mt-6" method="POST" action="{{ route('seeker.jobs.save',$job) }}">@csrf
+        <button class="min-h-11 rounded-lg border border-neutral-900 px-5 font-semibold hover:bg-neutral-100" type="submit">Save this job</button>
+      </form>
+    @elseif(auth()->guest())
+      <p class="mt-6 text-sm"><a class="font-semibold underline" href="{{ route('seeker.login') }}">Sign in to save this job</a></p>
+    @endif
     <section class="mt-10 rounded-xl border border-neutral-200 p-5 sm:p-7">
       <h2 class="text-xl font-bold">How to apply</h2>
       @if($job->application_instructions)
