@@ -13,10 +13,16 @@
     <meta property="og:description" content="{{ $description }}">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="DeafJobsIndia">
-    @if($robots || (request()->is('admin*') || request()->is('account*') || request()->is('employer-account*')) || request()->is('search') || request()->hasAny(['q', 'page', 'category', 'sort', 'salary', 'experience', 'featuredOnly']))<meta name="robots" content="{{ $robots ?? ((request()->is('admin*') || request()->is('account*')) ? 'noindex,nofollow' : 'noindex,follow') }}">@endif
+    @if($robots || (request()->is('admin*') || request()->is('account*') || request()->is('employer-account*')) || request()->is('search') || request()->hasAny(['q', 'page', 'category', 'sort', 'salary', 'experience', 'featuredOnly']))<meta name="robots" content="{{ $robots ?? ((request()->is('admin*') || request()->is('account*') || request()->is('employer-account*')) ? 'noindex,nofollow' : 'noindex,follow') }}">@endif
     @if($structuredData)
     <script type="application/ld+json">{!! json_encode($structuredData, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) !!}</script>
     @endif
+    <style>
+        :focus-visible { outline: 3px solid #111; outline-offset: 3px; }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { scroll-behavior: auto !important; animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+        }
+    </style>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="flex min-h-screen flex-col bg-white text-neutral-900 antialiased">
