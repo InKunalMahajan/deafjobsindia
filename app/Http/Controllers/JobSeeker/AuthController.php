@@ -24,6 +24,7 @@ class AuthController extends Controller {
         $user=User::create($data);
         $user->role='job_seeker';
         $user->save();
+        $user->sendEmailVerificationNotification();
         Auth::login($user);
         $request->session()->regenerate();
         return redirect()->route('seeker.dashboard');
