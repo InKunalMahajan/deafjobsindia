@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 class JobController extends Controller {
-    public function index(): View { return view('admin.jobs.index',['jobs'=>JobListing::with('employer')->latest()->paginate(15)]); }
+    public function index(): View { return view('admin.jobs.index',['jobs'=>JobListing::with('employer')->latest()->orderByDesc('id')->paginate(15)]); }
     public function create(): View { return view('admin.jobs.form',['job'=>new JobListing(),'employers'=>Employer::orderBy('name')->get(),'categories'=>JobCategory::orderBy('name')->get()]); }
     public function store(Request $request): RedirectResponse {
         JobListing::create($this->validated($request));
