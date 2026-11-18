@@ -29,7 +29,17 @@ class DashboardController extends Controller {
             'name'=>['required','string','max:255'],
             'location'=>['nullable','string','max:255'],
             'bio'=>['nullable','string','max:2000'],
+            'headline'=>['nullable','string','max:255'],
+            'education'=>['nullable','string','max:255'],
+            'experience_years'=>['nullable','integer','min:0','max:80'],
+            'skills'=>['nullable','string','max:1000'],
+            'preferred_location'=>['nullable','string','max:255'],
+            'preferred_work_mode'=>['nullable',Rule::in(['remote','hybrid','on-site'])],
+            'requires_captions'=>['sometimes','boolean'],
+            'prefers_isl'=>['sometimes','boolean'],
         ]);
+        $data['requires_captions']=$request->boolean('requires_captions');
+        $data['prefers_isl']=$request->boolean('prefers_isl');
         $user->update($data);
         return back()->with('status','Profile updated.');
     }
