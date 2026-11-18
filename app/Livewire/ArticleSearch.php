@@ -49,6 +49,7 @@ class ArticleSearch extends Component
             ->orderByDesc('id')
             ->paginate(10);
 
-        return view('livewire.article-search', ['articles' => $articles]);
+        return view('livewire.article-search', ['articles' => $articles,
+            'categories' => Article::published()->whereNotNull('category')->distinct()->orderBy('category')->pluck('category')]);
     }
 }
