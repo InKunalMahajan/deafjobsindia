@@ -3,6 +3,12 @@
     <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       <flux:input wire:model.live.debounce.400ms="query" label="Keyword" placeholder="Job title or employer" />
       <flux:input wire:model.live.debounce.400ms="location" label="Location" placeholder="City or location" />
+      <flux:select wire:model.live="category" label="Job category">
+        <flux:select.option value="">All categories</flux:select.option>
+        @foreach($categories as $categoryOption)
+          <flux:select.option value="{{ $categoryOption->slug }}">{{ $categoryOption->name }}</flux:select.option>
+        @endforeach
+      </flux:select>
       <flux:select wire:model.live="sector" label="Sector">
         <flux:select.option value="">All sectors</flux:select.option>
         <flux:select.option value="government">Government</flux:select.option>
@@ -22,17 +28,36 @@
         <flux:select.option value="hybrid">Hybrid</flux:select.option>
         <flux:select.option value="remote">Remote</flux:select.option>
       </flux:select>
+      <flux:select wire:model.live="salary" label="Annual salary (minimum)">
+        <flux:select.option value="">Any salary</flux:select.option>
+        <flux:select.option value="200000">₹2 lakh</flux:select.option>
+        <flux:select.option value="400000">₹4 lakh</flux:select.option>
+        <flux:select.option value="600000">₹6 lakh</flux:select.option>
+        <flux:select.option value="1000000">₹10 lakh</flux:select.option>
+      </flux:select>
+      <flux:select wire:model.live="experience" label="Experience">
+        <flux:select.option value="">Any experience</flux:select.option>
+        <flux:select.option value="0">Fresher (0 years)</flux:select.option>
+        <flux:select.option value="1">1 year</flux:select.option>
+        <flux:select.option value="3">3 years</flux:select.option>
+        <flux:select.option value="5">5 years</flux:select.option>
+        <flux:select.option value="10">10 years</flux:select.option>
+      </flux:select>
       <flux:select wire:model.live="sort" label="Sort">
         <flux:select.option value="newest">Newest first</flux:select.option>
         <flux:select.option value="deadline">Closing soon</flux:select.option>
+        <flux:select.option value="salary_high">Highest salary</flux:select.option>
+        <flux:select.option value="salary_low">Lowest salary</flux:select.option>
       </flux:select>
     </div>
     <div class="mt-5 flex flex-wrap items-center gap-x-6 gap-y-3">
       <flux:checkbox wire:model.live="openOnly" label="Open jobs only" />
+      <flux:checkbox wire:model.live="featuredOnly" label="Featured jobs only" />
       <flux:checkbox wire:model.live="deafFriendly" label="Reported Deaf-friendly" />
       <flux:checkbox wire:model.live="pwdEligible" label="Reported PwD eligible" />
       <flux:button variant="ghost" wire:click="clearFilters">Clear filters</flux:button>
     </div>
+    <p class="mt-4 text-xs text-neutral-600">Salary and experience filters only include jobs with structured information.</p>
   </div>
   <div class="mt-7 flex flex-wrap items-center justify-between gap-3">
     <p class="text-sm font-medium text-neutral-700" role="status" aria-live="polite">{{ $jobs->total() }} jobs found</p>
