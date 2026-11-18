@@ -30,6 +30,17 @@ class UiUxAuditRegressionTest extends TestCase {
             ->assertSee('Save alert');
     }
 
+    public function test_job_seeker_dashboard_has_clear_actions_and_empty_state(): void {
+        $seeker=User::factory()->create(['role'=>'job_seeker']);
+        $this->actingAs($seeker)->get(route('seeker.dashboard'))
+            ->assertOk()
+            ->assertSee('Quick actions')
+            ->assertSee('Profile and resume')
+            ->assertSee('Submitted applications')
+            ->assertSee('Start your job search')
+            ->assertSee('Browse available jobs');
+    }
+
     public function test_unsigned_unsubscribe_is_not_accessible(): void {
         $this->get('/alerts/unsubscribe/1/1')->assertForbidden();
     }

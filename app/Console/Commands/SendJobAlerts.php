@@ -29,7 +29,15 @@ class SendJobAlerts extends Command {
                     if(!$user || $user->role!=='job_seeker' || !$user->email_verified_at) continue;
                     $hours=$alert->frequency==='weekly' ? 168 : 24;
                     if($alert->last_sent_at && \Illuminate\Support\Carbon::parse($alert->last_sent_at)->diffInMinutes(now())<$hours*60) continue;
+                    $reservedIds=DB::table('job_alert_outbox')
+                        ->where('job_alert_id',$alert->id)
+                        ->whereIn('status',['pending','failed','exhausted','sent'])
+                        ->pluck('job_ids')->flatMap(function($json) {
+                            $ids=json_decode($json,true);
+                            return is_array($ids) ? $ids : [];
+                        })->all();
                     $query=JobListing::query()->published()->open()
+                        ->whereNotIn('id',$reservedIds)
                         ->whereNotIn('id',DB::table('job_alert_deliveries')->select('job_listing_id')->where('job_alert_id',$alert->id));
                     if(filled($alert->location)) $query->where('location','like','%'.$alert->location.'%');
                     if(filled($alert->keywords)) {
@@ -57,7 +65,7 @@ class SendJobAlerts extends Command {
                     } catch(\Throwable $e) {
                         report($e);
                         $failed++;
-                        $this->error('Unable to send alert '.$alert->id);
+                        $this->error('Unable to stage alert '.$alert->id);
                     }
                     } finally {
                         if($lock) $lock->release();

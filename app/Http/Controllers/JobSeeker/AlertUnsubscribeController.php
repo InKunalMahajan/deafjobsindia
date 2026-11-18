@@ -20,7 +20,7 @@ class AlertUnsubscribeController extends Controller {
             DB::table('job_alerts')->where('id',$alert)->where('user_id',$user)
                 ->update(['email_opt_in'=>false,'updated_at'=>now()]);
             DB::table('job_alert_outbox')->where('job_alert_id',$alert)
-                ->where('user_id',$user)->whereIn('status',['pending','failed'])
+                ->where('user_id',$user)->whereIn('status',['pending','failed','exhausted'])
                 ->update(['status'=>'cancelled','updated_at'=>now()]);
         });
         return redirect()->route('seeker.alerts.unsubscribe.done');
