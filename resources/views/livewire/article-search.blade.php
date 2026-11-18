@@ -3,7 +3,7 @@
     <flux:input wire:model.live.debounce.400ms="query" label="Search articles" placeholder="Title, topic or location" />
     <flux:select wire:model.live="category" label="Category">
       <flux:select.option value="">All categories</flux:select.option>
-      @foreach(['Jobs','Education','Training','Career','Government Schemes','Job Fairs','Community','Technology'] as $categoryOption)
+      @foreach($categories as $categoryOption)
         <flux:select.option value="{{ $categoryOption }}">{{ $categoryOption }}</flux:select.option>
       @endforeach
     </flux:select>
